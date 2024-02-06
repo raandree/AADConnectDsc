@@ -6,7 +6,7 @@ output/*
 output/RequiredModules/*
 
 !output/RequiredModules/DscResource.Common
-
+!output/RequiredModules/Sampler
 
 **.bak
 *.local.*
