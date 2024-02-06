@@ -1,9 +1,7 @@
-#Region './prefix.ps1' -1
-
+#Region './prefix.ps1' 0
 $script:modulesFolderPath = Split-Path -Path $PSScriptRoot -Parent
 #EndRegion './prefix.ps1' 2
-#Region './Private/Assert-RequiredCommandParameter.ps1' -1
-
+#Region './Private/Assert-RequiredCommandParameter.ps1' 0
 <#
     .SYNOPSIS
         Assert that required parameters has been specified.
@@ -94,8 +92,7 @@ function Assert-RequiredCommandParameter
     }
 }
 #EndRegion './Private/Assert-RequiredCommandParameter.ps1' 90
-#Region './Private/Test-DscObjectHasProperty.ps1' -1
-
+#Region './Private/Test-DscObjectHasProperty.ps1' 0
 <#
     .SYNOPSIS
         Tests if an object has a property.
@@ -136,8 +133,7 @@ function Test-DscObjectHasProperty
     return $false
 }
 #EndRegion './Private/Test-DscObjectHasProperty.ps1' 40
-#Region './Private/Test-DscPropertyIsAssigned.ps1' -1
-
+#Region './Private/Test-DscPropertyIsAssigned.ps1' 0
 <#
     .SYNOPSIS
         Tests whether the class-based resource property is assigned a non-null value.
@@ -194,8 +190,7 @@ function Test-DscPropertyIsAssigned
     }
 }
 #EndRegion './Private/Test-DscPropertyIsAssigned.ps1' 56
-#Region './Private/Test-DscPropertyState.ps1' -1
-
+#Region './Private/Test-DscPropertyState.ps1' 0
 <#
     .SYNOPSIS
         Compares the current and the desired value of a property.
@@ -221,7 +216,7 @@ function Test-DscPropertyIsAssigned
         }
 
     .NOTES
-        This function is used by the command Compare-ResourcePropertyState.
+        This function is used by the cmdlet Compare-ResourcePropertyState.
 #>
 function Test-DscPropertyState
 {
@@ -443,32 +438,15 @@ function Test-DscPropertyState
     return $returnValue
 }
 #EndRegion './Private/Test-DscPropertyState.ps1' 247
-#Region './Public/Assert-BoundParameter.ps1' -1
-
+#Region './Public/Assert-BoundParameter.ps1' 0
 <#
     .SYNOPSIS
         Throws an error if there is a bound parameter that exists in both the
         mutually exclusive lists.
 
     .DESCRIPTION
-        This command asserts passed parameters. It takes a hashtable, normally
-        `$PSBoundParameters`. There are two parameter sets for this command.
-
-        >There is no built in logic to validate against parameters sets for DSC
-        >so this can be used instead to validate the parameters that were set in
-        >the configuration.
-
-        **MutuallyExclusiveParameters**
-
-        This parameter set takes two mutually exclusive lists of parameters.
-        If any of the parameters in the first list are specified, none of the
-        parameters in the second list can be specified.
-
-        **RequiredParameter**
-
-        Assert that required parameters has been specified, and throws an exception
-        if not. Optionally it can be specified that parameters are only required
-        if a specific parameter has been passed.
+        Throws an error if there is a bound parameter that exists in both the
+        mutually exclusive lists.
 
     .PARAMETER BoundParameterList
         The parameters that should be evaluated against the mutually exclusive
@@ -501,6 +479,7 @@ function Test-DscPropertyState
                 'Parameter2'
             )
         }
+
         Assert-BoundParameter @assertBoundParameterParameters
 
         This example throws an exception if `$PSBoundParameters` contains both
@@ -514,8 +493,7 @@ function Test-DscPropertyState
     .EXAMPLE
         Assert-BoundParameter -BoundParameterList $PSBoundParameters -RequiredParameter @('Property2', 'Property3') -IfParameterPresent @('Property1')
 
-        Throws an exception if the parameter 'Property1' is specified and either
-        of the required parameters are not.
+        Throws an exception if the parameter 'Property1' is specified and either of the required parameters are not.
 #>
 function Assert-BoundParameter
 {
@@ -571,28 +549,19 @@ function Assert-BoundParameter
         }
     }
 }
-#EndRegion './Public/Assert-BoundParameter.ps1' 127
-#Region './Public/Assert-ElevatedUser.ps1' -1
-
+#EndRegion './Public/Assert-BoundParameter.ps1' 111
+#Region './Public/Assert-ElevatedUser.ps1' 0
 <#
     .SYNOPSIS
         Assert that the user has elevated the PowerShell session.
 
     .DESCRIPTION
-        Assert that the user has elevated the PowerShell session. The command will
-        throw a statement-terminating error if the script is not run from an elevated
-        session.
+        Assert that the user has elevated the PowerShell session.
 
     .EXAMPLE
         Assert-ElevatedUser
 
         Throws an exception if the user has not elevated the PowerShell session.
-
-    .EXAMPLE
-        `Assert-ElevatedUser -ErrorAction 'Stop'`
-
-        This example stops the entire script if it is not run from an
-        elevated PowerShell session.
 
     .OUTPUTS
         None.
@@ -627,13 +596,11 @@ function Assert-ElevatedUser
         )
     }
 }
-#EndRegion './Public/Assert-ElevatedUser.ps1' 54
-#Region './Public/Assert-IPAddress.ps1' -1
-
+#EndRegion './Public/Assert-ElevatedUser.ps1' 46
+#Region './Public/Assert-IPAddress.ps1' 0
 <#
     .SYNOPSIS
-        Asserts if the IP Address is valid and optionally validates
-        the IP Address against an Address Family.
+        Asserts that the specified IP address is valid.
 
     .DESCRIPTION
         Checks the IP address so that it is valid and do not conflict with address
@@ -649,21 +616,21 @@ function Assert-ElevatedUser
     .EXAMPLE
         Assert-IPAddress -Address '127.0.0.1'
 
-        This will assert that the supplied address is a valid IPv4 address. If it
-        is not an exception will be thrown.
+        This will assert that the supplied address is a valid IPv4 address.
+        If it is not an exception will be thrown.
 
     .EXAMPLE
         Assert-IPAddress -Address 'fe80:ab04:30F5:002b::1'
 
-        This will assert that the supplied address is a valid IPv6 address. If it
-        is not an exception will be thrown.
+        This will assert that the supplied address is a valid IPv6 address.
+        If it is not an exception will be thrown.
 
     .EXAMPLE
         Assert-IPAddress -Address 'fe80:ab04:30F5:002b::1' -AddressFamily 'IPv6'
 
-        This will assert that address is valid and that it matches the supplied
-        address family. If the supplied address family does not match the address
-        an exception will be thrown.
+        This will assert that address is valid and that it matches the
+        supplied address family. If the supplied address family does not match
+        the address an exception will be thrown.
 #>
 function Assert-IPAddress
 {
@@ -716,17 +683,14 @@ function Assert-IPAddress
         }
     }
 }
-#EndRegion './Public/Assert-IPAddress.ps1' 87
-#Region './Public/Assert-Module.ps1' -1
-
+#EndRegion './Public/Assert-IPAddress.ps1' 86
+#Region './Public/Assert-Module.ps1' 0
 <#
     .SYNOPSIS
-        Assert if the specific module is available to be imported and optionally
-        import the module.
+        Assert if the specific module is available to be imported.
 
     .DESCRIPTION
-        Assert if the specific module is available to be imported and optionally
-        import the module.
+        Assert if the specific module is available to be imported.
 
     .PARAMETER ModuleName
         Specifies the name of the module to assert.
@@ -742,21 +706,19 @@ function Assert-IPAddress
     .EXAMPLE
         Assert-Module -ModuleName 'DhcpServer'
 
-        This asserts that the module DhcpServer is available on the system. If it
-        is not an exception will be thrown.
+        This asserts that the module DhcpServer is available on the system.
 
     .EXAMPLE
         Assert-Module -ModuleName 'DhcpServer' -ImportModule
 
         This asserts that the module DhcpServer is available on the system and
-        imports it. If the module is not available an exception will be thrown.
+        imports it.
 
     .EXAMPLE
         Assert-Module -ModuleName 'DhcpServer' -ImportModule -Force
 
-        This asserts that the module DhcpServer is available on the system and it
-        will be forcibly imported into the session (even if it was already in the
-        session). If the module is not available an exception will be thrown.
+        This asserts that the module DhcpServer is available on the system and
+        forcibly imports it.
 #>
 function Assert-Module
 {
@@ -801,9 +763,8 @@ function Assert-Module
         Import-Module -Name $ModuleName -Force
     }
 }
-#EndRegion './Public/Assert-Module.ps1' 83
-#Region './Public/Compare-DscParameterState.ps1' -1
-
+#EndRegion './Public/Assert-Module.ps1' 79
+#Region './Public/Compare-DscParameterState.ps1' 0
 <#
     .SYNOPSIS
         This method is used to compare current and desired values for any DSC resource.
@@ -812,11 +773,6 @@ function Assert-Module
         This function compare the parameter status of DSC resource parameters against
         the current values present on the system, and return a hashtable with the metadata
         from the comparison.
-
-        >[!NOTE]
-        >The content of the function `Test-DscParameterState` has been extracted and now
-        >`Test-DscParameterState` is just calling `Compare-DscParameterState`.
-        >This function can be used in a DSC resource from the _Get_ function/method.
 
     .PARAMETER CurrentValues
         A hashtable with the current values on the system, obtained by e.g.
@@ -850,23 +806,7 @@ function Assert-Module
         By default, this command returns only the properties not in desired state.
 
     .PARAMETER IncludeValue
-        Indicates that result contains the ActualValue and ExpectedValue properties.
-
-    .OUTPUTS
-        System.Object[]
-
-    .NOTES
-        Returns an array containing a PSCustomObject with metadata for each property
-        that was evaluated.
-
-        Metadata Name | Type | Description
-        --- | --- | ---
-        Property | `[System.String]` | The name of the property that was evaluated
-        InDesiredState | `[System.Boolean]` | Returns `$true` if the expected and actual value was equal.
-        ExpectedType | `[System.String]` | Return the type of desired object.
-        ActualType | `[System.String]` | Return the type of current object.
-        ExpectedValue | `[System.PsObject]` | Return the value of expected object.
-        ActualValue | `[System.PsObject]` | Return the value of current object.
+        Indicates that result contains the ActualValue and ExcpectedValue properties.
 
     .EXAMPLE
         $currentValues = @{
@@ -874,11 +814,21 @@ function Assert-Module
             Int = 1
             Bool = $true
         }
+
         $desiredValues = @{
             String = 'This is a string'
             Int = 99
         }
+
         Compare-DscParameterState -CurrentValues $currentValues -DesiredValues $desiredValues
+
+        Name                           Value
+        ----                           -----
+        Property                       Int
+        InDesiredState                 False
+        ExpectedType                   System.Int32
+        ActualType                     System.Int32
+        ```
 
         The function Compare-DscParameterState compare the value of each hashtable based
         on the keys present in $desiredValues hashtable. The result indicates that Int
@@ -891,16 +841,27 @@ function Assert-Module
             Int = 1
             Bool = $true
         }
+
         $desiredValues = @{
             String = 'This is a string'
             Int = 99
             Bool = $false
         }
+
         $excludeProperties = @('Bool')
+
         Compare-DscParameterState `
             -CurrentValues $currentValues `
             -DesiredValues $desiredValues `
             -ExcludeProperties $ExcludeProperties
+
+        Name                           Value
+        ----                           -----
+        Property                       Int
+        InDesiredState                 False
+        ExpectedType                   System.Int32
+        ActualType                     System.Int32
+        ```
 
         The function Compare-DscParameterState compare the value of each hashtable based
         on the keys present in $desiredValues hashtable and without those in $excludeProperties.
@@ -911,6 +872,7 @@ function Assert-Module
         $serviceParameters = @{
             Name     = $Name
         }
+
         $returnValue = Compare-DscParameterState `
             -CurrentValues (Get-Service @serviceParameters) `
             -DesiredValues $PSBoundParameters `
@@ -972,7 +934,7 @@ function Compare-DscParameterState
     )
 
     $returnValue = @()
-    #region ConvertCIm to Hashtable
+    #region ConvertCim to Hashtable
     if ($CurrentValues -is [Microsoft.Management.Infrastructure.CimInstance] -or
         $CurrentValues -is [Microsoft.Management.Infrastructure.CimInstance[]])
     {
@@ -988,8 +950,7 @@ function Compare-DscParameterState
     #region CheckType of object
     $types = 'System.Management.Automation.PSBoundParametersDictionary',
         'System.Collections.Hashtable',
-        'Microsoft.Management.Infrastructure.CimInstance',
-        'System.Collections.Specialized.OrderedDictionary'
+        'Microsoft.Management.Infrastructure.CimInstance'
 
     if ($DesiredValues.GetType().FullName -notin $types)
     {
@@ -1013,8 +974,13 @@ function Compare-DscParameterState
             -ArgumentName Properties
     }
     #endregion check cim and properties
+    
     #Clean value if there are a common parameters provide from Test/Get-TargetResource parameter
-    $desiredValuesClean = Remove-CommonParameter -Hashtable $DesiredValues
+    if ($DesiredValues -is [hashtable])
+    {
+        $desiredValuesClean = Remove-CommonParameter -Hashtable $DesiredValues
+    }
+    
     #region generate keyList based on $Properties and $excludeProperties value
     if (-not $Properties)
     {
@@ -1056,10 +1022,45 @@ function Compare-DscParameterState
         {
             $desiredValue = ConvertTo-HashTable -CimInstance $desiredValue
         }
+        elseif ($null -ne $desiredValue -and
+            ($desiredValue.GetType().GetElementType().CustomAttributes.Where({ $_.AttributeType.Name -eq 'DscParameter' }) -or
+            $desiredValue.GetType().CustomAttributes.Where({ $_.AttributeType.Name -eq 'DscParameter' }))
+        )
+        {
+            $desiredValue = if ($desiredValue.GetType().IsArray)
+            {
+                foreach ($item in $desiredValue)
+                {
+                    Convert-ObjectToHashtable -Object $item
+                }
+            }
+            else
+            {
+                Convert-ObjectToHashtable -Object $desiredValue
+            }
+        }
+        
         if ($currentValue -is [Microsoft.Management.Infrastructure.CimInstance] -or
             $currentValue -is [Microsoft.Management.Infrastructure.CimInstance[]])
         {
             $currentValue = ConvertTo-HashTable -CimInstance $currentValue
+        }
+        elseif ($null -ne $currentValue -and
+            ($currentValue.GetType().GetElementType().CustomAttributes.Where({ $_.AttributeType.Name -eq 'DscParameter' }) -or
+            $currentValue.GetType().CustomAttributes.Where({ $_.AttributeType.Name -eq 'DscParameter' }))
+        )
+        {
+            $currentValue = if ($currentValue.GetType().IsArray)
+            {
+                foreach ($item in $currentValue)
+                {
+                    Convert-ObjectToHashtable -Object $item
+                }
+            }
+            else
+            {
+                Convert-ObjectToHashtable -Object $currentValue
+            }
         }
         #endregion converttohashtable
         #region gettype of value to check if they are the same.
@@ -1144,7 +1145,7 @@ function Compare-DscParameterState
         }
         #endregion check same value
         #region Check if the DesiredValuesClean has the key and if it doesn't have, it's not necessary to check his value
-        if ($desiredValuesClean.GetType().Name -in 'HashTable', 'PSBoundParametersDictionary', 'OrderedDictionary')
+        if ($desiredValuesClean.GetType().Name -in 'HashTable', 'PSBoundParametersDictionary')
         {
             $checkDesiredValue = $desiredValuesClean.ContainsKey($key)
         }
@@ -1194,7 +1195,7 @@ function Compare-DscParameterState
                     $currentArrayValues = @($currentArrayValues | Sort-Object)
                 }
                 <#
-                    for all object in collection, check their type.ConvertoString if they are script block.
+                        for all object in collection, check their type.ConvertoString if they are script block.
 
                 #>
                 for ($i = 0; $i -lt $desiredArrayValues.Count; $i++)
@@ -1233,10 +1234,10 @@ function Compare-DscParameterState
                     }
 
                     <#
-                        Convert a scriptblock into a string as scriptblocks are not comparable
-                        if currentvalue is scriptblock and if desired value is string,
-                        we invoke the result of script block. Ifno, we convert to string.
-                        if Desired value
+                            Convert a scriptblock into a string as scriptblocks are not comparable
+                            if currentvalue is scriptblock and if desired value is string,
+                            we invoke the result of script block. Ifno, we convert to string.
+                            if Desired value
                     #>
 
                     $wasCurrentArrayValuesConverted = $false
@@ -1265,7 +1266,7 @@ function Compare-DscParameterState
                         }
                     }
 
-                    if (($desiredType -eq [System.Collections.Hashtable] -or $desiredType -eq [System.Collections.Specialized.OrderedDictionary]) -and ($currentType -eq [System.Collections.Hashtable]-or $currentType -eq [System.Collections.Specialized.OrderedDictionary]))
+                    if ($desiredType -eq [System.Collections.Hashtable] -and $currentType -eq [System.Collections.Hashtable])
                     {
                         $param = @{} + $PSBoundParameters
                         $param.CurrentValues = $currentArrayValues[$i]
@@ -1289,21 +1290,95 @@ function Compare-DscParameterState
                         continue
                     }
 
-                    if ($desiredArrayValues[$i] -ne $currentArrayValues[$i])
+                    if ($desiredArrayValues[$i].GetType().IsArray -or $currentArrayValues[$i].GetType().IsArray)
                     {
-                        Write-Verbose -Message ($script:localizedData.NoMatchElementValueMismatchMessage -f $i, $desiredType.FullName, $key, $currentArrayValues[$i], $desiredArrayValues[$i])
-                        $InDesiredStateTable.InDesiredState = $false
+                        if ($desiredArrayValues[$i].GetType().IsArray -ne $currentArrayValues[$i].GetType().IsArray)
+                        {
+                            #TODO Message in psd1
+                            Write-Verbose "NOTMATCH: Type mismatch array"
+                            continue
+                        }
+                        
+                        $param = @{} + $PSBoundParameters
+                        $param.CurrentValues = @{
+                            "ListOf_$key" = $currentArrayValues[$i]
+                        }
+                        $param.DesiredValues = @{
+                            "ListOf_$key" = $desiredArrayValues[$i]
+                        }
+
+                        'IncludeInDesiredState','IncludeValue','Properties','ReverseCheck' | ForEach-Object {
+                            if ($param.ContainsKey($_))
+                            {
+                                $null = $param.Remove($_)
+                            }
+                        }
+
+                        if ($InDesiredStateTable.InDesiredState)
+                        {
+                            $InDesiredStateTable.InDesiredState = Test-DscParameterState @param
+                        }
+                        else
+                        {
+                            Test-DscParameterState @param | Out-Null
+                        }
                         continue
                     }
                     else
                     {
-                        Write-Verbose -Message ($script:localizedData.MatchElementValueMessage -f $i, $desiredType.FullName, $key, $currentArrayValues[$i], $desiredArrayValues[$i])
-                        continue
+                        if ($desiredArrayValues[$i] -ne $currentArrayValues[$i])
+                        {
+                            Write-Verbose -Message ($script:localizedData.NoMatchElementValueMismatchMessage -f $i, $desiredType.FullName, $key, $currentArrayValues[$i], $desiredArrayValues[$i])
+                            $InDesiredStateTable.InDesiredState = $false
+                            continue
+                        }
+                        else
+                        {
+                            Write-Verbose -Message ($script:localizedData.MatchElementValueMessage -f $i, $desiredType.FullName, $key, $currentArrayValues[$i], $desiredArrayValues[$i])
+                            continue
+                        }
                     }
                 }
+
             }
         }
-        elseif (($desiredType -eq [System.Collections.Hashtable] -or $desiredType -eq [System.Collections.Specialized.OrderedDictionary]) -and ($currentType -eq [System.Collections.Hashtable]-or $currentType -eq [System.Collections.Specialized.OrderedDictionary]))
+        elseif ($desiredType.CustomAttributes.Where({ $_.AttributeType -eq [DscParameter]}) -and
+            $currentType.CustomAttributes.Where({ $_.AttributeType -eq [DscParameter]}) -and
+            -not $desiredType.IsArray -and -not $currentType.IsArray)
+        {
+            $param = @{} + $PSBoundParameters
+            $param.CurrentValues = $currentValue | Convert-ObjectToHashtable
+            $param.DesiredValues = $desiredValue | Convert-ObjectToHashtable
+
+            'IncludeInDesiredState','IncludeValue','Properties','ReverseCheck' | ForEach-Object {
+                if ($param.ContainsKey($_))
+                {
+                    $null = $param.Remove($_)
+                }
+            }
+
+            if ($InDesiredStateTable.InDesiredState)
+            {
+                <#
+                        if desiredvalue is an empty hashtable and not currentvalue, it's not necessery to compare them, it's not compliant.
+                        See issue 65 https://github.com/dsccommunity/DscResource.Common/issues/65
+                #>
+                if ($desiredValue.Keys.Count -eq 0 -and $currentValue.Keys.Count -ne 0)
+                {
+                    Write-Verbose -Message ($script:localizedData.NoMatchKeyMessage -f $desiredType.FullName, $key, $($currentValue.Keys -join ', '))
+                    $InDesiredStateTable.InDesiredState = $false
+                }
+                else{
+                    $InDesiredStateTable.InDesiredState = Test-DscParameterState @param
+                }
+            }
+            else
+            {
+                $null = Test-DscParameterState @param
+            }
+            continue
+        }
+        elseif ($desiredType -eq [System.Collections.Hashtable] -and $currentType -eq [System.Collections.Hashtable])
         {
             $param = @{} + $PSBoundParameters
             $param.CurrentValues = $currentValue
@@ -1319,8 +1394,8 @@ function Compare-DscParameterState
             if ($InDesiredStateTable.InDesiredState)
             {
                 <#
-                    if desiredvalue is an empty hashtable and not currentvalue, it's not necessery to compare them, it's not compliant.
-                    See issue 65 https://github.com/dsccommunity/DscResource.Common/issues/65
+                        if desiredvalue is an empty hashtable and not currentvalue, it's not necessery to compare them, it's not compliant.
+                        See issue 65 https://github.com/dsccommunity/DscResource.Common/issues/65
                 #>
                 if ($desiredValue.Keys.Count -eq 0 -and $currentValue.Keys.Count -ne 0)
                 {
@@ -1441,35 +1516,15 @@ function Compare-DscParameterState
 
     return $returnValue
 }
-#EndRegion './Public/Compare-DscParameterState.ps1' 638
-#Region './Public/Compare-ResourcePropertyState.ps1' -1
-
+#EndRegion './Public/Compare-DscParameterState.ps1' 639
+#Region './Public/Compare-ResourcePropertyState.ps1' 0
 <#
     .SYNOPSIS
-        Compare current and desired property values for any DSC resource and return
-        a hashtable with the metadata from the comparison.
+        Compare current and desired property values for any DSC resource.
 
     .DESCRIPTION
         This function is used to compare current and desired property values for any
         DSC resource, and return a hashtable with the metadata from the comparison.
-
-        This introduces another design pattern that is used to evaluate current and
-        desired state in a DSC resource. This command is meant to be used in a DSC
-        resource from both _Test_ and _Set_. The evaluation is made in _Set_
-        to make sure to only change the properties that are not in the desired state.
-        Properties that are in the desired state should not be changed again. This
-        design pattern also handles when the command `Invoke-DscResource` is called
-        with the method `Set`, which with this design pattern will evaluate the
-        properties correctly.
-
-        >[!NOTE]
-        >This design pattern is not widely used in the DSC resource modules in the
-        >DSC Community, the only known use is in SqlServerDsc. This design pattern
-        >can be viewed as deprecated, and should be replaced with the design pattern
-        >that uses the command [`Compare-DscParameterState`](Compare-DscParameterState).
-
-        See the other design patterns that uses the command [`Compare-DscParameterState`](Compare-DscParameterState)
-        or [`Test-DscParameterState`](Test-DscParameterState).
 
     .PARAMETER CurrentValues
         The current values that should be compared to to desired values. Normally
@@ -1498,82 +1553,17 @@ function Compare-DscParameterState
             Permission = @('State')
         }
 
-    .OUTPUTS
-        System.Collections.Hashtable[]
-
-    .NOTES
-        Returns an array containing a hashtable with metadata for each property
-        that was evaluated.
-
-        Metadata Name | Type | Description
-        --- | --- | ---
-        ParameterName | `[System.String]` | The name of the property that was evaluated
-        Expected | The type of the property | The desired value for the property
-        Actual | The type of the property | The actual current value for the property
-        InDesiredState | `[System.Boolean]` | Returns `$true` if the expected and actual value was equal.
-
     .EXAMPLE
         $compareTargetResourceStateParameters = @{
             CurrentValues = (Get-TargetResource $PSBoundParameters)
             DesiredValues = $PSBoundParameters
         }
-        $propertyState = Compare-ResourcePropertyState @compareTargetResourceStateParameters
-        $propertiesNotInDesiredState = $propertyState.Where({ -not $_.InDesiredState })
 
-        This example calls Compare-ResourcePropertyState with the current state
+        $propertyState = Compare-ResourcePropertyState @compareTargetResourceStateParameters
+
+        This examples call Compare-ResourcePropertyState with the current state
         and the desired state and returns a hashtable array of all the properties
         that was evaluated based on the properties pass in the parameter DesiredValues.
-        Finally it sets a parameter `$propertiesNotInDesiredState` that contain
-        an array with all properties not in desired state.
-
-    .EXAMPLE
-        $compareTargetResourceStateParameters = @{
-            CurrentValues = (Get-TargetResource $PSBoundParameters)
-            DesiredValues = $PSBoundParameters
-            Properties    = @(
-                'Property1'
-            )
-        }
-        $propertyState = Compare-ResourcePropertyState @compareTargetResourceStateParameters
-        $false -in $propertyState.InDesiredState
-
-        This example calls Compare-ResourcePropertyState with the current state
-        and the desired state and returns a hashtable array with just the property
-        `Property1` as that was the only property that was to be evaluated.
-        Finally it checks if `$false` is present in the array property `InDesiredState`.
-
-    .EXAMPLE
-        $compareTargetResourceStateParameters = @{
-            CurrentValues    = (Get-TargetResource $PSBoundParameters)
-            DesiredValues    = $PSBoundParameters
-            IgnoreProperties = @(
-                'Property1'
-            )
-        }
-        $propertyState = Compare-ResourcePropertyState @compareTargetResourceStateParameters
-
-        This example calls Compare-ResourcePropertyState with the current state
-        and the desired state and returns a hashtable array of all the properties
-        except the property `Property1`.
-
-    .EXAMPLE
-        $compareTargetResourceStateParameters = @{
-            CurrentValues    = (Get-TargetResource $PSBoundParameters)
-            DesiredValues    = $PSBoundParameters
-            CimInstanceKeyProperties = @{
-                ResourceProperty1 = @(
-                    'CimProperty1'
-                )
-            }
-        }
-        $propertyState = Compare-ResourcePropertyState @compareTargetResourceStateParameters
-
-        This example calls Compare-ResourcePropertyState with the current state
-        and the desired state and have a property `ResourceProperty1` who's value
-        is an  array of embedded CIM instances. The key property for the CIM instances
-        are `CimProperty1`. The CIM instance key property `CimProperty1` is used
-        to get the unique CIM instance object to compare against from both the current
-        state and the desired state.
 #>
 function Compare-ResourcePropertyState
 {
@@ -1685,53 +1675,55 @@ function Compare-ResourcePropertyState
 
     return $compareTargetResourceStateReturnValue
 }
-#EndRegion './Public/Compare-ResourcePropertyState.ps1' 242
-#Region './Public/ConvertFrom-DscResourceInstance.ps1' -1
+#EndRegion './Public/Compare-ResourcePropertyState.ps1' 158
+#Region './Public/ConvertFrom-DscResourceInstance.ps1' 0
 
 <#
     .SYNOPSIS
         Convert any object to hashtable.
 
     .DESCRIPTION
-        This function is used to convert a PSObject into a hashtable.
+        This function is used to convert a psobject into a hashtable.
 
     .PARAMETER InputObject
         The object that should be convert to hashtable.
 
-    .PARAMETER OutputFormat
+    .PARAMETER OutPutFormat
         Set the format you do want to convert the object. The default value is HashTable.
         It's the only value accepted at this time.
 
     .OUTPUTS
-        System.Collections.Hashtable
+        Hashtable
 
     .EXAMPLE
-        $object = [PSCustomObject] = @{
-            FirstName = 'John'
-            LastName = 'Smith'
-        }
-        ConvertFrom-DscResourceInstance -InputObject $object
 
-        This creates a PSCustomObject and converts its properties and values to
-        key/value pairs in a hashtable.
+    $Object = [pscustomobject]=@{
+        FirstName = 'John'
+        LastName = 'Smith'
+    }
+
+    ConvertFrom-DscResourceInstance -InputObject $Object
+
+    This creates a pscustomobject and converts its properties/values to Hashtable Key/Value.
 
     .EXAMPLE
-        $objectArray = [PSCustomObject] = @{
-            FirstName = 'John'
-            LastName = 'Smith'
-        }, [PSCustomObject] = @{
-            FirstName = 'Peter'
-            LastName = 'Smith'
-        }
-        $objectArray | ConvertFrom-DscResourceInstance
 
-        This creates an array of PSCustomObject and converts their properties and
-        values to key/value pairs in a hashtable.
+    $ObjectArray = [pscustomobject]=@{
+        FirstName = 'John'
+        LastName = 'Smith'
+    },[pscustomobject]=@{
+        FirstName = 'Peter'
+        LastName = 'Smith'
+    }
+
+    $ObjectArray | ConvertFrom-DscResourceInstance
+
+    This creates pscustomobjects and converts there properties/values to Hashtable Keys/Values through the pipeline.
 #>
 function ConvertFrom-DscResourceInstance
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([Hashtable])]
     param
     (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -1741,33 +1733,30 @@ function ConvertFrom-DscResourceInstance
         [Parameter()]
         [ValidateSet('HashTable')]
         [String]
-        $OutputFormat = 'HashTable'
+        $OutPutFormat = 'HashTable'
 
     )
+    process {
 
-    process
-    {
-        switch ($OutputFormat)
+        switch ($OutPutFormat)
         {
             'HashTable'
             {
-                $result = @{}
-
+                $Result = @{}
                 foreach ($obj in $InputObject)
                 {
-                    $obj.PSObject.Properties | Foreach-Object {
-                        $result[$_.Name] = $_.Value
+                    $obj.psobject.Properties | Foreach-Object {
+                        $Result[$_.Name] = $_.Value
                     }
                 }
             }
         }
 
-        return $result
+        return $Result
     }
 }
-#EndRegion './Public/ConvertFrom-DscResourceInstance.ps1' 78
-#Region './Public/ConvertTo-CimInstance.ps1' -1
-
+#EndRegion './Public/ConvertFrom-DscResourceInstance.ps1' 79
+#Region './Public/ConvertTo-CimInstance.ps1' 0
 <#
     .SYNOPSIS
         Converts a hashtable into a CimInstance array.
@@ -1781,7 +1770,7 @@ function ConvertFrom-DscResourceInstance
         A hashtable with the values to convert.
 
     .OUTPUTS
-        System.Object[]
+        An object array with CimInstance objects.
 
     .EXAMPLE
         ConvertTo-CimInstance -Hashtable @{
@@ -1823,8 +1812,7 @@ function ConvertTo-CimInstance
     }
 }
 #EndRegion './Public/ConvertTo-CimInstance.ps1' 55
-#Region './Public/ConvertTo-HashTable.ps1' -1
-
+#Region './Public/ConvertTo-HashTable.ps1' 0
 <#
     .SYNOPSIS
         Converts CimInstances into a hashtable.
@@ -1837,7 +1825,7 @@ function ConvertTo-CimInstance
         An array of CimInstances or a single CimInstance object to convert.
 
     .OUTPUTS
-        System.Collections.Hashtable
+        Hashtable
 
     .EXAMPLE
         $newInstanceParameters = @{
@@ -1845,19 +1833,22 @@ function ConvertTo-CimInstance
             Namespace = 'root/microsoft/Windows/DesiredStateConfiguration'
             ClientOnly = $true
         }
+
         $cimInstance = [Microsoft.Management.Infrastructure.CimInstance[]] (
             (New-CimInstance @newInstanceParameters -Property @{
                 Key   = 'FirstName'
                 Value = 'John'
             }),
+
             (New-CimInstance @newInstanceParameters -Property @{
                 Key   = 'LastName'
                 Value = 'Smith'
             })
         )
+
         ConvertTo-HashTable -CimInstance $cimInstance
 
-        This creates a array of CimInstances using the class name MSFT_KeyValuePair
+        This creates a array om CimInstances of the class name MSFT_KeyValuePair
         and passes it to ConvertTo-HashTable which returns a hashtable.
 #>
 function ConvertTo-HashTable
@@ -1869,7 +1860,12 @@ function ConvertTo-HashTable
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CimInstance')]
         [AllowEmptyCollection()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $CimInstance
+        $CimInstance,
+        
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'DscParameter')]
+        [AllowEmptyCollection()]
+        [object[]]
+        $DscParameter
     )
 
     begin
@@ -1879,9 +1875,21 @@ function ConvertTo-HashTable
 
     process
     {
-        foreach ($ci in $CimInstance)
+        if ($PSCmdlet.ParameterSetName -eq 'CimInstance')
         {
-            $result.Add($ci.Key, $ci.Value)
+            foreach ($ci in $CimInstance)
+            {
+                $result.Add($ci.Key, $ci.Value)
+            }
+        }
+        else
+        {
+            foreach ($cie in $DscParameter)
+            {
+                $cie.psobject.Properties.ForEach({
+                        $result[$_.Name] = $_.Value
+                })
+            }
         }
     }
 
@@ -1890,20 +1898,18 @@ function ConvertTo-HashTable
         $result
     }
 }
-#EndRegion './Public/ConvertTo-HashTable.ps1' 66
-#Region './Public/Find-Certificate.ps1' -1
-
+#EndRegion './Public/ConvertTo-HashTable.ps1' 69
+#Region './Public/Find-Certificate.ps1' 0
 <#
     .SYNOPSIS
         Locates one or more certificates using the passed certificate selector parameters.
 
+        If more than one certificate is found matching the selector criteria, they will be
+        returned in order of descending expiration date.
+
     .DESCRIPTION
         A common function to find certificates based on multiple search filters, including,
         but not limited to: Thumbprint, Friendly Name, DNS Names, Key Usage, Issuers, etc.
-
-        Locates one or more certificates using the passed certificate selector parameters.
-        If more than one certificate is found matching the selector criteria, they will be
-        returned in order of descending expiration date.
 
     .PARAMETER Thumbprint
         The thumbprint of the certificate to find.
@@ -1933,9 +1939,6 @@ function ConvertTo-HashTable
     .PARAMETER AllowExpired
         Allows expired certificates to be returned.
 
-    .OUTPUTS
-        System.Security.Cryptography.X509Certificates.X509Certificate2
-
     .EXAMPLE
         Find-Certificate -Thumbprint '1111111111111111111111111111111111111111'
 
@@ -1952,25 +1955,25 @@ function ConvertTo-HashTable
         Return certificate(s) filtered on specific DNS Names.
 
     .EXAMPLE
-        Find-Certificate -Subject 'CN=contoso, DC=com'
+        find-certificate -Subject 'CN=contoso, DC=com'
 
         Return certificate(s) with specific subject.
 
     .EXAMPLE
-        Find-Certificate -Issuer 'CN=contoso-ca, DC=com' -AllowExpired $true
+        find-certificate -Issuer 'CN=contoso-ca, DC=com' -AllowExpired $true
 
         Return all certificates from specific issuer, including expired certificates.
 
     .EXAMPLE
-        Find-Certificate -EnhancedKeyUsage @('Client authentication','Server Authentication') -AllowExpired $true
+        Find-Certificate -EnhancedKeyUsage 'Server Authentication' -AllowExpired $true
 
-        Return all certificates that can be used for server or client authentication,
-        including expired certificates.
+        Return all certificates that can be used for "Server Authentication", including expired certificates.
 
     .EXAMPLE
         Find-Certificate -FriendlyName 'My IIS Site SSL Cert'
 
         Return certificate based on FriendlyName.
+
 #>
 function Find-Certificate
 {
@@ -2086,26 +2089,21 @@ function Find-Certificate
 
     return $certs
 } # end function Find-Certificate
-#EndRegion './Public/Find-Certificate.ps1' 194
-#Region './Public/Get-ComputerName.ps1' -1
-
+#EndRegion './Public/Find-Certificate.ps1' 190
+#Region './Public/Get-ComputerName.ps1' 0
 <#
     .SYNOPSIS
         Returns the computer name cross-plattform.
 
     .DESCRIPTION
-        Returns the computer name cross-plattform. The variable `$env:COMPUTERNAME`
-        does not exist cross-platform which hinders development and testing on
-        macOS and Linux. Instead this command can be used to get the computer name
-        cross-plattform.
-
-    .OUTPUTS
-        System.String
+        The variable `$env:COMPUTERNAME` does not exist cross-platform which
+        hinders development and testing on macOS and Linux. Instead this cmdlet
+        can be used to get the computer name cross-plattform.
 
     .EXAMPLE
         Get-ComputerName
 
-        Returns the computer name regardless of platform.
+        This example returns the computer name cross-plattform.
 #>
 function Get-ComputerName
 {
@@ -2130,8 +2128,8 @@ function Get-ComputerName
 
     return $computerName
 }
-#EndRegion './Public/Get-ComputerName.ps1' 42
-#Region './Public/Get-DscProperty.ps1' -1
+#EndRegion './Public/Get-ComputerName.ps1' 38
+#Region './Public/Get-DscProperty.ps1' 0
 
 <#
     .SYNOPSIS
@@ -2140,7 +2138,7 @@ function Get-ComputerName
     .DESCRIPTION
         Returns DSC resource properties that is part of a class-based DSC resource.
         The properties can be filtered using name, attribute, or if it has been
-        assigned a non-null value.
+        assigned a value.
 
     .PARAMETER InputObject
         The object that contain one or more key properties.
@@ -2160,9 +2158,6 @@ function Get-ComputerName
         Specifies to return only properties that has been assigned a non-null value.
         If left out all properties are returned regardless if there is a value
         assigned or not.
-
-    .OUTPUTS
-        System.Collections.Hashtable
 
     .EXAMPLE
         Get-DscProperty -InputObject $this
@@ -2305,8 +2300,8 @@ function Get-DscProperty
         return $getPropertyResult
     }
 }
-#EndRegion './Public/Get-DscProperty.ps1' 173
-#Region './Public/Get-EnvironmentVariable.ps1' -1
+#EndRegion './Public/Get-DscProperty.ps1' 171
+#Region './Public/Get-EnvironmentVariable.ps1' 0
 
 <#
     .SYNOPSIS
@@ -2314,16 +2309,12 @@ function Get-DscProperty
 
     .DESCRIPTION
         Returns the value from an environment variable from a specified target.
-        This command returns `$null` if the environment variable does not exist.
 
     .PARAMETER Name
         Specifies the environment variable name.
 
     .PARAMETER FromTarget
         Specifies the target to return the value from. Defaults to 'Session'.
-
-    .OUTPUTS
-        System.String
 
     .EXAMPLE
         Get-EnvironmentVariable -Name 'PSModulePath'
@@ -2375,26 +2366,24 @@ function Get-EnvironmentVariable
 
     return $value
 }
-#EndRegion './Public/Get-EnvironmentVariable.ps1' 68
-#Region './Public/Get-LocalizedData.ps1' -1
+#EndRegion './Public/Get-EnvironmentVariable.ps1' 65
+#Region './Public/Get-LocalizedData.ps1' 0
 
 <#
     .SYNOPSIS
         Gets language-specific data into scripts and functions based on the UI culture
-        that is specified or that is selected for the operating system.
+        that is selected for the operating system.
+        Similar to Import-LocalizedData, with extra parameter 'DefaultUICulture'.
 
     .DESCRIPTION
-        The Get-LocalizedData command dynamically retrieves strings from a subdirectory
+        The Get-LocalizedData cmdlet dynamically retrieves strings from a subdirectory
         whose name matches the UI language set for the current user of the operating system.
         It is designed to enable scripts to display user messages in the UI language selected
         by the current user.
 
-        Optionally the `Get-LocalizedData` saves the hash table in the variable
-        that is specified by the value of the `BindingVariable` parameter.
-
         Get-LocalizedData imports data from .psd1 files in language-specific subdirectories
         of the script directory and saves them in a local variable that is specified in the
-        command. The command selects the subdirectory and file based on the value of the
+        command. The cmdlet selects the subdirectory and file based on the value of the
         $PSUICulture automatic variable. When you use the local variable in the script to
         display a user message, the message appears in the user's UI language.
 
@@ -2402,37 +2391,11 @@ function Get-EnvironmentVariable
         path, and file name, to add supported commands, and to suppress the error message that
         appears if the .psd1 files are not found.
 
-        The G-LocalizedData command supports the script internationalization
+        The G-LocalizedData cmdlet supports the script internationalization
         initiative that was introduced in Windows PowerShell 2.0. This initiative
         aims to better serve users worldwide by making it easy for scripts to display
         user messages in the UI language of the current user. For more information
         about this and about the format of the .psd1 files, see about_Script_Internationalization.
-
-        ```mermaid
-        graph LR
-
-        Argument{Parameter set?} -->|"Only UICulture
-        (DefaultUICulture = en-US)"| UseUIC
-        Argument -->|"Only DefaultUICulture"| GetUIC[[Get OS Culture]]
-        GetUIC --> LCID127{"Is LCID = 127?<br>(in variant culture)"}
-        Argument -->|"Both UICulture and
-        DefaultUICulture"| UseUIC
-        UseUIC[Use UICulture] --> LCID127
-        LCID127 -->|"No"| SetUIC[[Set UICulture]]
-        LCID127 -->|"Yes"| UseDC[Use default culture]
-        UseDC --> SetUIC
-        SetUIC --> SearchFile[[Find UICulture<br>localization file]]
-        SearchFile --> FileExist
-        FileExist{localization<br>file exist?} -->|"No"| ParentCulture{Parent culture<br>exist?}
-        ParentCulture -->|"Yes"| UseParentC[Use parent culture]
-        UseParentC --> SetUIC
-        ParentCulture -->|"No"| EvalDefaultC{Evaluate<br>default>br>culture?}
-        EvalDefaultC -->|"Yes"| UseDC
-        EvalDefaultC -->|"No"| EvalStillLCID127{Still invariant?}
-        FileExist -->|"Yes"| EvalStillLCID127
-        EvalStillLCID127 -->|"Yes, Use Get-LocalizedDataForInvariantCulture"| GetFile[[Get localization strings]]
-        EvalStillLCID127 -->|"No, Use Import-LocalizedData"| GetFile
-        ```
 
     .PARAMETER BindingVariable
         Specifies the variable into which the text strings are imported. Enter a variable
@@ -2450,10 +2413,6 @@ function Get-EnvironmentVariable
         imported data will replace the default text strings. If you are not specifying
         default text strings, you can select any variable name.
 
-        If the BindingVariable parameter is not specified, Import-LocalizedData returns
-        a hashtable of the text strings. The hash table is passed down the pipeline or
-        displayed at the command line.
-
     .PARAMETER UICulture
         Specifies an alternate UI culture. The default is the value of the $PsUICulture
         automatic variable. Enter a UI culture in <language>-<region> format, such as
@@ -2463,7 +2422,7 @@ function Get-EnvironmentVariable
         (within the base directory) from which Import-LocalizedData gets the .psd1 file
         for the script.
 
-        The command searches for a subdirectory with the same name as the value of the
+        The cmdlet searches for a subdirectory with the same name as the value of the
         UICulture parameter or the $PsUICulture automatic variable, such as de-DE or
         ar-SA. If it cannot find the directory, or the directory does not contain a .psd1
         file for the script, it searches for a subdirectory with the name of the language
@@ -2542,48 +2501,12 @@ function Get-EnvironmentVariable
 
         For more information, see about_Script_Internationalization.
 
-        This command should preferably be used at the top of each resource PowerShell
-        module script file (.psm1).
-
-        It will automatically look for a file in the folder for the current UI
-        culture, or default to the UI culture folder 'en-US'.
-
-        The localized strings file can be named either `<ScriptFileName>.psd1`,
-        e.g. `DSC_MyResource.psd1`, or suffixed with `strings`, e.g.
-        `DSC_MyResource.strings.psd1`.
-
-        Read more about localization in the section [Localization](https://dsccommunity.org/styleguidelines/localization/)
-        in the DSC Community style guideline.
-
-    .OUTPUTS
-        System.Collections.Hashtable
-
     .EXAMPLE
-        $script:localizedData = Get-LocalizedData
+        $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 
-        Imports the localized strings for the current OS UI culture. If the localized
-        folder does not exist then the localized strings for the default UI culture
-        'en-US' is returned.
-
-    .EXAMPLE
-        $script:localizedData = Get-LocalizedData -DefaultUICulture 'de-DE'
-
-        Imports the localized strings for the current OS UI culture. If the localized
-        folder does not exist then the localized strings for the default UI culture
-        'de-DE' is returned.
-
-    .EXAMPLE
-        $script:localizedData = Get-LocalizedData -UICulture 'de-DE'
-
-        Imports the localized strings for UI culture 'de-DE'. If the localized folder
-        does not exist then the localized strings for the default UI culture 'en-US'
-        is returned.
-
-        $script:localizedData = Get-LocalizedData -UICulture 'de-DE' -DefaultUICulture 'en-GB'
-
-        Imports the localized strings for UI culture 'de-DE'. If the localized folder
-        does not exist then the localized strings for the default UI culture
-        'en-GB' is returned.
+        This is an example that can be used in DSC resources to import the
+        localized strings and if the current UI culture localized folder does
+        not exist the UI culture 'en-US' is returned.
 #>
 function Get-LocalizedData
 {
@@ -2596,7 +2519,7 @@ function Get-LocalizedData
         [System.String]
         $BindingVariable,
 
-        [Parameter(Position = 1)]
+        [Parameter(Position = 1, ParameterSetName = 'TargetedUICulture')]
         [System.String]
         $UICulture,
 
@@ -2612,238 +2535,237 @@ function Get-LocalizedData
         [System.String[]]
         $SupportedCommand,
 
-        [Parameter(Position = 2)]
-        [ValidateNotNullOrEmpty()]
+        [Parameter(Position = 1, ParameterSetName = 'DefaultUICulture')]
         [System.String]
         $DefaultUICulture = 'en-US'
     )
 
-    if ($PSBoundParameters.ContainsKey('FileName'))
+    begin
     {
-        Write-Debug -Message ('Looking for provided file with base name: ''{0}''.' -f $FileName)
-    }
-    else
-    {
-        if ($myInvocation.ScriptName)
+        <#
+            Because Proxy Command changes the Invocation origin, we need to be explicit
+            when handing the pipeline back to original command.
+        #>
+        if ($PSBoundParameters.ContainsKey('FileName'))
         {
-            $file = [System.IO.FileInfo] $myInvocation.ScriptName
+            Write-Debug -Message ('Looking for provided file with base name: ''{0}''.' -f $FileName)
         }
         else
         {
-            $file = [System.IO.FileInfo] $myInvocation.MyCommand.Module.Path
+            if ($myInvocation.ScriptName)
+            {
+                $file = [System.IO.FileInfo] $myInvocation.ScriptName
+            }
+            else
+            {
+                $file = [System.IO.FileInfo] $myInvocation.MyCommand.Module.Path
+            }
+
+            $FileName = $file.BaseName
+
+            $PSBoundParameters.Add('FileName', $file.Name)
+            Write-Debug -Message ('Looking for resolved file with base name: ''{0}''.' -f $FileName)
         }
 
-        $FileName = $file.BaseName
+        if ($PSBoundParameters.ContainsKey('BaseDirectory'))
+        {
+            $callingScriptRoot = $BaseDirectory
+        }
+        else
+        {
+            $callingScriptRoot = $MyInvocation.PSScriptRoot
+            $PSBoundParameters.Add('BaseDirectory', $callingScriptRoot)
+        }
 
-        $PSBoundParameters.Add('FileName', $file.Name)
+        # If we're not looking for a specific UICulture, but looking for current culture, one of its parent, or the default.
+        if (-not $PSBoundParameters.ContainsKey('UICulture') -and $PSBoundParameters.ContainsKey('DefaultUICulture'))
+        {
+            <#
+                We don't want the resolution to eventually return the ModuleManifest
+                so we run the same GetFilePath() logic than here:
+                https://github.com/PowerShell/PowerShell/blob/master/src/Microsoft.PowerShell.Commands.Utility/commands/utility/Import-LocalizedData.cs#L302-L333
+                and if we see it will return the wrong thing, set the UICulture to DefaultUI culture, and return the logic to Import-LocalizedData.
 
-        Write-Debug -Message ('Looking for resolved file with base name: ''{0}''.' -f $FileName)
-    }
+                If the LCID is 127 (invariant) then use default UI culture anyway.
+                If we can't create the CultureInfo object, it's probably because the Globalization-invariant mode is enabled for the DotNet runtime (breaking change in .Net)
+                See more information in issue https://github.com/dsccommunity/DscResource.Common/issues/11.
+                https://docs.microsoft.com/en-us/dotnet/core/compatibility/globalization/6.0/culture-creation-invariant-mode
+            #>
 
-    if ($PSBoundParameters.ContainsKey('BaseDirectory'))
-    {
-        $callingScriptRoot = $BaseDirectory
-    }
-    else
-    {
-        $callingScriptRoot = $MyInvocation.PSScriptRoot
+            $currentCulture = Get-UICulture
+            $evaluateDefaultCulture = $true
 
-        $PSBoundParameters.Add('BaseDirectory', $callingScriptRoot)
-    }
+            if ($currentCulture.LCID -eq 127)
+            {
+                try
+                {
+                    # Current culture is invariant, let's directly evaluate the DefaultUICulture
+                    $currentCulture = New-Object -TypeName 'System.Globalization.CultureInfo' -ArgumentList @($DefaultUICulture)
+                    # No need to evaluate the DefaultUICulture later, as we'll start with this (in the while loop below)
+                    $evaluateDefaultCulture = $false
+                }
+                catch
+                {
+                    Write-Debug -Message 'The Globalization-Invariant mode is enabled, only the Invariant Culture is allowed.'
+                    # The code will now skip to the InvokeCommand part and execute the Get-LocalizedDataForInvariantCulture
+                }
 
-    # If UICulture wasn't specified use the OS configured one, otherwise use the one specified.
-    if (-not $PSBoundParameters.ContainsKey('UICulture'))
-    {
-        $currentCulture = Get-UICulture
+                $PSBoundParameters['UICulture'] = $DefaultUICulture
+            }
 
-        Write-Debug -Message ("Using OS configured culture:`n{0}" -f ($currentCulture | Out-String))
+            [string] $languageFile = ''
+            [string[]] $localizedFileNamesToTry = @(
+                ('{0}.psd1' -f $FileName)
+                ('{0}.strings.psd1' -f $FileName)
+            )
 
-        $PSBoundParameters['UICulture'] = $currentCulture.Name
-    }
-    else
-    {
-        $currentCulture = New-Object -TypeName 'System.Globalization.CultureInfo' -ArgumentList @($UICulture)
+            while (-not [string]::IsNullOrEmpty($currentCulture.Name) -and [String]::IsNullOrEmpty($languageFile))
+            {
+                Write-Debug -Message ('Looking for Localized data file using the current culture ''{0}''.' -f $currentCulture.Name)
+                foreach ($localizedFileName in $localizedFileNamesToTry)
+                {
+                    $filePath = [System.IO.Path]::Combine($callingScriptRoot, $CurrentCulture.Name, $localizedFileName)
+                    if (Test-Path -Path $filePath)
+                    {
+                        Write-Debug -Message "Found '$filePath'."
+                        $languageFile = $filePath
+                        # Set the filename to the file we found.
+                        $PSBoundParameters['FileName'] = $localizedFileName
+                        # Exit loop if as we found the first filename.
+                        break
+                    }
+                    else
+                    {
+                        Write-Debug -Message "File '$filePath' not found."
+                    }
+                }
 
-        Write-Debug -Message ("Using specified culture:`n{0}" -f ($currentCulture | Out-String))
-    }
+                if ([String]::IsNullOrEmpty($languageFile))
+                {
+                    <#
+                        Evaluate the parent culture if there is a valid one (not Invariant).
 
-    <#
-        If the LCID is 127 (invariant) then use default UI culture anyway.
-        If we can't create the CultureInfo object, it's probably because the
-        Globalization-invariant mode is enabled for the DotNet runtime (breaking change in .Net)
-        See more information in issue https://github.com/dsccommunity/DscResource.Common/issues/11.
-        https://docs.microsoft.com/en-us/dotnet/core/compatibility/globalization/6.0/culture-creation-invariant-mode
-    #>
+                        If the parent culture is LCID 127 then move to the default culture.
+                        See more information in issue https://github.com/dsccommunity/DscResource.Common/issues/11.
+                    #>
+                    if ($currentCulture.Parent -and [string]$currentCulture.Parent.Name)
+                    {
+                        $currentCulture = $currentCulture.Parent
+                    }
+                    else
+                    {
+                        if ($evaluateDefaultCulture)
+                        {
+                            $evaluateDefaultCulture = $false
 
-    $evaluateDefaultCulture = $true
+                            <#
+                                Could not find localized strings file for the the operating
+                                system UI culture. Evaluating the default UI culture (which
+                                defaults to 'en-US' if not specifically set).
+                            #>
+                            try
+                            {
+                                $currentCulture = New-Object -TypeName 'System.Globalization.CultureInfo' -ArgumentList @($DefaultUICulture)
+                            }
+                            catch
+                            {
+                                Write-Debug -Message ('Unable to create the Default UI Culture [CultureInfo] object, most likely due to invariant mode being enabled.')
+                                $currentCulture = Get-UICulture
+                                # We already tried everything we could, exit the while loop and hand over to Import-LocalizedData or Get-LocalizedDataForInvariantCultureMode
+                                break
+                            }
 
-    if ($currentCulture.LCID -eq 127) # cSpell: ignore LCID
-    {
+                            $PSBoundParameters['UICulture'] = $DefaultUICulture
+                        }
+                        else
+                        {
+                            <#
+                                Already evaluated everything we could, exit and let
+                                Import-LocalizedData throw an exception.
+                            #>
+                            break
+                        }
+                    }
+                }
+            }
+
+            <#
+                Removes the parameter DefaultUICulture so that isn't used when
+                calling Import-LocalizedData.
+            #>
+            $null = $PSBoundParameters.Remove('DefaultUICulture')
+        }
+
         try
         {
-            # Current culture is invariant, let's directly evaluate the DefaultUICulture
-            $currentCulture = New-Object -TypeName 'System.Globalization.CultureInfo' -ArgumentList @($DefaultUICulture)
+            $outBuffer = $null
 
-            Write-Debug -Message ("Invariant culture. Using default culture instead:`n{0}" -f ($currentCulture | Out-String))
+            if ($PSBoundParameters.TryGetValue('OutBuffer', [ref] $outBuffer))
+            {
+                $PSBoundParameters['OutBuffer'] = 1
+            }
 
-            # No need to evaluate the DefaultUICulture later, as we'll start with this (in the while loop below)
-            $evaluateDefaultCulture = $false
+            if ($currentCulture.LCID -eq 127)
+            {
+                # Culture is invariant, working around issue with Import-LocalizedData when pwsh configured as invariant
+                $wrappedCmd = $ExecutionContext.InvokeCommand.GetCommand('Get-LocalizedDataForInvariantCulture', [System.Management.Automation.CommandTypes]::Function)
+                $PSBoundParameters.Keys.ForEach({
+                    if ($_ -notin $wrappedCmd.Parameters.Keys)
+                    {
+                        $PSBoundParameters.Remove($_)
+                    }
+                })
+
+                $scriptCmd = { & $wrappedCmd @PSBoundParameters }
+            }
+            else
+            {
+                <# Action when all if and elseif conditions are false #>
+                $wrappedCmd = $ExecutionContext.InvokeCommand.GetCommand('Microsoft.PowerShell.Utility\Import-LocalizedData', [System.Management.Automation.CommandTypes]::Cmdlet)
+                $scriptCmd = { & $wrappedCmd @PSBoundParameters }
+            }
+
+            $steppablePipeline = $scriptCmd.GetSteppablePipeline($myInvocation.CommandOrigin)
+            $steppablePipeline.Begin($PSCmdlet)
         }
         catch
         {
-            # The code will now skip to the InvokeCommand part and execute the Get-LocalizedDataForInvariantCulture
-            # function instead of Import-LocalizedData.
-
-            Write-Debug -Message 'The Globalization-Invariant mode is enabled, only the Invariant Culture is allowed.'
-        }
-
-        Write-Debug -Message ('Setting parameter UICulture to ''{0}''.' -f $DefaultUICulture)
-
-        $PSBoundParameters['UICulture'] = $DefaultUICulture
-    }
-
-    [System.String] $languageFile = ''
-
-    [System.String[]] $localizedFileNamesToTry = @(
-        ('{0}.psd1' -f $FileName)
-        ('{0}.strings.psd1' -f $FileName)
-    )
-
-    while (-not [System.String]::IsNullOrEmpty($currentCulture.Name) -and [System.String]::IsNullOrEmpty($languageFile))
-    {
-        Write-Debug -Message ('Looking for Localized data file using the current culture ''{0}''.' -f $currentCulture.Name)
-
-        foreach ($localizedFileName in $localizedFileNamesToTry)
-        {
-            $filePath = [System.IO.Path]::Combine($callingScriptRoot, $CurrentCulture.Name, $localizedFileName)
-
-            if (Test-Path -Path $filePath)
-            {
-                Write-Debug -Message "Found '$filePath'."
-
-                $languageFile = $filePath
-
-                # Set the filename to the file we found.
-                $PSBoundParameters['FileName'] = $localizedFileName
-
-                # Exit loop if as we found the first filename.
-                break
-            }
-            else
-            {
-                Write-Debug -Message "File '$filePath' not found."
-            }
-        }
-
-        # If the file wasn't found one, try parent culture or the default culture.
-        if ([System.String]::IsNullOrEmpty($languageFile))
-        {
-            # Evaluate the parent culture if there is a valid one (not invariant culture).
-            if ($currentCulture.Parent -and [System.String] $currentCulture.Parent.Name)
-            {
-                $currentCulture = $currentCulture.Parent
-
-                Write-Debug -Message ('Setting parameter UICulture to ''{0}''.' -f $currentCulture.Name)
-
-                $PSBoundParameters['UICulture'] = $currentCulture.Name
-
-                Write-Debug -Message ("Did not find matching file for current culture, testing parent culture:`n{0}" -f ($currentCulture | Out-String))
-            }
-            else
-            {
-                # If we haven't evaluated the default culture yet, do it now.
-                if ($evaluateDefaultCulture)
-                {
-                    $evaluateDefaultCulture = $false
-
-                    <#
-                        Evaluating the default UI culture (which defaults to 'en-US').
-                        If the default UI culture cannot be resolved, we'll revert
-                        to the current culture because then most likely the invariant
-                        mode is enabled for the DotNet runtime.
-                    #>
-                    try
-                    {
-                        $currentCulture = New-Object -TypeName 'System.Globalization.CultureInfo' -ArgumentList @($DefaultUICulture)
-
-                        Write-Debug -Message ("Did not find matching file for current or parent culture, testing default culture:`n{0}" -f ($currentCulture | Out-String))
-                    }
-                    catch
-                    {
-                        # Set the OS culture to revert to invariant culture (LCID 127).
-                        $currentCulture = Get-UICulture
-
-                        Write-Debug -Message ("Unable to create the [CultureInfo] object for default culture '{0}', most likely due to invariant mode being enabled. Reverting to current (invariant) culture:`n{1}" -f $DefaultUICulture, ($currentCulture | Out-String))
-
-                        <#
-                            Already tried every possible way. Exit the while loop and hand over to
-                            Import-LocalizedData or Get-LocalizedDataForInvariantCultureMode
-                        #>
-                        break
-                    }
-
-                    Write-Debug -Message ('Setting parameter UICulture to ''{0}''.' -f $DefaultUICulture)
-
-                    $PSBoundParameters['UICulture'] = $DefaultUICulture
-                }
-                else
-                {
-                    Write-Debug -Message 'Already evaluated everything we could, continue and let the command called next throw an exception.'
-
-                    break
-                }
-            }
+            throw
         }
     }
 
-    if ($currentCulture.LCID -eq 127)
+    process
     {
-        $getLocalizedDataForInvariantCultureParameters = Get-Command -Name 'Get-LocalizedDataForInvariantCulture' -ErrorAction 'Stop'
-
-        $PSBoundParameters.Keys.ForEach({
-            if ($_ -notin $getLocalizedDataForInvariantCultureParameters.Parameters.Keys)
-            {
-                $PSBoundParameters.Remove($_)
-            }
-        })
-
-        Write-Debug ('Because culture is invariant, calling Get-LocalizedDataForInvariantCulture using parameters: {0}' -f ($PSBoundParameters | Out-String))
-
-        # This works around issue with Import-LocalizedData when pwsh configured as invariant.
-        $localizedData = Get-LocalizedDataForInvariantCulture @PSBoundParameters
-    }
-    else
-    {
-        Write-Debug ('Calling Microsoft.PowerShell.Utility\Import-LocalizedData using parameters: {0}' -f ($PSBoundParameters | Out-String))
-
-        # Removes the parameter DefaultUICulture so that isn't used when calling Import-LocalizedData.
-        $PSBoundParameters.Remove('DefaultUICulture')
-
-        $localizedData = Microsoft.PowerShell.Utility\Import-LocalizedData @PSBoundParameters
-    }
-
-    if ($PSBoundParameters.ContainsKey('BindingVariable'))
-    {
-        # The command we called returned the localized data in the binding variable.
-        $boundLocalizedData = Get-Variable -Name $BindingVariable -ValueOnly -ErrorAction 'Ignore'
-
-        if ($boundLocalizedData)
+        try
         {
-            Write-Debug -Message ('Binding variable ''{0}'' to localized data.' -f $BindingVariable)
+            $steppablePipeline.Process($_)
+        }
+        catch
+        {
+            throw
+        }
+    }
 
+    end
+    {
+        if ($BindingVariable -and ($valueToBind = Get-Variable -Name $BindingVariable -ValueOnly -ErrorAction 'Ignore'))
+        {
             # Bringing the variable to the parent scope
-            Set-Variable -Scope 1 -Name $BindingVariable -Force -ErrorAction 'SilentlyContinue' -Value $boundLocalizedData
+            Set-Variable -Scope 1 -Name $BindingVariable -Force -ErrorAction 'SilentlyContinue' -Value $valueToBind
         }
-    }
-    else
-    {
-        Write-Debug -Message 'Returning localized data.'
 
-        return $localizedData
+        try
+        {
+            $steppablePipeline.End()
+        }
+        catch
+        {
+            throw
+        }
     }
 }
-#EndRegion './Public/Get-LocalizedData.ps1' 465
-#Region './Public/Get-LocalizedDataForInvariantCulture.ps1' -1
+#EndRegion './Public/Get-LocalizedData.ps1' 397
+#Region './Public/Get-LocalizedDataForInvariantCulture.ps1' 0
 
 <#
     .SYNOPSIS
@@ -3073,8 +2995,8 @@ function Get-LocalizedDataForInvariantCulture
         $constrainedRunspace.Dispose()
     }
 }
-#EndRegion './Public/Get-LocalizedDataForInvariantCulture.ps1' 229
-#Region './Public/Get-PSModulePath.ps1' -1
+#EndRegion './Public/Get-LocalizedDataForInvariantCulture.ps1' 230
+#Region './Public/Get-PSModulePath.ps1' 0
 
 <#
     .SYNOPSIS
@@ -3083,14 +3005,10 @@ function Get-LocalizedDataForInvariantCulture
     .DESCRIPTION
         Returns the environment variable PSModulePath from the specified target.
         If more than one target is provided the return will contain all the
-        concatenation of all unique paths from the targets. If there are no paths
-        to return the command will return an empty string.
+        concatenation of all unique paths from the targets.
 
     .PARAMETER FromTarget
         Specifies the target to get the PSModulePath from.
-
-    .OUTPUTS
-        System.String
 
     .EXAMPLE
         Get-PSModulePath -FromTarget 'Session'
@@ -3155,9 +3073,8 @@ function Get-PSModulePath
 
     return $modulePath
 }
-#EndRegion './Public/Get-PSModulePath.ps1' 80
-#Region './Public/Get-TemporaryFolder.ps1' -1
-
+#EndRegion './Public/Get-PSModulePath.ps1' 77
+#Region './Public/Get-TemporaryFolder.ps1' 0
 <#
     .SYNOPSIS
         Returns the path of the current user's temporary folder.
@@ -3165,19 +3082,10 @@ function Get-PSModulePath
     .DESCRIPTION
         Returns the path of the current user's temporary folder.
 
-    .OUTPUTS
-        System.String
-
     .NOTES
         This is the same as doing the following
         - Windows: $env:TEMP
         - macOS: $env:TMPDIR
-        - Linux: /tmp/
-
-        Examples of what the command returns:
-
-        - Windows: C:\Users\username\AppData\Local\Temp\
-        - macOS: /var/folders/6x/thq2xce46bc84lr66fih2p5h0000gn/T/
         - Linux: /tmp/
 
     .EXAMPLE
@@ -3193,15 +3101,14 @@ function Get-TemporaryFolder
 
     return [IO.Path]::GetTempPath()
 }
-#EndRegion './Public/Get-TemporaryFolder.ps1' 36
-#Region './Public/New-ArgumentException.ps1' -1
-
+#EndRegion './Public/Get-TemporaryFolder.ps1' 27
+#Region './Public/New-InvalidArgumentException.ps1' 0
 <#
     .SYNOPSIS
-        Creates and throws or returns an invalid argument exception.
+        Creates and throws an invalid argument exception.
 
     .DESCRIPTION
-        Creates and throws or returns an invalid argument exception.
+        Creates and throws an invalid argument exception.
 
     .PARAMETER Message
         The message explaining why this error is being thrown.
@@ -3209,32 +3116,16 @@ function Get-TemporaryFolder
     .PARAMETER ArgumentName
         The name of the invalid argument that is causing this error to be thrown.
 
-    .PARAMETER PassThru
-        If specified, returns the error record instead of throwing it.
-
-    .OUTPUTS
-        None
-        System.ArgumentException
-
     .EXAMPLE
-        New-ArgumentException -ArgumentName 'Action' -Message 'My error message'
+        $errorMessage = $script:localizedData.ActionCannotBeUsedInThisContextMessage `
+                -f $Action, $Parameter
 
-        Creates and throws an invalid argument exception for (parameter) 'Action'
-        with the message 'My error message'.
-
-    .EXAMPLE
-        $errorRecord = New-ArgumentException -ArgumentName 'Action' -Message 'My error message' -PassThru
-
-        Creates an invalid argument exception for (parameter) 'Action'
-        with the message 'My error message' and returns the exception.
+        New-InvalidArgumentException -ArgumentName 'Action' -Message $errorMessage
 #>
-
-function New-ArgumentException
+function New-InvalidArgumentException
 {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [CmdletBinding()]
-    [Alias('New-InvalidArgumentException')]
-    [OutputType([System.ArgumentException])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -3245,171 +3136,77 @@ function New-ArgumentException
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [System.String]
-        $ArgumentName,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru
+        $ArgumentName
     )
 
-    $argumentException = New-Object -TypeName 'System.ArgumentException' `
+    $argumentException = New-Object -TypeName 'ArgumentException' `
         -ArgumentList @($Message, $ArgumentName)
 
-    $errorRecord = New-ErrorRecord -Exception $argumentException -ErrorId $ArgumentName -ErrorCategory 'InvalidArgument'
+    $newObjectParameters = @{
+        TypeName     = 'System.Management.Automation.ErrorRecord'
+        ArgumentList = @($argumentException, $ArgumentName, 'InvalidArgument', $null)
+    }
 
-    if ($PassThru.IsPresent)
-    {
-        return $argumentException
-    }
-    else
-    {
-        throw $errorRecord
-    }
+    $errorRecord = New-Object @newObjectParameters
+
+    throw $errorRecord
 }
-#EndRegion './Public/New-ArgumentException.ps1' 71
-#Region './Public/New-ErrorRecord.ps1' -1
-
+#EndRegion './Public/New-InvalidArgumentException.ps1' 49
+#Region './Public/New-InvalidDataException.ps1' 0
 <#
     .SYNOPSIS
-        Creates a new ErrorRecord.
+        Creates and throws an invalid data exception.
 
     .DESCRIPTION
-        The New-ErrorRecord function creates a new ErrorRecord with the specified parameters.
-
-    .PARAMETER ErrorRecord
-        Specifies an existing ErrorRecord.
-
-    .PARAMETER Exception
-        Specifies the exception that caused the error.
-
-        If an error record is passed to parameter ErrorRecord and if the wrapped exception
-        in the error record contains a `[System.Management.Automation.ParentContainsErrorRecordException]`,
-        the new ErrorRecord should have this exception as its Exception instead.
-
-    .PARAMETER ErrorCategory
-        Specifies the category of the error.
-
-    .PARAMETER TargetObject
-        Specifies the object that was being manipulated when the error occurred.
+        Creates and throws an invalid data exception.
 
     .PARAMETER ErrorId
-        Specifies a string that uniquely identifies the error.
+        The error Id to assign to the exception.
+
+    .PARAMETER ErrorMessage
+        The error message to assign to the exception.
 
     .EXAMPLE
-        $ex = New-Exception -Message 'An error occurred.'
-        $errorRecord = New-ErrorRecord -Exception $ex -ErrorCategory 'InvalidOperation'
+        if ( -not $resultOfEvaluation )
+        {
+            $errorMessage = $script:localizedData.InvalidData -f $Action
 
-        This example creates a new ErrorRecord with the specified parameters. Passing
-        'InvalidOperation' which is one available value of the enum `[System.Management.Automation.ErrorCategory]`.
-
-    .EXAMPLE
-        $ex = New-Exception -Message 'An error occurred.'
-        $errorRecord = New-ErrorRecord -Exception $ex -ErrorCategory 'InvalidOperation' -TargetObject $myObject
-
-        This example creates a new ErrorRecord with the specified parameters. TargetObject
-        is set to the object that was being manipulated when the error occurred.
-
-    .EXAMPLE
-        $ex = New-Exception -Message 'An error occurred.'
-        $errorRecord = New-ErrorRecord -Exception $ex -ErrorCategory 'InvalidOperation' -ErrorId 'MyErrorId'
-
-        This example creates a new ErrorRecord with the specified parameters. Passing
-        ErrorId that will be set as the FullyQualifiedErrorId in the error record.
-
-    .EXAMPLE
-        $existingErrorRecord = [System.Management.Automation.ErrorRecord]::new(
-            [System.Management.Automation.ParentContainsErrorRecordException]::new('Existing error'),
-            'ExistingErrorId',
-            [System.Management.Automation.ErrorCategory]::InvalidOperation,
-            $null
-        )
-        $newException = [System.Exception]::new('New error')
-        $newErrorRecord = New-ErrorRecord -ErrorRecord $existingErrorRecord -Exception $newException
-        $newErrorRecord.Exception.Message
-
-        This example first creates an emulated ErrorRecord that contain a `ParentContainsErrorRecordException`
-        which will be replaced by the new exception passed to New-ErrorRecord. The
-        result of `$newErrorRecord.Exception.Message` will be 'New error'.
-
-    .INPUTS
-        System.Management.Automation.ErrorRecord, System.Exception, System.Management.Automation.ErrorCategory, System.Object, System.String
-
-    .OUTPUTS
-        System.Management.Automation.ErrorRecord
-
-    .NOTES
-        The function supports two parameter sets: 'ErrorRecord' and 'Exception'.
-        If the 'ErrorRecord' parameter set is used, the function creates a new ErrorRecord based on an existing one and an exception.
-        If the 'Exception' parameter set is used, the function creates a new ErrorRecord based on an exception, an error category, a target object, and an error ID.
+            New-InvalidDataException -ErrorId 'InvalidDataError' -ErrorMessage $errorMessage
+        }
 #>
-function New-ErrorRecord
+function New-InvalidDataException
 {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'The command does not change state.')]
-    [CmdletBinding(DefaultParameterSetName = 'Exception')]
-    [OutputType([System.Management.Automation.ErrorRecord])]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
+    [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true, ParameterSetName = 'ErrorRecord')]
-        [System.Management.Automation.ErrorRecord]
-        $ErrorRecord,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'ErrorRecord')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Exception')]
-        [System.Exception]
-        $Exception,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'Exception')]
-        [System.Management.Automation.ErrorCategory]
-        $ErrorCategory,
-
-        [Parameter(ParameterSetName = 'Exception')]
-        [System.Object]
-        $TargetObject = $null,
-
-        [Parameter(ParameterSetName = 'Exception')]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $ErrorId = $null
+        $ErrorId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ErrorMessage
     )
 
-    switch ($PSCmdlet.ParameterSetName)
-    {
-        'ErrorRecord'
-        {
-            $errorRecord = New-Object -TypeName 'System.Management.Automation.ErrorRecord' -ArgumentList @(
-                $ErrorRecord,
-                $Exception
-            )
+    $errorCategory = [System.Management.Automation.ErrorCategory]::InvalidData
+    $exception = New-Object `
+        -TypeName System.InvalidOperationException `
+        -ArgumentList $ErrorMessage
+    $errorRecord = New-Object `
+        -TypeName System.Management.Automation.ErrorRecord `
+        -ArgumentList $exception, $ErrorId, $errorCategory, $null
 
-            break
-        }
-
-        'Exception'
-        {
-            $errorRecord = New-Object -TypeName 'System.Management.Automation.ErrorRecord' -ArgumentList @(
-                $Exception,
-                $ErrorId,
-                $ErrorCategory,
-                $TargetObject
-            )
-
-            break
-        }
-    }
-
-    return $errorRecord
+    throw $errorRecord
 }
-#EndRegion './Public/New-ErrorRecord.ps1' 130
-#Region './Public/New-Exception.ps1' -1
-
+#EndRegion './Public/New-InvalidDataException.ps1' 47
+#Region './Public/New-InvalidOperationException.ps1' 0
 <#
     .SYNOPSIS
-        Creates and returns an exception.
+        Creates and throws an invalid operation exception.
 
     .DESCRIPTION
-        Creates an exception that will be returned.
-
-    .OUTPUTS
-        None
+        Creates and throws an invalid operation exception.
 
     .PARAMETER Message
         The message explaining why this error is being thrown.
@@ -3417,33 +3214,21 @@ function New-ErrorRecord
     .PARAMETER ErrorRecord
         The error record containing the exception that is causing this terminating error.
 
-    .OUTPUTS
-        System.Exception
-
-    .EXAMPLE
-        $errorRecord = New-Exception -Message 'An error occurred'
-
-        Creates and returns an exception with the message 'An error occurred'.
-
     .EXAMPLE
         try
         {
-            Get-ChildItem -Path $path -ErrorAction 'Stop'
+            Start-Process @startProcessArguments
         }
         catch
         {
-            $exception = New-Exception -Message 'Could not get files' -ErrorRecord $_
+            $errorMessage = $script:localizedData.InstallationFailedMessage -f $Path, $processId
+            New-InvalidOperationException -Message $errorMessage -ErrorRecord $_
         }
-
-        Returns an exception with the message 'Could not get files' and includes
-        the exception that caused this terminating error.
-
 #>
-function New-Exception
+function New-InvalidOperationException
 {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [CmdletBinding()]
-    [OutputType([System.Exception])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -3459,156 +3244,31 @@ function New-Exception
 
     if ($null -eq $ErrorRecord)
     {
-        $exception = New-Object -TypeName 'System.Exception' `
+        $invalidOperationException = New-Object -TypeName 'InvalidOperationException' `
             -ArgumentList @($Message)
     }
     else
     {
-        $exception = New-Object -TypeName 'System.Exception' `
+        $invalidOperationException = New-Object -TypeName 'InvalidOperationException' `
             -ArgumentList @($Message, $ErrorRecord.Exception)
     }
 
-    return $exception
+    $newObjectParameters = @{
+        TypeName     = 'System.Management.Automation.ErrorRecord'
+        ArgumentList = @(
+            $invalidOperationException.ToString(),
+            'MachineStateIncorrect',
+            'InvalidOperation',
+            $null
+        )
+    }
+
+    $errorRecordToThrow = New-Object @newObjectParameters
+
+    throw $errorRecordToThrow
 }
-#EndRegion './Public/New-Exception.ps1' 70
-#Region './Public/New-InvalidDataException.ps1' -1
-
-<#
-    .SYNOPSIS
-        Creates and throws an invalid data exception.
-
-    .DESCRIPTION
-        Creates and throws an invalid data exception.
-
-    .OUTPUTS
-        None
-
-    .PARAMETER ErrorId
-        The error Id to assign to the exception.
-
-    .PARAMETER Message
-        The error message to assign to the exception.
-
-    .EXAMPLE
-        New-InvalidDataException -ErrorId 'InvalidDataError' -Message 'My error message'
-
-        Creates and throws an invalid data exception with the error id 'InvalidDataError'
-        and with the message 'My error message'.
-#>
-function New-InvalidDataException
-{
-    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ErrorId,
-
-        [Parameter(Mandatory = $true)]
-        [Alias('ErrorMessage')]
-        [System.String]
-        $Message
-    )
-
-    $errorCategory = [System.Management.Automation.ErrorCategory]::InvalidData
-
-    $exception = New-Object `
-        -TypeName 'System.InvalidOperationException' `
-        -ArgumentList $Message
-
-    $errorRecord = New-ErrorRecord -Exception $exception -ErrorId $ErrorId -ErrorCategory $errorCategory
-
-    throw $errorRecord
-}
-#EndRegion './Public/New-InvalidDataException.ps1' 49
-#Region './Public/New-InvalidOperationException.ps1' -1
-
-<#
-    .SYNOPSIS
-        Creates and throws or returns an invalid operation exception.
-
-    .DESCRIPTION
-        Creates and throws or returns an invalid operation exception.
-
-    .OUTPUTS
-        None. If the PassThru parameter is not specified the command throws an error record.
-        System.InvalidOperationException. If the PassThru parameter is specified the command returns an error record.
-
-    .PARAMETER Message
-        The message explaining why this error is being thrown.
-
-    .PARAMETER ErrorRecord
-        The error record containing the exception that is causing this terminating error.
-
-    .PARAMETER PassThru
-        If specified, returns the error record instead of throwing it.
-
-    .EXAMPLE
-        try
-        {
-            Start-Process @startProcessArguments
-        }
-        catch
-        {
-            New-InvalidOperationException -Message 'My error message' -ErrorRecord $_
-        }
-
-        Creates and throws an invalid operation exception with the message 'My error message'
-        and includes the exception that caused this terminating error.
-
-    .EXAMPLE
-        $errorRecord = New-InvalidOperationException -Message 'My error message' -PassThru
-
-        Creates and returns an invalid operation exception with the message 'My error message'.
-    #>
-function New-InvalidOperationException
-{
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
-    [CmdletBinding()]
-    [OutputType([System.InvalidOperationException])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [System.String]
-        $Message,
-
-        [Parameter()]
-        [ValidateNotNull()]
-        [System.Management.Automation.ErrorRecord]
-        $ErrorRecord,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru
-    )
-
-    if ($null -eq $ErrorRecord)
-    {
-        $invalidOperationException = New-Object -TypeName 'System.InvalidOperationException' `
-            -ArgumentList @($Message)
-    }
-    else
-    {
-        $invalidOperationException = New-Object -TypeName 'System.InvalidOperationException' `
-            -ArgumentList @($Message, $ErrorRecord.Exception)
-    }
-
-    $errorRecord = New-ErrorRecord -Exception $invalidOperationException.ToString() -ErrorId 'MachineStateIncorrect' -ErrorCategory 'InvalidOperation'
-
-    if ($PassThru.IsPresent)
-    {
-        return $invalidOperationException
-    }
-    else
-    {
-        throw $errorRecord
-    }
-}
-#EndRegion './Public/New-InvalidOperationException.ps1' 83
-#Region './Public/New-InvalidResultException.ps1' -1
-
+#EndRegion './Public/New-InvalidOperationException.ps1' 67
+#Region './Public/New-InvalidResultException.ps1' 0
 <#
     .SYNOPSIS
         Creates and throws an invalid result exception.
@@ -3621,31 +3281,21 @@ function New-InvalidOperationException
 
     .PARAMETER ErrorRecord
         The error record containing the exception that is causing this terminating error.
-
-    .OUTPUTS
-        None
-
-    .EXAMPLE
-        $numberOfObjects = Get-ChildItem -Path $path
-        if ($numberOfObjects -eq 0)
-        {
-            New-InvalidResultException -Message 'To few files'
-        }
-
-        Creates and throws an invalid result exception with the message 'To few files'
 
     .EXAMPLE
         try
         {
             $numberOfObjects = Get-ChildItem -Path $path
+            if ($numberOfObjects -eq 0)
+            {
+                throw 'To few files.'
+            }
         }
         catch
         {
-            New-InvalidResultException -Message 'Missing files' -ErrorRecord $_
+            $errorMessage = $script:localizedData.TooFewFilesMessage -f $path
+            New-InvalidResultException -Message $errorMessage -ErrorRecord $_
         }
-
-        Creates and throws an invalid result exception with the message 'Missing files'
-        and includes the exception that caused this terminating error.
 #>
 function New-InvalidResultException
 {
@@ -3664,21 +3314,39 @@ function New-InvalidResultException
         $ErrorRecord
     )
 
-    $exception = New-Exception @PSBoundParameters
+    if ($null -eq $ErrorRecord)
+    {
+        $exception = New-Object -TypeName 'System.Exception' `
+            -ArgumentList @($Message)
+    }
+    else
+    {
+        $exception = New-Object -TypeName 'System.Exception' `
+            -ArgumentList @($Message, $ErrorRecord.Exception)
+    }
 
-    $errorRecord = New-ErrorRecord -Exception $exception.ToString() -ErrorId 'MachineStateIncorrect' -ErrorCategory 'InvalidResult'
+    $newObjectParameters = @{
+        TypeName     = 'System.Management.Automation.ErrorRecord'
+        ArgumentList = @(
+            $exception.ToString(),
+            'MachineStateIncorrect',
+            'InvalidResult',
+            $null
+        )
+    }
 
-    throw $errorRecord
+    $errorRecordToThrow = New-Object @newObjectParameters
+
+    throw $errorRecordToThrow
 }
-#EndRegion './Public/New-InvalidResultException.ps1' 62
-#Region './Public/New-NotImplementedException.ps1' -1
-
+#EndRegion './Public/New-InvalidResultException.ps1' 71
+#Region './Public/New-NotImplementedException.ps1' 0
 <#
     .SYNOPSIS
-        Creates and throws or returns an not implemented exception.
+        Creates and throws an not implemented exception.
 
     .DESCRIPTION
-        Creates and throws or returns an not implemented exception.
+        Creates and throws an not implemented exception.
 
     .PARAMETER Message
         The message explaining why this error is being thrown.
@@ -3686,33 +3354,20 @@ function New-InvalidResultException
     .PARAMETER ErrorRecord
         The error record containing the exception that is causing this terminating error.
 
-    .PARAMETER PassThru
-        If specified, returns the error record instead of throwing it.
-
-    .OUTPUTS
-        None
-        System.NotImplementedException
-
     .EXAMPLE
-        if ($notImplementedFeature)
+        if ($runFeature)
         {
-            New-NotImplementedException -Message 'This feature is not implemented yet'
+            $errorMessage = $script:localizedData.FeatureMissing -f $path
+            New-NotImplementedException -Message $errorMessage -ErrorRecord $_
         }
 
-        Creates and throws an not implemented exception with the message 'This feature
-        is not implemented yet'.
-
-    .EXAMPLE
-        $errorRecord = New-NotImplementedException -Message 'This feature is not implemented yet' -PassThru
-
-        Creates and returns an not implemented exception with the message 'This feature
-        is not implemented yet'.
+        Throws an not implemented exception if the variable $runFeature contains
+        a value.
 #>
 function New-NotImplementedException
 {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
     [CmdletBinding()]
-    [OutputType([System.NotImplementedException])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -3723,37 +3378,36 @@ function New-NotImplementedException
         [Parameter()]
         [ValidateNotNull()]
         [System.Management.Automation.ErrorRecord]
-        $ErrorRecord,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru
+        $ErrorRecord
     )
 
     if ($null -eq $ErrorRecord)
     {
-        $notImplementedException = New-Object -TypeName 'System.NotImplementedException' `
+        $invalidOperationException = New-Object -TypeName 'NotImplementedException' `
             -ArgumentList @($Message)
     }
     else
     {
-        $notImplementedException = New-Object -TypeName 'System.NotImplementedException' `
+        $invalidOperationException = New-Object -TypeName 'NotImplementedException' `
             -ArgumentList @($Message, $ErrorRecord.Exception)
     }
 
-    $errorRecord = New-ErrorRecord -Exception $notImplementedException.ToString() -ErrorId 'MachineStateIncorrect' -ErrorCategory 'NotImplemented'
+    $newObjectParameters = @{
+        TypeName     = 'System.Management.Automation.ErrorRecord'
+        ArgumentList = @(
+            $invalidOperationException.ToString(),
+            'MachineStateIncorrect',
+            'NotImplemented',
+            $null
+        )
+    }
 
-    if ($PassThru.IsPresent)
-    {
-        return $notImplementedException
-    }
-    else
-    {
-        throw $errorRecord
-    }
+    $errorRecordToThrow = New-Object @newObjectParameters
+
+    throw $errorRecordToThrow
 }
-#EndRegion './Public/New-NotImplementedException.ps1' 80
-#Region './Public/New-ObjectNotFoundException.ps1' -1
+#EndRegion './Public/New-NotImplementedException.ps1' 66
+#Region './Public/New-ObjectNotFoundException.ps1' 0
 
 <#
     .SYNOPSIS
@@ -3762,17 +3416,11 @@ function New-NotImplementedException
     .DESCRIPTION
         Creates and throws an object not found exception.
 
-    .OUTPUTS
-        None
-
     .PARAMETER Message
         The message explaining why this error is being thrown.
 
     .PARAMETER ErrorRecord
         The error record containing the exception that is causing this terminating error.
-
-    .OUTPUTS
-        None
 
     .EXAMPLE
         try
@@ -3781,11 +3429,9 @@ function New-NotImplementedException
         }
         catch
         {
-            New-ObjectNotFoundException -Message 'Could not get files' -ErrorRecord $_
+            $errorMessage = $script:localizedData.PathNotFoundMessage -f $path
+            New-ObjectNotFoundException -Message $errorMessage -ErrorRecord $_
         }
-
-        Creates and throws an object not found exception with the message 'Could not
-        get files' and includes the exception that caused this terminating error.
 #>
 function New-ObjectNotFoundException
 {
@@ -3804,15 +3450,33 @@ function New-ObjectNotFoundException
         $ErrorRecord
     )
 
-    $exception = New-Exception @PSBoundParameters
+    if ($null -eq $ErrorRecord)
+    {
+        $exception = New-Object -TypeName 'System.Exception' `
+            -ArgumentList @($Message)
+    }
+    else
+    {
+        $exception = New-Object -TypeName 'System.Exception' `
+            -ArgumentList @($Message, $ErrorRecord.Exception)
+    }
 
-    $errorRecord = New-ErrorRecord -Exception $exception.ToString() -ErrorId 'MachineStateIncorrect' -ErrorCategory 'ObjectNotFound'
+    $newObjectParameters = @{
+        TypeName     = 'System.Management.Automation.ErrorRecord'
+        ArgumentList = @(
+            $exception.ToString(),
+            'MachineStateIncorrect',
+            'ObjectNotFound',
+            $null
+        )
+    }
 
-    throw $errorRecord
+    $errorRecordToThrow = New-Object @newObjectParameters
+
+    throw $errorRecordToThrow
 }
-#EndRegion './Public/New-ObjectNotFoundException.ps1' 56
-#Region './Public/Remove-CommonParameter.ps1' -1
-
+#EndRegion './Public/New-ObjectNotFoundException.ps1' 68
+#Region './Public/Remove-CommonParameter.ps1' 0
 <#
     .SYNOPSIS
         Removes common parameters from a hashtable.
@@ -3820,9 +3484,6 @@ function New-ObjectNotFoundException
     .DESCRIPTION
         This function serves the purpose of removing common parameters and option
         common parameters from a parameter hashtable.
-
-    .OUTPUTS
-        System.Collections.Hashtable
 
     .PARAMETER Hashtable
         The parameter hashtable that should be pruned.
@@ -3861,9 +3522,8 @@ function Remove-CommonParameter
 
     return $inputClone
 }
-#EndRegion './Public/Remove-CommonParameter.ps1' 49
-#Region './Public/Set-DscMachineRebootRequired.ps1' -1
-
+#EndRegion './Public/Remove-CommonParameter.ps1' 46
+#Region './Public/Set-DscMachineRebootRequired.ps1' 0
 <#
     .SYNOPSIS
         Set the DSC reboot required status variable.
@@ -3873,13 +3533,10 @@ function Remove-CommonParameter
         This function is used to set the global variable that indicates
         to the LCM that a reboot of the node is required.
 
-    .OUTPUTS
-        None
-
     .EXAMPLE
-        Set-DscMachineRebootRequired
+        PS C:\> Set-DscMachineRebootRequired
 
-        Sets the `$global:DSCMachineStatus` variable to 1.
+        Sets the $global:DSCMachineStatus variable to 1.
 
     .NOTES
         This function is implemented so that individual resource modules
@@ -3904,8 +3561,8 @@ function Set-DscMachineRebootRequired
 
     $global:DSCMachineStatus = 1
 }
-#EndRegion './Public/Set-DscMachineRebootRequired.ps1' 41
-#Region './Public/Set-PSModulePath.ps1' -1
+#EndRegion './Public/Set-DscMachineRebootRequired.ps1' 38
+#Region './Public/Set-PSModulePath.ps1' 0
 
 <#
     .SYNOPSIS
@@ -3913,11 +3570,8 @@ function Set-DscMachineRebootRequired
         wide.
 
     .DESCRIPTION
-        This is a command to set environment variable PSModulePath in current
+        This is a wrapper to set environment variable PSModulePath in current
         session or machine wide.
-
-    .OUTPUTS
-        None
 
     .PARAMETER Path
         A string with all the paths separated by semi-colons.
@@ -3926,32 +3580,11 @@ function Set-DscMachineRebootRequired
         If set the PSModulePath will be changed machine wide. If not set, only
         the current session will be changed.
 
-    .PARAMETER FromTarget
-        The target environment variable to copy the value from.
-
-    .PARAMETER ToTarget
-        The target environment variable to set the value to.
-
-    .PARAMETER PassThru
-        If specified, returns the set value.
-
     .EXAMPLE
         Set-PSModulePath -Path '<Path 1>;<Path 2>'
 
-        Sets the session environment variable `PSModulePath` to the specified path
-        or paths (separated with semi-colons).
-
     .EXAMPLE
         Set-PSModulePath -Path '<Path 1>;<Path 2>' -Machine
-
-        Sets the machine environment variable `PSModulePath` to the specified path
-        or paths (separated with semi-colons).
-
-    .EXAMPLE
-        Set-PSModulePath -FromTarget 'MAchine' -ToTarget 'User'
-
-        Copies the value of the machine environment variable `PSModulePath` to the
-        user environment variable `PSModulePath`.
 #>
 function Set-PSModulePath
 {
@@ -3960,71 +3593,30 @@ function Set-PSModulePath
         '',
         Justification = 'ShouldProcess is not supported in DSC resources.'
     )]
-    [CmdletBinding(DefaultParameterSetName = 'Default')]
-    [OutputType([System.String])]
+    [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true, ParameterSetName = 'Default')]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [System.String]
         $Path,
 
-        [Parameter(ParameterSetName = 'Default')]
-        [System.Management.Automation.SwitchParameter]
-        $Machine,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'TargetParameters')]
-        [ValidateSet('Session', 'User', 'Machine')]
-        [System.String]
-        $FromTarget,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'TargetParameters')]
-        [ValidateSet('Session', 'User', 'Machine')]
-        [System.String]
-        $ToTarget,
-
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $PassThru
+        $Machine
     )
 
-    if ($PSCmdlet.ParameterSetName -eq 'Default')
+    if ($Machine.IsPresent)
     {
-        if ($Machine.IsPresent)
-        {
-            [System.Environment]::SetEnvironmentVariable('PSModulePath', $Path, [System.EnvironmentVariableTarget]::Machine)
-        }
-        else
-        {
-            $env:PSModulePath = $Path
-        }
+        [System.Environment]::SetEnvironmentVariable('PSModulePath', $Path, [System.EnvironmentVariableTarget]::Machine)
     }
-    elseif ($PSCmdlet.ParameterSetName -eq 'TargetParameters')
+    else
     {
-        $Path = Get-EnvironmentVariable -Name 'PSModulePath' -FromTarget $FromTarget
-
-        switch ($ToTarget)
-        {
-            'Session'
-            {
-                [System.Environment]::SetEnvironmentVariable('PSModulePath', $Path)
-            }
-
-            default
-            {
-                [System.Environment]::SetEnvironmentVariable('PSModulePath', $Path, [System.EnvironmentVariableTarget]::$ToTarget)
-            }
-        }
-    }
-
-    if ($PassThru.IsPresent)
-    {
-        return $Path
+        $env:PSModulePath = $Path
     }
 }
-#EndRegion './Public/Set-PSModulePath.ps1' 116
-#Region './Public/Test-AccountRequirePassword.ps1' -1
-
+#EndRegion './Public/Set-PSModulePath.ps1' 53
+#Region './Public/Test-AccountRequirePassword.ps1' 0
 <#
     .SYNOPSIS
         Returns whether the specified account require a password to be provided.
@@ -4040,17 +3632,17 @@ function Set-PSModulePath
     .EXAMPLE
         Test-AccountRequirePassword -Name 'DOMAIN\MyMSA$'
 
-        Returns `$false` as a manged service account does not need a password.
+        Returns $false as a manged service account does not need a password.
 
     .EXAMPLE
         Test-AccountRequirePassword -Name 'DOMAIN\MySqlUser'
 
-        Returns `$true` as a user account need a password.
+        Returns $true as a user account need a password.
 
     .EXAMPLE
         Test-AccountRequirePassword -Name 'NT SERVICE\MSSQL$PAYROLL'
 
-        Returns `$false`as a virtual account does not need a password.
+        Returns $false as a virtual account does not need a password.
 
     .OUTPUTS
         [System.Boolean]
@@ -4099,20 +3691,14 @@ function Test-AccountRequirePassword
     return $requirePassword
 }
 #EndRegion './Public/Test-AccountRequirePassword.ps1' 74
-#Region './Public/Test-DscParameterState.ps1' -1
-
+#Region './Public/Test-DscParameterState.ps1' 0
 <#
     .SYNOPSIS
-        This command is used to test current and desired values for any DSC resource.
+        This method is used to test current and desired values for any DSC resource.
 
     .DESCRIPTION
         This function tests the parameter status of DSC resource parameters against
         the current values present on the system.
-
-        This command was designed to be used in a DSC resource from only _Test_.
-        The design pattern that uses the command `Test-DscParameterState` assumes that
-        LCM is used which always calls _Test_ before _Set_, or that there never
-        is a need to evaluate the state in _Set_.
 
     .PARAMETER CurrentValues
         A hashtable with the current values on the system, obtained by e.g.
@@ -4141,18 +3727,14 @@ function Test-AccountRequirePassword
         If the sorting of array values does not matter, values are sorted internally
         before doing the comparison.
 
-    .OUTPUTS
-        [System.Boolean]
-
     .EXAMPLE
         $currentState = Get-TargetResource @PSBoundParameters
+
         $returnValue = Test-DscParameterState -CurrentValues $currentState -DesiredValues $PSBoundParameters
 
         The function Get-TargetResource is called first using all bound parameters
         to get the values in the current state. The result is then compared to the
-        desired state by calling `Test-DscParameterState`. The result is either
-        `$true` or `$false`, `$false` if one or more properties are not in desired
-        state.
+        desired state by calling `Test-DscParameterState`.
 
     .EXAMPLE
         $getTargetResourceParameters = @{
@@ -4160,6 +3742,7 @@ function Test-AccountRequirePassword
             InstanceName   = $InstanceName
             Name           = $Name
         }
+
         $returnValue = Test-DscParameterState `
             -CurrentValues (Get-TargetResource @getTargetResourceParameters) `
             -DesiredValues $PSBoundParameters `
@@ -4171,9 +3754,8 @@ function Test-AccountRequirePassword
         This compares the values in the current state against the desires state.
         The function Get-TargetResource is called using just the required parameters
         to get the values in the current state. The parameter 'ExcludeProperties'
-        is used to exclude the properties 'FailsafeOperator' and 'NotificationMethod'
-        from the comparison. The result is either `$true` or `$false`, `$false` if
-        one or more properties are not in desired state.
+        is used to exclude the properties 'FailsafeOperator' and
+        'NotificationMethod' from the comparison.
 
     .EXAMPLE
         $getTargetResourceParameters = @{
@@ -4181,6 +3763,7 @@ function Test-AccountRequirePassword
             InstanceName   = $InstanceName
             Name           = $Name
         }
+
         $returnValue = Test-DscParameterState `
             -CurrentValues (Get-TargetResource @getTargetResourceParameters) `
             -DesiredValues $PSBoundParameters `
@@ -4228,8 +3811,9 @@ function Test-DscParameterState
     )
 
     $returnValue = $true
+    $param = $PSBoundParameters
 
-    $resultCompare = Compare-DscParameterState @PSBoundParameters
+    $resultCompare = Compare-DscParameterState @param
 
     if ($resultCompare.InDesiredState -contains $false)
     {
@@ -4238,17 +3822,14 @@ function Test-DscParameterState
 
     return $returnValue
 }
-#EndRegion './Public/Test-DscParameterState.ps1' 138
-#Region './Public/Test-DscProperty.ps1' -1
-
+#EndRegion './Public/Test-DscParameterState.ps1' 130
+#Region './Public/Test-DscProperty.ps1' 0
 <#
     .SYNOPSIS
         Tests whether the class-based resource has the specified property.
 
     .DESCRIPTION
-        Tests whether the class-based resource has the specified property, and
-        can optionally tests if the property has a certain attribute or whether
-        it is assigned a non-null value.
+        Tests whether the class-based resource has the specified property.
 
     .PARAMETER InputObject
         Specifies the object that should be tested for existens of the specified
@@ -4266,24 +3847,21 @@ function Test-DscParameterState
         If the property exist but is not the specific attribute the command returns
         `$false`.
 
-    .OUTPUTS
-        [System.Boolean]
-
     .EXAMPLE
         Test-DscProperty -InputObject $this -Name 'MyDscProperty'
 
-        Returns `$true` or `$false` whether the property exist or not.
+        Returns $true or $false whether the property exist or not.
 
     .EXAMPLE
         $this | Test-DscProperty -Name 'MyDscProperty'
 
-        Returns `$true` or `$false` whether the property exist or not.
+        Returns $true or $false whether the property exist or not.
 
     .EXAMPLE
         Test-DscProperty -InputObject $this -Name 'MyDscProperty' -HasValue
 
-        Returns `$true` if the property exist and is assigned a non-null value,
-        if not `$false` is returned.
+        Returns $true if the property exist and is assigned a non-null value, if not
+        $false is returned.
 
     .EXAMPLE
         Test-DscProperty -InputObject $this -Name 'MyDscProperty' -Attribute 'Optional'
@@ -4347,9 +3925,8 @@ function Test-DscProperty
         return $hasProperty
     }
 }
-#EndRegion './Public/Test-DscProperty.ps1' 107
-#Region './Public/Test-IsNanoServer.ps1' -1
-
+#EndRegion './Public/Test-DscProperty.ps1' 102
+#Region './Public/Test-IsNanoServer.ps1' 0
 <#
     .SYNOPSIS
         Tests if the current OS is a Nano server.
@@ -4357,13 +3934,10 @@ function Test-DscProperty
     .DESCRIPTION
         Tests if the current OS is a Nano server.
 
-    .OUTPUTS
-        [System.Boolean]
-
     .EXAMPLE
         Test-IsNanoServer
 
-        Returns `$true` if the current operating system is Nano Server, if not `$false`
+        Returns $true if the current operating system is Nano Server, if not $false
         is returned.
 #>
 function Test-IsNanoServer
@@ -4381,27 +3955,14 @@ function Test-IsNanoServer
 
     return ($operatingSystemSKU -in ($productDatacenterNanoServer, $productStandardNanoServer))
 }
-#EndRegion './Public/Test-IsNanoServer.ps1' 32
-#Region './Public/Test-IsNumericType.ps1' -1
-
+#EndRegion './Public/Test-IsNanoServer.ps1' 29
+#Region './Public/Test-IsNumericType.ps1' 0
 <#
     .SYNOPSIS
         Returns whether the specified object is of a numeric type.
 
     .DESCRIPTION
-        Returns whether the specified object is of a numeric type:
-
-        - [System.Byte]
-        - [System.Int16]
-        - [System.Int32]
-        - [System.Int64]
-        - [System.SByte]
-        - [System.UInt16]
-        - [System.UInt32]
-        - [System.UInt64]
-        - [System.Decimal]
-        - [System.Double]
-        - [System.Single]
+        Returns whether the specified object is of a numeric type.
 
     .PARAMETER Object
        The object to test if it is a numeric type.
@@ -4409,17 +3970,12 @@ function Test-IsNanoServer
     .EXAMPLE
         Test-IsNumericType -Object ([System.UInt32] 1)
 
-        Returns `$true` since the object passed is of a numeric type.
-
-    .EXAMPLE
-        ([System.String] 'a') | Test-IsNumericType
-
-        Returns `$false` since the value is not a numeric type.
+        Returns $true since the object passed is of a numeric type.
 
     .EXAMPLE
         ('a', 2, 'b') | Test-IsNumericType
 
-        Returns `$true` since one of the values in the array is of a numeric type.
+        Returns $true since one of the values in the array is of a numeric type.
 
     .OUTPUTS
         [System.Boolean]
@@ -4469,8 +4025,7 @@ function Test-IsNumericType
         return $isNumeric
     }
 }
-#EndRegion './Public/Test-IsNumericType.ps1' 86
-#Region './suffix.ps1' -1
-
+#EndRegion './Public/Test-IsNumericType.ps1' 69
+#Region './suffix.ps1' 0
 $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 #EndRegion './suffix.ps1' 2
