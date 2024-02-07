@@ -1,8 +1,2 @@
-Add-Type -TypeDefinition @'
-public class DscParameter : System.Attribute
-{
-    public DscParameter() { }
-}
-'@ -IgnoreWarnings -WarningAction SilentlyContinue
-
-Import-Module -Name ADSync -Force
+$script:dscResourceCommonModulePath = Join-Path -Path $PSScriptRoot -ChildPath 'Modules/DscResource.Common'
+Import-Module -Name $script:dscResourceCommonModulePath
