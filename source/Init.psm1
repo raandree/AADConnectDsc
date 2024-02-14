@@ -5,4 +5,7 @@ public class DscParameter : System.Attribute
 }
 '@ -IgnoreWarnings -WarningAction SilentlyContinue
 
-Import-Module -Name ADSync -Force
+if (-not (Get-Module -Name ADSync))
+{
+    Import-Module -Name ADSync
+}
