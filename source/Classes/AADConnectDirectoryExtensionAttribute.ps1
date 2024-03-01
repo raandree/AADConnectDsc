@@ -43,7 +43,6 @@ class AADConnectDirectoryExtensionAttribute
 
     [AADConnectDirectoryExtensionAttribute]Get()
     {
-
         $currentState = [AADConnectDirectoryExtensionAttribute]::new()
 
         $attribute = Get-AADConnectDirectoryExtensionAttribute -Name $this.Name -ErrorAction SilentlyContinue |
