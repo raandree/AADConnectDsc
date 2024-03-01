@@ -23,6 +23,9 @@ class AADSyncRule
     [DscProperty()]
     [JoinConditionGroup[]]$JoinFilter
 
+    [DscProperty()]
+    [AttributeFlowMapping[]]$AttributeFlowMappings
+
     [DscProperty(Mandatory = $true)]
     [string]$ConnectorName
 
@@ -92,7 +95,7 @@ class AADSyncRule
         }
 
         $param.ExcludeProperties = 'Precedence', 'Version', 'Identifier', 'Connector', 'IsStandardRule', 'IsLegacyCustomRule'
-        #Wait-Debugger
+
         $compare = Test-DscParameterState @param -ReverseCheck
 
         return $compare
@@ -100,7 +103,6 @@ class AADSyncRule
 
     [AADSyncRule]Get()
     {
-
         $syncRule = Get-ADSyncRule -Name $this.Name
 
         $currentState = [AADSyncRule]::new()
@@ -118,11 +120,12 @@ class AADSyncRule
         $currentState.ConnectorName = (Get-ADSyncConnector | Where-Object Identifier -EQ $syncRule.Connector).Name
         $currentState.Connector = $syncRule.Connector
 
+        $currentState.Description = $syncRule.Description
+        $currentState.Disabled = $syncRule.Disabled
         $currentState.Direction = $syncRule.Direction
         $currentState.EnablePasswordSync = $syncRule.EnablePasswordSync
         $currentState.Identifier = $syncRule.Identifier
-        $currentState.Description = $syncRule.Description
-        #$currentState.ImmutableTag
+        $currentState.AttributeFlowMappings = $syncRule.AttributeFlowMappings
         $currentState.LinkType = $syncRule.LinkType
         $currentState.Precedence = $syncRule.Precedence
 
@@ -184,7 +187,6 @@ class AADSyncRule
 
         if ($this.Ensure -eq 'Present')
         {
-
             $cmdet = Get-Command -Name New-ADSyncRule
             $param = Sync-Parameter -Command $cmdet -Parameters $allParameters
             $rule = New-ADSyncRule @param
