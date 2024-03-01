@@ -20,8 +20,8 @@ class AttributeFlowMapping
     [DscProperty(NotConfigurable)]
     [string]$MappingSourceAsString
 
-    #[DscProperty()]
-    #[string[]]$MappingSourceAsString
+    [DscProperty()]
+    [string[]]$Source
 
     [DscProperty()]
     [AttributeValueMergeType]$ValueMergeType

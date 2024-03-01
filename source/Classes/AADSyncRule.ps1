@@ -125,7 +125,6 @@ class AADSyncRule
         $currentState.Direction = $syncRule.Direction
         $currentState.EnablePasswordSync = $syncRule.EnablePasswordSync
         $currentState.Identifier = $syncRule.Identifier
-        $currentState.AttributeFlowMappings = $syncRule.AttributeFlowMappings
         $currentState.LinkType = $syncRule.LinkType
         $currentState.Precedence = $syncRule.Precedence
 
@@ -151,6 +150,19 @@ class AADSyncRule
             }
 
             $currentState.JoinFilter += $jcg2
+        }
+
+        foreach ($af in $syncRule.AttributeFlowMappings)
+        {
+            $af2 = [AttributeFlowMapping]::new()
+            $af2.Source = $af.Source
+            $af2.Destination = $af.Destination
+            $af2.ExecuteOnce = $af.ExecuteOnce
+            $af2.FlowType = $af.FlowType
+            $af2.ValueMergeType = $af.ValueMergeType
+            $af2.Expression = $af.Expression
+
+            $currentState.AttributeFlowMappings += $af2
         }
 
         $currentState.SourceObjectType = $syncRule.SourceObjectType
