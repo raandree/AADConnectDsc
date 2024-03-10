@@ -5,7 +5,7 @@ class AttributeFlowMapping
     {
     }
 
-    [DscProperty()]
+    [DscProperty(Key)]
     [string]$Destination
 
     [DscProperty()]
