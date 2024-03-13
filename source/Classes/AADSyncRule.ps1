@@ -1,4 +1,3 @@
-
 [DscResource()]
 class AADSyncRule
 {
@@ -160,7 +159,10 @@ class AADSyncRule
             $af2.ExecuteOnce = $af.ExecuteOnce
             $af2.FlowType = $af.FlowType
             $af2.ValueMergeType = $af.ValueMergeType
-            $af2.Expression = $af.Expression
+            if ($af.Expression)
+            {
+                $af2.Expression = $af.Expression
+            }
 
             $currentState.AttributeFlowMappings += $af2
         }
@@ -226,6 +228,19 @@ class AADSyncRule
                     }
 
                     $rule | Add-ADSyncJoinConditionGroup -JoinConditions $joinConditions
+                }
+
+            }
+
+            if ($this.AttributeFlowMappings)
+            {
+                foreach ($af in $this.AttributeFlowMappings)
+                {
+                    $afHashTable = Convert-ObjectToHashtable -Object $af
+                    $param = Sync-Parameter -Command (Get-Command -Name Add-ADSyncAttributeFlowMapping) -Parameters $afHashTable
+                    $param.SynchronizationRule = $rule
+
+                    Add-ADSyncAttributeFlowMapping @param
                 }
 
             }
