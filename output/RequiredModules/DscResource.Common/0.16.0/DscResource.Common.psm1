@@ -999,7 +999,6 @@ function Compare-DscParameterState
     #region enumerate of each key in list
     foreach ($key in $keyList)
     {
-        Wait-Debugger
         #generate default value
         $InDesiredStateTable = [ordered]@{
             Property        = $key
@@ -1139,7 +1138,6 @@ function Compare-DscParameterState
         }
         #endregion TestType
         #region Check if the value of Current and desired state is the same but only if they are not an array
-        Wait-Debugger
         if ($currentValue -eq $desiredValue -and -not $desiredType.IsArray)
         {
             Write-Verbose -Message ($script:localizedData.MatchValueMessage -f $desiredType.FullName, $key, $currentValue, $desiredValue)

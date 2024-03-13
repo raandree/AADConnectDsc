@@ -14,7 +14,7 @@ class AttributeFlowMapping
     [DscProperty()]
     [string]$Expression
 
-    [DscProperty()]
+    [DscProperty(Key)]
     [AttributeMappingFlowType]$FlowType
 
     [DscProperty(NotConfigurable)]
