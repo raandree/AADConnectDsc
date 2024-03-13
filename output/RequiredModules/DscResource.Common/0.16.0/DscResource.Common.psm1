@@ -974,13 +974,13 @@ function Compare-DscParameterState
             -ArgumentName Properties
     }
     #endregion check cim and properties
-    
+
     #Clean value if there are a common parameters provide from Test/Get-TargetResource parameter
     if ($DesiredValues -is [hashtable])
     {
         $desiredValuesClean = Remove-CommonParameter -Hashtable $DesiredValues
     }
-    
+
     #region generate keyList based on $Properties and $excludeProperties value
     if (-not $Properties)
     {
@@ -999,6 +999,7 @@ function Compare-DscParameterState
     #region enumerate of each key in list
     foreach ($key in $keyList)
     {
+        Wait-Debugger
         #generate default value
         $InDesiredStateTable = [ordered]@{
             Property        = $key
@@ -1039,7 +1040,7 @@ function Compare-DscParameterState
                 Convert-ObjectToHashtable -Object $desiredValue
             }
         }
-        
+
         if ($currentValue -is [Microsoft.Management.Infrastructure.CimInstance] -or
             $currentValue -is [Microsoft.Management.Infrastructure.CimInstance[]])
         {
@@ -1138,10 +1139,20 @@ function Compare-DscParameterState
         }
         #endregion TestType
         #region Check if the value of Current and desired state is the same but only if they are not an array
+        Wait-Debugger
         if ($currentValue -eq $desiredValue -and -not $desiredType.IsArray)
         {
             Write-Verbose -Message ($script:localizedData.MatchValueMessage -f $desiredType.FullName, $key, $currentValue, $desiredValue)
             continue # pass to the next key
+        }
+        elseif ([bool]$currentValue -eq $false -and [bool]$desiredValue -eq $false -and $currentType.Name -eq 'Unknown')
+        {
+            $currentValue = $currentValue -as $desiredType
+            if ($currentValue -eq $desiredValue -and -not $desiredType.IsArray)
+            {
+                Write-Verbose -Message ($script:localizedData.MatchValueMessage -f $desiredType.FullName, $key, $currentValue, $desiredValue)
+                continue # pass to the next key
+            }
         }
         #endregion check same value
         #region Check if the DesiredValuesClean has the key and if it doesn't have, it's not necessary to check his value
@@ -1298,7 +1309,7 @@ function Compare-DscParameterState
                             Write-Verbose "NOTMATCH: Type mismatch array"
                             continue
                         }
-                        
+
                         $param = @{} + $PSBoundParameters
                         $param.CurrentValues = @{
                             "ListOf_$key" = $currentArrayValues[$i]
@@ -1342,8 +1353,8 @@ function Compare-DscParameterState
 
             }
         }
-        elseif ($desiredType.CustomAttributes.Where({ $_.AttributeType -eq [DscParameter]}) -and
-            $currentType.CustomAttributes.Where({ $_.AttributeType -eq [DscParameter]}) -and
+        elseif ($desiredType.CustomAttributes.Where({ $_.AttributeType.Name -eq 'DscParameter' }) -and
+            $currentType.CustomAttributes.Where({ $_.AttributeType.Name -eq 'DscParameter' }) -and
             -not $desiredType.IsArray -and -not $currentType.IsArray)
         {
             $param = @{} + $PSBoundParameters
@@ -1465,7 +1476,7 @@ function Compare-DscParameterState
 
         if ($returnValue)
         {
-            $returnValue = Compare-DscParameterState @reverseCheckParameters
+            $returnValue += Compare-DscParameterState @reverseCheckParameters
         }
         else
         {
@@ -1861,7 +1872,7 @@ function ConvertTo-HashTable
         [AllowEmptyCollection()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $CimInstance,
-        
+
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'DscParameter')]
         [AllowEmptyCollection()]
         [object[]]
