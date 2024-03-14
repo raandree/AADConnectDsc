@@ -154,7 +154,7 @@ class AADSyncRule
         foreach ($af in $syncRule.AttributeFlowMappings)
         {
             $af2 = [AttributeFlowMapping]::new()
-            $af2.Source = $af.Source
+            $af2.Source = $af.Source[0]
             $af2.Destination = $af.Destination
             $af2.ExecuteOnce = $af.ExecuteOnce
             $af2.FlowType = $af.FlowType

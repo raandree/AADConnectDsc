@@ -21,7 +21,7 @@ class AttributeFlowMapping
     [string]$MappingSourceAsString
 
     [DscProperty(Key)]
-    [string[]]$Source
+    [string]$Source
 
     [DscProperty()]
     [AttributeValueMergeType]$ValueMergeType
