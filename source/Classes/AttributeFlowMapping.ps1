@@ -11,7 +11,7 @@ class AttributeFlowMapping
     [DscProperty()]
     [bool]$ExecuteOnce
 
-    [DscProperty()]
+    [DscProperty(Key)]
     [string]$Expression
 
     [DscProperty(Key)]
@@ -20,7 +20,7 @@ class AttributeFlowMapping
     [DscProperty(NotConfigurable)]
     [string]$MappingSourceAsString
 
-    [DscProperty()]
+    [DscProperty(Key)]
     [string[]]$Source
 
     [DscProperty()]
