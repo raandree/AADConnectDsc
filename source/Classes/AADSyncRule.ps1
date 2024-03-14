@@ -58,7 +58,7 @@ class AADSyncRule
     [DscProperty()]
     [string]$ImmutableTag
 
-    [DscProperty(NotConfigurable)]
+    [DscProperty()]
     [bool]$IsStandardRule
 
     [DscProperty(NotConfigurable)]
@@ -93,7 +93,14 @@ class AADSyncRule
             SortArrayValues     = $true
         }
 
-        $param.ExcludeProperties = 'Precedence', 'Version', 'Identifier', 'Connector', 'IsStandardRule', 'IsLegacyCustomRule'
+        $param.ExcludeProperties = if ($this.IsStandardRule)
+        {
+            $this.GetType().GetProperties().Name -notin 'Name', 'IsDisabled', 'Connector'
+        }
+        else
+        {
+            'Precedence', 'Version', 'Identifier', 'Connector', 'IsStandardRule', 'IsLegacyCustomRule'
+        }
 
         $compare = Test-DscParameterState @param -ReverseCheck
 
@@ -190,67 +197,68 @@ class AADSyncRule
             New-Guid2 -InputString $this.Name
         }
 
-        $allParameters = Convert-ObjectToHashtable $this
-        #$allParameters.ScopeFilter = $this.ScopeFilter.ScopeConditionList.ForEach({
-        #        [ScopeCondition]::new($_.Attribute, $_.ComparisonValue, $_.ComparisonOperator)
-        #})
-        #$allParameters.JoinFilter = $this.JoinFilter.ForEach({
-        #        [JoinCondition]::new($_.CSAttribute, $_.MVAttribute, $_.CaseSensitive)
-        #})
-        #$this.Identifier = New-Guid2 -InputString $this.Name
+        $allParameters = Convert-ObjectToHashtable -Object $this
 
         if ($this.Ensure -eq 'Present')
         {
-            $cmdet = Get-Command -Name New-ADSyncRule
-            $param = Sync-Parameter -Command $cmdet -Parameters $allParameters
-            $rule = New-ADSyncRule @param
-
-            if ($this.ScopeFilter)
+            if ($this.IsStandardRule)
             {
-                foreach ($scg in $this.ScopeFilter)
+                $existingRule.Disabled = $this.Disabled
+                $existingRule | Add-ADSyncRule
+            }
+            else
+            {
+                $cmdet = Get-Command -Name New-ADSyncRule
+                $param = Sync-Parameter -Command $cmdet -Parameters $allParameters
+                $rule = New-ADSyncRule @param
+
+                if ($this.ScopeFilter)
                 {
-                    $scopeConditions = foreach ($sc in $scg.ScopeConditionList)
+                    foreach ($scg in $this.ScopeFilter)
                     {
-                        [Microsoft.IdentityManagement.PowerShell.ObjectModel.ScopeCondition]::new($sc.Attribute, $sc.ComparisonValue, $sc.ComparisonOperator)
+                        $scopeConditions = foreach ($sc in $scg.ScopeConditionList)
+                        {
+                            [Microsoft.IdentityManagement.PowerShell.ObjectModel.ScopeCondition]::new($sc.Attribute, $sc.ComparisonValue, $sc.ComparisonOperator)
+                        }
+
+                        $rule | Add-ADSyncScopeConditionGroup -ScopeConditions $scopeConditions
+                    }
+                }
+
+                if ($this.JoinFilter)
+                {
+                    foreach ($jcg in $this.JoinFilter)
+                    {
+                        $joinConditions = foreach ($jc in $jcg.JoinConditionList)
+                        {
+                            [Microsoft.IdentityManagement.PowerShell.ObjectModel.JoinCondition]::new($jc.CSAttribute, $jc.MVAttribute, $jc.CaseSensitive)
+                        }
+
+                        $rule | Add-ADSyncJoinConditionGroup -JoinConditions $joinConditions
                     }
 
-                    $rule | Add-ADSyncScopeConditionGroup -ScopeConditions $scopeConditions
                 }
-            }
 
-            if ($this.JoinFilter)
-            {
-                foreach ($jcg in $this.JoinFilter)
+                if ($this.AttributeFlowMappings)
                 {
-                    $joinConditions = foreach ($jc in $jcg.JoinConditionList)
+                    foreach ($af in $this.AttributeFlowMappings)
                     {
-                        [Microsoft.IdentityManagement.PowerShell.ObjectModel.JoinCondition]::new($jc.CSAttribute, $jc.MVAttribute, $jc.CaseSensitive)
+                        $afHashTable = Convert-ObjectToHashtable -Object $af
+                        $param = Sync-Parameter -Command (Get-Command -Name Add-ADSyncAttributeFlowMapping) -Parameters $afHashTable
+                        $param.SynchronizationRule = $rule
+
+                        Add-ADSyncAttributeFlowMapping @param
                     }
 
-                    $rule | Add-ADSyncJoinConditionGroup -JoinConditions $joinConditions
                 }
 
+                #if ($existingRule)
+                #{
+                #    Remove-ADSyncRule -Identifier $rule.Identifier
+                #}
+
+                $rule | Add-ADSyncRule
             }
-
-            if ($this.AttributeFlowMappings)
-            {
-                foreach ($af in $this.AttributeFlowMappings)
-                {
-                    $afHashTable = Convert-ObjectToHashtable -Object $af
-                    $param = Sync-Parameter -Command (Get-Command -Name Add-ADSyncAttributeFlowMapping) -Parameters $afHashTable
-                    $param.SynchronizationRule = $rule
-
-                    Add-ADSyncAttributeFlowMapping @param
-                }
-
-            }
-
-            if ($existingRule)
-            {
-                Remove-ADSyncRule -Identifier $rule.Identifier
-            }
-
-            $rule | Add-ADSyncRule
         }
         else
         {
