@@ -1,4 +1,3 @@
-[DscParameter()]
 class JoinCondition
 {
     [DscProperty()]
@@ -10,9 +9,12 @@ class JoinCondition
     [DscProperty()]
     [bool]$CaseSensitive
 
-    JoinCondition() { }
+    JoinCondition()
+    {
+    }
 
-    JoinCondition([string]$CSAttribute, [string]$MVAttribute, [bool]$CaseSensitive) {
+    JoinCondition([string]$CSAttribute, [string]$MVAttribute, [bool]$CaseSensitive)
+    {
         $this.CSAttribute = $CSAttribute
         $this.MVAttribute = $MVAttribute
         $this.CaseSensitive = $CaseSensitive

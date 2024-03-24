@@ -1,4 +1,3 @@
-[DscParameter()]
 class ScopeCondition
 {
     [DscProperty()]
@@ -10,7 +9,9 @@ class ScopeCondition
     [DscProperty()]
     [ComparisonOperator]$ComparisonOperator
 
-    ScopeCondition() { }
+    ScopeCondition()
+    {
+    }
 
     ScopeCondition([hashtable]$Definition)
     {

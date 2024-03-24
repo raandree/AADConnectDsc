@@ -1,4 +1,3 @@
-[DscParameter()]
 class AttributeFlowMapping
 {
     AttributeFlowMapping()
