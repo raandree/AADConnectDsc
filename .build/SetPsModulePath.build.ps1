@@ -20,7 +20,7 @@ SetPSModulePath:
 
 #>
 
-Task Set_PSModulePath2 {
+Task Set_PSModulePath {
 
     . Set-SamplerTaskVariable
 
