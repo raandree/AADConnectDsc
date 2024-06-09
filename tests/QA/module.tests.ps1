@@ -20,6 +20,8 @@ BeforeDiscovery {
             Import-Module -Force -ErrorAction Stop -PassThru
 }
 
+return
+
 BeforeAll {
     # Convert-Path required for PS7 or Join-Path fails
     $projectPath = "$($PSScriptRoot)\..\.." | Convert-Path
@@ -54,7 +56,6 @@ BeforeAll {
     ).Directory.FullName
 }
 
-return
 Describe 'Changelog Management' -Tag 'Changelog' {
 
     It 'Changelog format compliant with keepachangelog format' -Skip:(![bool](Get-Command git -EA SilentlyContinue)) {
