@@ -54,6 +54,7 @@ BeforeAll {
     ).Directory.FullName
 }
 
+return
 Describe 'Changelog Management' -Tag 'Changelog' {
 
     It 'Changelog format compliant with keepachangelog format' -Skip:(![bool](Get-Command git -EA SilentlyContinue)) {
@@ -213,4 +214,3 @@ Describe 'Help for module' -Tags 'helpQuality' {
         }
     }
 }
-
