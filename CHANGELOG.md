@@ -5,26 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- For new features.
-
 ### Changed
 
-- For changes in existing functionality.
+- AttributeFlowMapping:
+  - Expression is no longer key
 
-### Deprecated
+## [0.2.0] - 2024-06-10
 
-- For soon-to-be removed features.
+### Added
 
-### Removed
-
-- For now removed features.
-
-### Fixed
-
-- For any bug fix.
-
-### Security
-
-- In case of vulnerabilities.
+Initial Release
