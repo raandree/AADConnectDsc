@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AttributeFlowMapping:
   - Expression is no longer key
 
+### Fixed
+
+- Aligned build task.
+
 ## [0.2.0] - 2024-06-10
 
 ### Added
