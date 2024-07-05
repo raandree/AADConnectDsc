@@ -10,7 +10,7 @@ class AttributeFlowMapping
     [DscProperty()]
     [bool]$ExecuteOnce
 
-    [DscProperty()]
+    [DscProperty(Key)]
     [string]$Expression
 
     [DscProperty(Key)]
