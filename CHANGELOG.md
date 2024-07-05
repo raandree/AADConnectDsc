@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- AttributeFlowMapping:
+  - Expression a key property again, otherwise complex rule sets
+    are resulting in conflicts.
+
 ## [0.2.1] - 2024-07-04
 
 ### Changed
