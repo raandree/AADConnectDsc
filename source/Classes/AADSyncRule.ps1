@@ -247,6 +247,11 @@ class AADSyncRule
                         $param = Sync-Parameter -Command (Get-Command -Name Add-ADSyncAttributeFlowMapping) -Parameters $afHashTable
                         $param.SynchronizationRule = $rule
 
+                        if ([string]::IsNullOrEmpty($param.Expression))
+                        {
+                            $param.Remove('Expression')
+                        }
+
                         Add-ADSyncAttributeFlowMapping @param
                     }
 

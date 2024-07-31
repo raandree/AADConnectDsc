@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Add check for empty expression as it is a key and does not allow $null.
+
 ## [0.2.2] - 2024-07-05
 
 ### Changed
