@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add check for empty 'Expression' as it is a key and does not allow $null.
 - Add check for empty 'Source' as it is a key and does not allow $null.
 - Added error handling for non-existing standard rule.
+- Set version of GitVersion to 5.*.
 
 ## [0.2.2] - 2024-07-05
 
