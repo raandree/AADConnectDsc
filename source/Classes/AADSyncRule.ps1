@@ -203,6 +203,12 @@ class AADSyncRule
         {
             if ($this.IsStandardRule)
             {
+                if ($null -eq $existingRule)
+                {
+                    Write-Error "A syncrule defined as 'IsStandardRule' does not exist. It cannot be enabled or disabled"
+                    return
+                }
+
                 $existingRule.Disabled = $this.Disabled
                 $existingRule | Add-ADSyncRule
             }
