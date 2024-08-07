@@ -203,6 +203,12 @@ class AADSyncRule
         {
             if ($this.IsStandardRule)
             {
+                if ($null -eq $existingRule)
+                {
+                    Write-Error "A syncrule defined as 'IsStandardRule' does not exist. It cannot be enabled or disabled"
+                    return
+                }
+
                 $existingRule.Disabled = $this.Disabled
                 $existingRule | Add-ADSyncRule
             }
@@ -246,6 +252,16 @@ class AADSyncRule
                         $afHashTable = Convert-ObjectToHashtable -Object $af
                         $param = Sync-Parameter -Command (Get-Command -Name Add-ADSyncAttributeFlowMapping) -Parameters $afHashTable
                         $param.SynchronizationRule = $rule
+
+                        if ([string]::IsNullOrEmpty($param.Expression))
+                        {
+                            $param.Remove('Expression')
+                        }
+
+                        if ([string]::IsNullOrEmpty($param.Source))
+                        {
+                            $param.Remove('Source')
+                        }
 
                         Add-ADSyncAttributeFlowMapping @param
                     }
