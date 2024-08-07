@@ -258,6 +258,11 @@ class AADSyncRule
                             $param.Remove('Expression')
                         }
 
+                        if ([string]::IsNullOrEmpty($param.Source))
+                        {
+                            $param.Remove('Source')
+                        }
+
                         Add-ADSyncAttributeFlowMapping @param
                     }
 
