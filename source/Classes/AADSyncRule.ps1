@@ -90,16 +90,16 @@ class AADSyncRule
             CurrentValues       = $currentState
             DesiredValues       = $desiredState
             TurnOffTypeChecking = $true
-            SortArrayValues     = $true
+            #SortArrayValues     = $true
         }
 
         $param.ExcludeProperties = if ($this.IsStandardRule)
         {
-            $this.GetType().GetProperties().Name -notin 'Name', 'IsDisabled', 'Connector'
+            $this.GetType().GetProperties().Name | Where-Object { $_ -in 'Connector', 'Version', 'Identifier' }
         }
         else
         {
-            'Precedence', 'Version', 'Identifier', 'Connector', 'IsStandardRule', 'IsLegacyCustomRule'
+            'Connector', 'Version', 'Identifier' #, 'IsStandardRule', 'IsLegacyCustomRule'
         }
 
         $compare = Test-DscParameterState @param -ReverseCheck
@@ -166,7 +166,11 @@ class AADSyncRule
             $af2.ExecuteOnce = $af.ExecuteOnce
             $af2.FlowType = $af.FlowType
             $af2.ValueMergeType = $af.ValueMergeType
-            if ($af.Expression)
+            if ($null -eq $af.Expression)
+            {
+                $af2.Expression = ''
+            }
+            else
             {
                 $af2.Expression = $af.Expression
             }
