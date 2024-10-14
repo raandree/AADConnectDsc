@@ -99,7 +99,7 @@ class AADSyncRule
         }
         else
         {
-            'Connector', 'Version', 'Identifier' #, 'IsStandardRule', 'IsLegacyCustomRule'
+            'Connector', 'Version', 'Identifier'
         }
 
         $compare = Test-DscParameterState @param -ReverseCheck
