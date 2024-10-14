@@ -95,11 +95,11 @@ class AADSyncRule
 
         $param.ExcludeProperties = if ($this.IsStandardRule)
         {
-            $this.GetType().GetProperties().Name -notin 'Name', 'IsDisabled', 'Connector'
+            $this.GetType().GetProperties().Name | Where-Object { $_ -in 'Connector', 'Version', 'Identifier' }
         }
         else
         {
-            'Precedence', 'Version', 'Identifier', 'Connector', 'IsStandardRule', 'IsLegacyCustomRule'
+            'Connector', 'Version', 'Identifier'
         }
 
         $compare = Test-DscParameterState @param -ReverseCheck
@@ -134,6 +134,7 @@ class AADSyncRule
         $currentState.LinkType = $syncRule.LinkType
         $currentState.Precedence = $syncRule.Precedence
 
+        $currentState.ScopeFilter = @()
         foreach ($scg in $syncRule.ScopeFilter)
         {
             $scg2 = [ScopeConditionGroup]::new()
@@ -146,6 +147,7 @@ class AADSyncRule
             $currentState.ScopeFilter += $scg2
         }
 
+        $currentState.JoinFilter = @()
         foreach ($jcg in $syncRule.JoinFilter)
         {
             $jcg2 = [JoinConditionGroup]::new()
@@ -158,6 +160,7 @@ class AADSyncRule
             $currentState.JoinFilter += $jcg2
         }
 
+        $currentState.AttributeFlowMappings = @()
         foreach ($af in $syncRule.AttributeFlowMappings)
         {
             $af2 = [AttributeFlowMapping]::new()
@@ -166,7 +169,11 @@ class AADSyncRule
             $af2.ExecuteOnce = $af.ExecuteOnce
             $af2.FlowType = $af.FlowType
             $af2.ValueMergeType = $af.ValueMergeType
-            if ($af.Expression)
+            if ($null -eq $af.Expression)
+            {
+                $af2.Expression = ''
+            }
+            else
             {
                 $af2.Expression = $af.Expression
             }
@@ -205,15 +212,22 @@ class AADSyncRule
             {
                 if ($null -eq $existingRule)
                 {
-                    Write-Error "A syncrule defined as 'IsStandardRule' does not exist. It cannot be enabled or disabled"
+                    Write-Error "A syncrule defined as 'IsStandardRule' does not exist. It cannot be enabled or disabled."
                     return
                 }
 
+                Write-Warning "The only property changed on a standard rule is 'Disabled'. All other configuration drifts will not be corrected."
                 $existingRule.Disabled = $this.Disabled
                 $existingRule | Add-ADSyncRule
             }
             else
             {
+                if ($existingRule.IsStandardRule)
+                {
+                    Write-Error "It is not allowed to modify a standard rule. It can only be enabled or disabled."
+                    return
+                }
+
                 $cmdet = Get-Command -Name New-ADSyncRule
                 $param = Sync-Parameter -Command $cmdet -Parameters $allParameters
                 $rule = New-ADSyncRule @param
@@ -267,11 +281,6 @@ class AADSyncRule
                     }
 
                 }
-
-                #if ($existingRule)
-                #{
-                #    Remove-ADSyncRule -Identifier $rule.Identifier
-                #}
 
                 $rule | Add-ADSyncRule
             }
