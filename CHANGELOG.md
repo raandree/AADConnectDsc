@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed multiple bugs in the ADSyncRule class effected the comparing of objects.
+- Fixed dealing with standard rules.
+
 ## [0.3.0] - 2024-08-07
 
 ### Fixed
