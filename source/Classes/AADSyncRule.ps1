@@ -77,6 +77,23 @@ class AADSyncRule
         $currentState = Convert-ObjectToHashtable -Object $this.Get()
         $desiredState = Convert-ObjectToHashtable -Object $this
 
+        #Remove all whitespace from expressions in AttributeFlowMappings, otherwise they will not match due to encoding differences
+        foreach ($afm in $currentState.AttributeFlowMappings)
+        {
+            if (-not [string]::IsNullOrEmpty($afm.Expression))
+            {
+                $afm.Expression = $afm.Expression -replace '\s', ''
+            }
+        }
+
+        foreach ($afm in $desiredState.AttributeFlowMappings)
+        {
+            if (-not [string]::IsNullOrEmpty($afm.Expression))
+            {
+                $afm.Expression = $afm.Expression -replace '\s', ''
+            }
+        }
+
         if ($currentState.Ensure -ne $desiredState.Ensure)
         {
             return $false
@@ -224,7 +241,7 @@ class AADSyncRule
             {
                 if ($existingRule.IsStandardRule)
                 {
-                    Write-Error "It is not allowed to modify a standard rule. It can only be enabled or disabled."
+                    Write-Error 'It is not allowed to modify a standard rule. It can only be enabled or disabled.'
                     return
                 }
 
