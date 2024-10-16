@@ -1,7 +1,7 @@
 function Get-ADSyncRule
 {
     [CmdletBinding(DefaultParameterSetName = 'ByName')]
-    param(
+    param (
         [Parameter(ParameterSetName = 'ByName')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ByNameAndConnector')]
         [string]
