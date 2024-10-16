@@ -25,7 +25,7 @@ class AADSyncRule
     [DscProperty()]
     [AttributeFlowMapping[]]$AttributeFlowMappings
 
-    [DscProperty(Mandatory = $true)]
+    [DscProperty(Key = $true)]
     [string]$ConnectorName
 
     [DscProperty(NotConfigurable)]
@@ -126,7 +126,7 @@ class AADSyncRule
 
     [AADSyncRule]Get()
     {
-        $syncRule = Get-ADSyncRule -Name $this.Name
+        $syncRule = Get-ADSyncRule -Name $this.Name -ConnectorName $this.ConnectorName
 
         $currentState = [AADSyncRule]::new()
         $currentState.Name = $this.Name
@@ -211,7 +211,7 @@ class AADSyncRule
     {
         $this.Connector = (Get-ADSyncConnector | Where-Object Name -EQ $this.ConnectorName).Identifier
 
-        $existingRule = Get-ADSyncRule -Name $this.Name
+        $existingRule = Get-ADSyncRule -Name $this.Name -ConnectorName $this.ConnectorName
         $this.Identifier = if ($existingRule)
         {
             $existingRule.Identifier
