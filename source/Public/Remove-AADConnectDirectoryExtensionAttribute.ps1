@@ -15,7 +15,8 @@ function Remove-AADConnectDirectoryExtensionAttribute
         $FullAttributeString
     )
 
-    process {
+    process
+    {
         $currentAttributes = Get-AADConnectDirectoryExtensionAttribute
 
         if ($FullAttributeString)
@@ -36,13 +37,14 @@ function Remove-AADConnectDirectoryExtensionAttribute
                     $_.Name -eq $Name -and
                     $_.AssignedObjectClass -eq $AssignedObjectClass -and
                     $_.Type -eq $Type
-        })) {
+                }))
+        {
             Write-Error "The attribute '$Name' with the type '$Type' assigned to the class '$AssignedObjectClass' is not defined."
             return
         }
 
         $settings = Get-ADSyncGlobalSettings
-        $attributeParameter = $settings.Parameters | Where-Object Name -eq Microsoft.OptionalFeature.DirectoryExtensionAttributes
+        $attributeParameter = $settings.Parameters | Where-Object Name -EQ Microsoft.OptionalFeature.DirectoryExtensionAttributes
         $currentAttributeList = $attributeParameter.Value -split ','
 
         $attributeStringToRemove = "$($existingAttribute.Name).$($existingAttribute.AssignedObjectClass).$($existingAttribute.Type).$($existingAttribute.IsEnabled)"

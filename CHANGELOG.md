@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed dealing with standard rules.
 - Remove all whitespace from expressions in AttributeFlowMappings, otherwise they
   will not match due to encoding  differences.
+- Added parameter set 'ByNameAndConnector' to 'Get-ADSyncRule'.
+- Added parameter 'ConnectorName' as key in DSC Resource 'AADSyncRule.
+- DSC Resource 'AADSyncRule' uses parameter set 'ByNameAndConnector' when
+  calling 'Get-ADSyncRule'.
 
 ## [0.3.0] - 2024-08-07
 

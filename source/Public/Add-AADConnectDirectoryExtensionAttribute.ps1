@@ -21,8 +21,8 @@ function Add-AADConnectDirectoryExtensionAttribute
         [switch]$Force
     )
 
-    process {
-
+    process
+    {
         $currentAttributes = Get-AADConnectDirectoryExtensionAttribute
 
         if ($FullAttributeString)
@@ -44,7 +44,8 @@ function Add-AADConnectDirectoryExtensionAttribute
                 $_.AssignedObjectClass -eq $AssignedObjectClass -and
                 $_.Type -eq $Type -and
                 $_.IsEnabled -eq $IsEnabled
-        }) {
+            })
+        {
             Write-Error "The attribute '$Name' with the type '$Type' assigned to the class '$AssignedObjectClass' is already defined."
             return
         }
@@ -52,16 +53,18 @@ function Add-AADConnectDirectoryExtensionAttribute
         if (($existingAttribute = $currentAttributes | Where-Object {
                     $_.Name -eq $Name -and
                     $_.Type -ne $Type
-        }) -and -not $Force) {
+                }) -and -not $Force)
+        {
             Write-Error "The attribute '$Name' is already defined with the type '$($existingAttribute.Type)'."
             return
         }
-        else {
+        else
+        {
             $existingAttribute | Remove-AADConnectDirectoryExtensionAttribute
         }
 
         $settings = Get-ADSyncGlobalSettings
-        $attributeParameter = $settings.Parameters | Where-Object Name -eq Microsoft.OptionalFeature.DirectoryExtensionAttributes
+        $attributeParameter = $settings.Parameters | Where-Object Name -EQ Microsoft.OptionalFeature.DirectoryExtensionAttributes
         $currentAttributeList = $attributeParameter.Value -split ','
 
         $newAttributeString = "$Name.$AssignedObjectClass.$Type.$IsEnabled"
@@ -71,6 +74,5 @@ function Add-AADConnectDirectoryExtensionAttribute
         $settings.Parameters.AddOrReplace($attributeParameter)
 
         Set-ADSyncGlobalSettings -GlobalSettings $settings | Out-Null
-
     }
 }
