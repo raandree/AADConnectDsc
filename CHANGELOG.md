@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixes
+
+- Remove all whitespace from `Description` otherwise this property may will not
+  match due to encoding differences.
+
 ## [0.3.1] - 2024-10-17
 
 ### Fixed
@@ -12,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed multiple bugs in the ADSyncRule class effected the comparing of objects.
 - Fixed dealing with standard rules.
 - Remove all whitespace from expressions in AttributeFlowMappings, otherwise they
-  will not match due to encoding  differences.
+  may not match due to encoding differences.
 - Added parameter set 'ByNameAndConnector' to 'Get-ADSyncRule'.
 - Added parameter 'ConnectorName' as key in DSC Resource 'AADSyncRule.
 - DSC Resource 'AADSyncRule' uses parameter set 'ByNameAndConnector' when
