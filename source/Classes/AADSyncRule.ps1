@@ -94,6 +94,17 @@ class AADSyncRule
             }
         }
 
+        #Remove all whitespace from description , otherwise they will not match due to encoding differences
+        if (-not [string]::IsNullOrEmpty($currentState.Description))
+        {
+            $currentState.Description = $currentState.Description -replace '\s', ''
+        }
+
+        if (-not [string]::IsNullOrEmpty($desiredState.Description))
+        {
+            $desiredState.Description = $desiredState.Description -replace '\s', ''
+        }
+
         if ($currentState.Ensure -ne $desiredState.Ensure)
         {
             return $false
