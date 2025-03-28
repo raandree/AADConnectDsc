@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove all whitespace from `Description` otherwise this property may will not
   match due to encoding differences.
+- Add verbose logging for sync rule processing and scope conditions.
 
 ## [0.3.1] - 2024-10-17
 

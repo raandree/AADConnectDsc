@@ -107,6 +107,7 @@ class AADSyncRule
 
         if ($currentState.Ensure -ne $desiredState.Ensure)
         {
+            Write-Verbose "The Sync Rule '$($this.Name)' does not exist for connection '$($this.ConnectorName)'."
             return $false
         }
         if ($desiredState.Ensure -eq [Ensure]::Absent)
@@ -262,14 +263,19 @@ class AADSyncRule
 
                 if ($this.ScopeFilter)
                 {
+                    $i = 0
                     foreach ($scg in $this.ScopeFilter)
                     {
+                        Write-Verbose "Processing ScopeConditionList $i"
                         $scopeConditions = foreach ($sc in $scg.ScopeConditionList)
                         {
+                            Write-Verbose "Processing ScopeFilter: Attribute = '$($sc.Attribute)', ComparisonValue = '$($sc.ComparisonValue)', ComparisonOperator = '$($sc.ComparisonOperator)'"
                             [Microsoft.IdentityManagement.PowerShell.ObjectModel.ScopeCondition]::new($sc.Attribute, $sc.ComparisonValue, $sc.ComparisonOperator)
                         }
+                        Write-Verbose "ScopeConditionList count is $($scopeConditions.Count)"
 
                         $rule | Add-ADSyncScopeConditionGroup -ScopeConditions $scopeConditions
+                        $i++
                     }
                 }
 
