@@ -94,26 +94,6 @@ class AADSyncRule
             }
         }
 
-        #Remove all whitespace from description , otherwise they will not match due to encoding differences
-        if (-not [string]::IsNullOrEmpty($currentState.Description))
-        {
-            $currentState.Description = $currentState.Description -replace '\s', ''
-        }
-
-        if (-not [string]::IsNullOrEmpty($desiredState.Description))
-        {
-            $desiredState.Description = $desiredState.Description -replace '\s', ''
-        }
-
-        if ($currentState.Ensure -ne $desiredState.Ensure)
-        {
-            return $false
-        }
-        if ($desiredState.Ensure -eq [Ensure]::Absent)
-        {
-            return $true
-        }
-
         $param = @{
             CurrentValues       = $currentState
             DesiredValues       = $desiredState
@@ -130,7 +110,31 @@ class AADSyncRule
             'Connector', 'Version', 'Identifier'
         }
 
-        $compare = Test-DscParameterState @param -ReverseCheck
+        $compare = if ($currentState.Ensure -eq $desiredState.Ensure)
+        {
+            if ($desiredState.Ensure -eq 'Present')
+            {
+                Write-Verbose "The sync rule '$($this.Name)' exists and should exist, comparing rule with 'Test-DscParameterState'."
+                Test-DscParameterState @param -ReverseCheck
+            }
+            else
+            {
+                Write-Verbose "The sync rule '$($this.Name)' is absent and should be absent."
+                $true
+            }
+        }
+        else
+        {
+            if ($desiredState.Ensure -eq 'Present')
+            {
+                Write-Verbose "The sync rule '$($this.Name)' for connector '$($this.ConnectorName)' is absent, but should be present."
+            }
+            else
+            {
+                Write-Verbose "The sync rule '$($this.Name)' for connector '$($this.ConnectorName)' is present, but should be absent."
+            }
+            $false
+        }
 
         return $compare
     }
@@ -220,22 +224,33 @@ class AADSyncRule
 
     [void]Set()
     {
-        $this.Connector = (Get-ADSyncConnector | Where-Object Name -EQ $this.ConnectorName).Identifier
+        $connectorObject = Get-ADSyncConnector -Name $this.ConnectorName -ErrorAction SilentlyContinue
+        if ($null -eq $connectorObject)
+        {
+            Write-Error "The connector '$($this.ConnectorName)' does not exist."
+            return
+        }
+
+        $this.Connector = $connectorObject.Identifier
+        Write-Verbose "Got connector '$($this.ConnectorName)' for rule '$($this.Name)' with identifier '$($this.Connector)'."
 
         $existingRule = Get-ADSyncRule -Name $this.Name -ConnectorName $this.ConnectorName
-        $this.Identifier = if ($existingRule)
+        if ($existingRule)
         {
-            $existingRule.Identifier
+            Write-Verbose "Got existing rule '$($existingRule.Name)' with identifier '$($existingRule.Identifier)' for connector '$($this.ConnectorName)'."
+            $this.Identifier = $existingRule.Identifier
         }
         else
         {
-            New-Guid2 -InputString $this.Name
+            $this.Identifier = New-Guid2 -InputString "$($this.Name)$($this.ConnectorName)"
+            Write-Verbose "No existing rule found with the name '$($this.Name)'. Using identifier '$($this.Identifier)'."
         }
 
-        $allParameters = Convert-ObjectToHashtable -Object $this
+        $desiredState = Convert-ObjectToHashtable -Object $this
 
         if ($this.Ensure -eq 'Present')
         {
+            Write-Verbose "The sync rule '$($this.Name)' should be present for connector '$($this.ConnectorName)'. Proceeding with creation or update."
             if ($this.IsStandardRule)
             {
                 if ($null -eq $existingRule)
@@ -246,6 +261,7 @@ class AADSyncRule
 
                 Write-Warning "The only property changed on a standard rule is 'Disabled'. All other configuration drifts will not be corrected."
                 $existingRule.Disabled = $this.Disabled
+                Write-Verbose "Setting the 'Disabled' property of the rule '$($this.Name)' to '$($this.Disabled)' and calling 'Add-ADSyncRule'."
                 $existingRule | Add-ADSyncRule
             }
             else
@@ -257,19 +273,24 @@ class AADSyncRule
                 }
 
                 $cmdet = Get-Command -Name New-ADSyncRule
-                $param = Sync-Parameter -Command $cmdet -Parameters $allParameters
+                $param = Sync-Parameter -Command $cmdet -Parameters $desiredState
                 $rule = New-ADSyncRule @param
 
                 if ($this.ScopeFilter)
                 {
+                    $i = 0
                     foreach ($scg in $this.ScopeFilter)
                     {
+                        Write-Verbose "Processing ScopeConditionList $i"
                         $scopeConditions = foreach ($sc in $scg.ScopeConditionList)
                         {
+                            Write-Verbose "Processing ScopeFilter: Attribute = '$($sc.Attribute)', ComparisonValue = '$($sc.ComparisonValue)', ComparisonOperator = '$($sc.ComparisonOperator)'"
                             [Microsoft.IdentityManagement.PowerShell.ObjectModel.ScopeCondition]::new($sc.Attribute, $sc.ComparisonValue, $sc.ComparisonOperator)
                         }
+                        Write-Verbose "ScopeConditionList count is $($scopeConditions.Count)"
 
                         $rule | Add-ADSyncScopeConditionGroup -ScopeConditions $scopeConditions
+                        $i++
                     }
                 }
 
@@ -310,6 +331,7 @@ class AADSyncRule
 
                 }
 
+                Write-Verbose "Calling 'Add-ADSyncRule' to create or update the rule '$($this.Name)'."
                 $rule | Add-ADSyncRule
             }
         }
