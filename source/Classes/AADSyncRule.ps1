@@ -74,8 +74,8 @@ class AADSyncRule
 
     [bool]Test()
     {
-        $currentState = Convert-ObjectToHashtable -Object $this.Get()
-        $desiredState = Convert-ObjectToHashtable -Object $this
+        $currentState = $this.Get() | ConvertTo-Yaml | ConvertFrom-Yaml
+        $desiredState = $this | ConvertTo-Yaml | ConvertFrom-Yaml
 
         #Remove all whitespace from expressions in AttributeFlowMappings, otherwise they will not match due to encoding differences
         foreach ($afm in $currentState.AttributeFlowMappings)
