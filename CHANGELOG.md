@@ -5,11 +5,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The `ADSyncRule::Test()` method converts the current and desired state to
+  Yaml and back from yaml. This is to have a hierarchy of hashtables. If
+  not doing the convertion, the function `Compare-DscParameterState` in
+  module `DscResource.Common` cannot compare the information in full depth.
+
 ### Fixes
 
 - Remove all whitespace from `Description` otherwise this property may will not
   match due to encoding differences.
 - Fixed multiple bugs in 'ADSyncRole::Test()' and 'ADSyncRole::Set()'.  
+- `ADSyncRule::Test()` works after changing the states to yaml and back.
 
 ### Added
 
