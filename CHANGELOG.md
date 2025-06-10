@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Yaml and back from yaml. This is to have a hierarchy of hashtables. If
   not doing the convertion, the function `Compare-DscParameterState` in
   module `DscResource.Common` cannot compare the information in full depth.
+- Excluding property `Precedence` from comparison for standard rules.
 
 ### Fixes
 

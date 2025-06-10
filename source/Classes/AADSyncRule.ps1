@@ -103,7 +103,7 @@ class AADSyncRule
 
         $param.ExcludeProperties = if ($this.IsStandardRule)
         {
-            $this.GetType().GetProperties().Name | Where-Object { $_ -in 'Connector', 'Version', 'Identifier' }
+            'Connector', 'Version', 'Identifier', 'Precedence'
         }
         else
         {
