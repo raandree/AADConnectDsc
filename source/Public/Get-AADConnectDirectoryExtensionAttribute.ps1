@@ -7,10 +7,10 @@
     that are currently configured in Azure AD Connect global settings. These attributes represent
     schema extensions that allow synchronization of custom attributes from on-premises Active Directory
     to Azure AD.
-    
+
     The function can retrieve all directory extension attributes or filter by a specific attribute name.
     Each returned object contains the attribute name, data type, assigned object class, and enabled status.
-    
+
     This function requires Windows PowerShell 5.1 and does not work with PowerShell 7.
 
 .PARAMETER Name
@@ -19,23 +19,23 @@
 
 .EXAMPLE
     Get-AADConnectDirectoryExtensionAttribute
-    
+
     Retrieves all directory extension attributes currently configured in Azure AD Connect.
 
 .EXAMPLE
     Get-AADConnectDirectoryExtensionAttribute -Name "employeeNumber"
-    
+
     Retrieves the directory extension attribute named "employeeNumber" if it exists.
 
 .EXAMPLE
     Get-AADConnectDirectoryExtensionAttribute -Name "employee*"
-    
+
     Retrieves all directory extension attributes with names starting with "employee".
 
 .EXAMPLE
     $attributes = Get-AADConnectDirectoryExtensionAttribute
     $attributes | Where-Object Type -eq "String"
-    
+
     Retrieves all directory extension attributes and filters for those with String data type.
 
 .INPUTS

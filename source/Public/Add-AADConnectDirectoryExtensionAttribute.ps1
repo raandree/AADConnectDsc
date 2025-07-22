@@ -7,10 +7,10 @@
     to the Azure AD Connect global settings. Directory extension attributes allow you to extend
     the schema of Azure AD objects with custom attributes that can be synchronized from on-premises
     Active Directory.
-    
+
     This function supports two parameter sets: specifying individual properties or providing a
     complete attribute string. It includes validation and conflict resolution capabilities.
-    
+
     This function requires Windows PowerShell 5.1 and does not work with PowerShell 7.
 
 .PARAMETER Name
@@ -27,7 +27,7 @@
 .PARAMETER AssignedObjectClass
     Specifies the object class to which this attribute will be assigned. Common values include:
     - user: For user objects
-    - group: For group objects  
+    - group: For group objects
     - contact: For contact objects
     - device: For device objects
 
@@ -46,22 +46,22 @@
 
 .EXAMPLE
     Add-AADConnectDirectoryExtensionAttribute -Name "employeeNumber" -Type "String" -AssignedObjectClass "user" -IsEnabled $true
-    
+
     Adds an employee number attribute for user objects as a string type.
 
 .EXAMPLE
     Add-AADConnectDirectoryExtensionAttribute -FullAttributeString "departmentCode.user.String.True"
-    
+
     Adds a department code attribute using the full attribute string format.
 
 .EXAMPLE
     Add-AADConnectDirectoryExtensionAttribute -Name "badgeNumber" -Type "Integer" -AssignedObjectClass "user" -IsEnabled $true -Force
-    
+
     Adds a badge number attribute, replacing any existing conflicting attribute with the same name.
 
 .EXAMPLE
     Get-Content "attributes.txt" | ForEach-Object { Add-AADConnectDirectoryExtensionAttribute -FullAttributeString $_ }
-    
+
     Adds multiple attributes from a text file, with each line containing a full attribute string.
 
 .INPUTS

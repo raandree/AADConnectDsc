@@ -6,13 +6,13 @@
     The Remove-AADConnectDirectoryExtensionAttribute function removes a directory extension attribute
     from the Azure AD Connect global settings. This function allows you to clean up unused or
     incorrectly configured directory extension attributes from the synchronization configuration.
-    
+
     The function supports two parameter sets: specifying individual properties or providing a
     complete attribute string. It includes validation to ensure the attribute exists before removal.
-    
+
     WARNING: Removing a directory extension attribute that is actively used in synchronization
     rules may cause synchronization errors. Ensure the attribute is not referenced before removal.
-    
+
     This function requires Windows PowerShell 5.1 and does not work with PowerShell 7.
 
 .PARAMETER Name
@@ -34,17 +34,17 @@
 
 .EXAMPLE
     Remove-AADConnectDirectoryExtensionAttribute -Name "employeeNumber" -Type "String" -AssignedObjectClass "user"
-    
+
     Removes the employee number directory extension attribute for user objects.
 
 .EXAMPLE
     Remove-AADConnectDirectoryExtensionAttribute -FullAttributeString "departmentCode.user.String.True"
-    
+
     Removes the department code directory extension attribute using the full attribute string format.
 
 .EXAMPLE
     Get-AADConnectDirectoryExtensionAttribute -Name "obsolete*" | Remove-AADConnectDirectoryExtensionAttribute
-    
+
     Removes all directory extension attributes with names starting with "obsolete".
 
 .EXAMPLE
@@ -52,7 +52,7 @@
     if ($attribute) {
         Remove-AADConnectDirectoryExtensionAttribute -Name $attribute.Name -Type $attribute.Type -AssignedObjectClass $attribute.AssignedObjectClass
     }
-    
+
     Safely removes a directory extension attribute after verifying it exists.
 
 .INPUTS

@@ -6,7 +6,7 @@
     The Get-ADSyncRule function provides a wrapper around the native ADSync\Get-ADSyncRule cmdlet,
     adding enhanced filtering capabilities by name and connector. This function supports multiple
     parameter sets for flexible rule retrieval and is designed to work with Windows PowerShell 5.1.
-    
+
     This function is part of the AADConnectDsc module and requires an active Azure AD Connect
     installation with the ADSync PowerShell module available.
 
@@ -24,27 +24,27 @@
 
 .EXAMPLE
     Get-ADSyncRule
-    
+
     Retrieves all synchronization rules from Azure AD Connect.
 
 .EXAMPLE
     Get-ADSyncRule -Name "In from AD - User Common"
-    
+
     Retrieves the synchronization rule with the specified name from any connector.
 
 .EXAMPLE
     Get-ADSyncRule -Identifier "12345678-1234-1234-1234-123456789012"
-    
+
     Retrieves the synchronization rule with the specified GUID identifier.
 
 .EXAMPLE
     Get-ADSyncRule -ConnectorName "contoso.com"
-    
+
     Retrieves all synchronization rules associated with the specified connector.
 
 .EXAMPLE
     Get-ADSyncRule -Name "In from AD - User Common" -ConnectorName "contoso.com"
-    
+
     Retrieves the synchronization rule with the specified name from the specified connector.
 
 .INPUTS

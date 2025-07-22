@@ -7,11 +7,11 @@
     extracting all properties and their values. This utility function is commonly used in
     DSC configurations and Azure AD Connect management scenarios where hashtable representations
     of objects are needed for parameter passing or configuration storage.
-    
+
     The function filters out properties with null values to create a clean hashtable with only
     meaningful data. This is particularly useful when working with Azure AD Connect objects
     that may have many optional properties.
-    
+
     This function works with both Windows PowerShell 5.1 and PowerShell 7.
 
 .PARAMETER Object
@@ -21,12 +21,12 @@
 .EXAMPLE
     $syncRule = Get-ADSyncRule -Name "In from AD - User Common"
     $hashtable = Convert-ObjectToHashtable -Object $syncRule
-    
+
     Converts an Azure AD Connect synchronization rule object to a hashtable.
 
 .EXAMPLE
     Get-ADSyncRule | Select-Object -First 1 | Convert-ObjectToHashtable
-    
+
     Retrieves a synchronization rule and converts it to a hashtable using pipeline input.
 
 .EXAMPLE
@@ -38,14 +38,14 @@
     }
     $hashtable = Convert-ObjectToHashtable -Object $user
     # Results in: @{ Name = "John Doe"; Email = "john.doe@contoso.com"; Enabled = $true }
-    
+
     Converts a custom object to a hashtable, excluding null properties.
 
 .EXAMPLE
     $config = @{
         SyncRules = Get-ADSyncRule | ForEach-Object { Convert-ObjectToHashtable $_ }
     }
-    
+
     Creates a configuration hashtable containing all synchronization rules as hashtables.
 
 .INPUTS
