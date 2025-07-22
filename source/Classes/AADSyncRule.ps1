@@ -288,7 +288,6 @@ class AADSyncRule
                             [Microsoft.IdentityManagement.PowerShell.ObjectModel.ScopeCondition]::new($sc.Attribute, $sc.ComparisonValue, $sc.ComparisonOperator)
                         }
                         Write-Verbose "ScopeConditionList count is $($scopeConditions.Count)"
-
                         $rule | Add-ADSyncScopeConditionGroup -ScopeConditions $scopeConditions
                         $i++
                     }
@@ -296,13 +295,17 @@ class AADSyncRule
 
                 if ($this.JoinFilter)
                 {
+                    $i = 0
                     foreach ($jcg in $this.JoinFilter)
                     {
+                        Write-Verbose "Processing JoinConditionList $i"
                         $joinConditions = foreach ($jc in $jcg.JoinConditionList)
                         {
+                            Write-Verbose "Processing JoinFilter: CSAttribute = '$($jc.CSAttribute)', MVAttribute = '$($jc.MVAttribute)', CaseSensitive = '$($jc.CaseSensitive)'"
                             [Microsoft.IdentityManagement.PowerShell.ObjectModel.JoinCondition]::new($jc.CSAttribute, $jc.MVAttribute, $jc.CaseSensitive)
                         }
 
+                        Write-Verbose "JoinConditionList count is $($joinConditions.Count)"
                         $rule | Add-ADSyncJoinConditionGroup -JoinConditions $joinConditions
                     }
 
@@ -310,8 +313,10 @@ class AADSyncRule
 
                 if ($this.AttributeFlowMappings)
                 {
+                    $i = 0
                     foreach ($af in $this.AttributeFlowMappings)
                     {
+                        Write-Verbose "Processing AttributeFlowMapping $i, Source = '$($af.Source)', Destination = '$($af.Destination)', Expression = '$($af.Expression)'"
                         $afHashTable = Convert-ObjectToHashtable -Object $af
                         $param = Sync-Parameter -Command (Get-Command -Name Add-ADSyncAttributeFlowMapping) -Parameters $afHashTable
                         $param.SynchronizationRule = $rule
