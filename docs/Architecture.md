@@ -138,8 +138,10 @@ with Azure AD Connect:
 
 ### Version Requirements
 
-- **PowerShell 5.0+**: Required for class-based DSC resources
-- **Windows PowerShell**: Azure AD Connect requires Windows PowerShell
+- **Windows PowerShell 5.1**: Required for class-based DSC resources and
+  Azure AD Connect integration
+- **PowerShell 7 Incompatibility**: This module does NOT work with PowerShell 7
+  due to Azure AD Connect dependencies
 - **.NET Framework 4.5.2+**: Dependency of Azure AD Connect
 
 ### Module Dependencies

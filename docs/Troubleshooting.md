@@ -20,7 +20,8 @@ Unable to load one or more of the requested types. Retrieve the LoaderExceptions
 1. **Verify PowerShell Version**:
    ```powershell
    $PSVersionTable.PSVersion
-   # Should be 5.0 or higher
+   # Should be 5.1.x (Windows PowerShell)
+   # PowerShell 7 is NOT supported
    ```
 
 2. **Check Module Import**:
@@ -324,8 +325,15 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 ### System Health Checks
 
 ```powershell
-# Check PowerShell version
-$PSVersionTable
+# Check PowerShell version - MUST be Windows PowerShell 5.1
+$PSVersionTable.PSVersion
+# Should show 5.1.x
+# PowerShell 7 is NOT supported
+
+# Verify you're running Windows PowerShell (not PowerShell 7)
+if ($PSVersionTable.PSEdition -ne 'Desktop') {
+    Write-Warning "This module requires Windows PowerShell 5.1, not PowerShell 7"
+}
 
 # Verify module installation
 Get-Module AADConnectDsc -ListAvailable

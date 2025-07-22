@@ -1,5 +1,34 @@
 # Best Practices Guide
 
+## Prerequisites and Environment
+
+### PowerShell Version Requirements
+
+**Critical**: This module requires Windows PowerShell 5.1 and does NOT work
+with PowerShell 7.
+
+```powershell
+# Verify you're running the correct PowerShell version
+$PSVersionTable.PSVersion        # Should be 5.1.x
+$PSVersionTable.PSEdition       # Should be 'Desktop' (not 'Core')
+
+# Check before starting any configuration work
+if ($PSVersionTable.PSEdition -ne 'Desktop') {
+    throw "AADConnectDsc requires Windows PowerShell 5.1, not PowerShell 7"
+}
+```
+
+### Azure AD Connect Dependencies
+
+Ensure Azure AD Connect is properly installed and configured before using DSC.
+
+```powershell
+# Verify Azure AD Connect installation
+Test-Path "C:\Program Files\Microsoft Azure AD Sync\Bin\"
+Get-Service ADSync
+Import-Module ADSync  # Should import without errors
+```
+
 ## Configuration Design Principles
 
 ### Idempotency

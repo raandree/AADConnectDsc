@@ -4,6 +4,9 @@ This section provides comprehensive documentation for all public functions in
 the AADConnectDsc module. These functions support the DSC resources and provide
 additional capabilities for managing Azure AD Connect configurations.
 
+**Important**: All functions require Windows PowerShell 5.1 and do NOT work
+with PowerShell 7 due to Azure AD Connect dependencies.
+
 ## Core Functions
 
 ### Get-ADSyncRule

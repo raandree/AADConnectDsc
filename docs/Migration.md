@@ -90,9 +90,14 @@ Import-Module AADConnectDsc -Force
 #### Validate Prerequisites
 
 ```powershell
-# Check PowerShell version
-if ($PSVersionTable.PSVersion.Major -lt 5) {
-    throw "PowerShell 5.0 or higher required"
+# Check PowerShell version - MUST be Windows PowerShell 5.1
+if ($PSVersionTable.PSVersion.Major -lt 5 -or $PSVersionTable.PSVersion.Minor -lt 1) {
+    throw "PowerShell 5.1 or higher required"
+}
+
+# Ensure you're NOT running PowerShell 7
+if ($PSVersionTable.PSEdition -ne 'Desktop') {
+    throw "AADConnectDsc requires Windows PowerShell 5.1, not PowerShell 7"
 }
 
 # Verify ADSync module

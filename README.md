@@ -27,7 +27,8 @@ The AADConnectDsc module contains the following resources:
 
 ### System Requirements
 
-- Windows PowerShell 5.0 or PowerShell 7.x
+- **Windows PowerShell 5.1**: This module requires Windows PowerShell 5.1
+  and does NOT work with PowerShell 7
 - Windows Server 2012 R2 or later
 - .NET Framework 4.6 or later
 
