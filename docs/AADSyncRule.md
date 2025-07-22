@@ -280,4 +280,3 @@ AADSyncRule 'AdvancedUserRule'
 - Scope filters use AND logic within a group, OR logic between groups
 - Join conditions are used with `Join` LinkType rules
 - Expression syntax follows Azure AD Connect transformation functions
-

@@ -22,7 +22,7 @@ Configuration Example_AADConnectDsc_Complete
             IsEnabled           = $true
             Ensure              = 'Present'
         }
-        
+
         AADConnectDirectoryExtensionAttribute 'DepartmentCodeExtension'
         {
             Name                = 'departmentCode'
@@ -31,7 +31,7 @@ Configuration Example_AADConnectDsc_Complete
             IsEnabled           = $true
             Ensure              = 'Present'
         }
-        
+
         # Create a sync rule that uses the custom extensions
         AADSyncRule 'CustomEmployeeRule'
         {
@@ -44,7 +44,7 @@ Configuration Example_AADConnectDsc_Complete
             LinkType            = 'Provision'
             Precedence          = 10
             Disabled            = $false
-            
+
             # Scope to employees only
             ScopeFilter         = @(
                 @{
@@ -62,7 +62,7 @@ Configuration Example_AADConnectDsc_Complete
                     )
                 }
             )
-            
+
             # Standard and custom attribute mappings
             AttributeFlowMappings = @(
                 # Standard mappings
@@ -100,11 +100,11 @@ Configuration Example_AADConnectDsc_Complete
                     Expression  = 'IIF(IsNullOrEmpty([extension_employeeID]), Concatenate([givenName], " ", [sn]), Concatenate([givenName], " ", [sn], " (", [extension_employeeID], ")"))'
                 }
             )
-            
+
             Ensure              = 'Present'
             DependsOn           = '[AADConnectDirectoryExtensionAttribute]EmployeeIDExtension', '[AADConnectDirectoryExtensionAttribute]DepartmentCodeExtension'
         }
-        
+
         # Create an outbound rule for Azure AD
         AADSyncRule 'CustomEmployeeOutbound'
         {
@@ -117,7 +117,7 @@ Configuration Example_AADConnectDsc_Complete
             LinkType            = 'Provision'
             Precedence          = 11
             Disabled            = $false
-            
+
             # Scope to provisioned employees
             ScopeFilter         = @(
                 @{
@@ -130,7 +130,7 @@ Configuration Example_AADConnectDsc_Complete
                     )
                 }
             )
-            
+
             # Outbound attribute mappings
             AttributeFlowMappings = @(
                 @{
@@ -159,7 +159,7 @@ Configuration Example_AADConnectDsc_Complete
                     FlowType    = 'Direct'
                 }
             )
-            
+
             Ensure              = 'Present'
             DependsOn           = '[AADSyncRule]CustomEmployeeRule'
         }

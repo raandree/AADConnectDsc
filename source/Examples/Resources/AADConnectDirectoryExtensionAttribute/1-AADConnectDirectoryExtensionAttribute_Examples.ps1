@@ -43,7 +43,7 @@ Configuration Example_AADConnectDirectoryExtensionAttribute_Multiple
             IsEnabled           = $true
             Ensure              = 'Present'
         }
-        
+
         AADConnectDirectoryExtensionAttribute 'ManagerIDExtension'
         {
             Name                = 'managerID'
@@ -52,7 +52,7 @@ Configuration Example_AADConnectDirectoryExtensionAttribute_Multiple
             IsEnabled           = $true
             Ensure              = 'Present'
         }
-        
+
         AADConnectDirectoryExtensionAttribute 'LastLoginExtension'
         {
             Name                = 'lastLogon'

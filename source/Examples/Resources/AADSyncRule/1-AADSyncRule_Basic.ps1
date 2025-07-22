@@ -23,7 +23,7 @@ Configuration Example_AADSyncRule_Basic
             LinkType            = 'Provision'
             Precedence          = 0
             Disabled            = $false
-            
+
             # Scope filter - only sync enabled employees
             ScopeFilter         = @(
                 @{
@@ -41,7 +41,7 @@ Configuration Example_AADSyncRule_Basic
                     )
                 }
             )
-            
+
             # Basic attribute mappings
             AttributeFlowMappings = @(
                 @{
@@ -60,7 +60,7 @@ Configuration Example_AADSyncRule_Basic
                     FlowType    = 'Direct'
                 }
             )
-            
+
             Ensure              = 'Present'
         }
     }

@@ -22,7 +22,7 @@ Configuration Example_AADSyncRule_Advanced
             LinkType            = 'Provision'
             Precedence          = 1
             Disabled            = $false
-            
+
             # Complex scope filter with multiple conditions
             ScopeFilter         = @(
                 @{
@@ -49,7 +49,7 @@ Configuration Example_AADSyncRule_Advanced
                     )
                 }
             )
-            
+
             # Join condition for object linking
             JoinFilter          = @(
                 @{
@@ -62,7 +62,7 @@ Configuration Example_AADSyncRule_Advanced
                     )
                 }
             )
-            
+
             # Advanced attribute mappings with expressions
             AttributeFlowMappings = @(
                 @{
@@ -88,7 +88,7 @@ Configuration Example_AADSyncRule_Advanced
                     Expression  = 'Concatenate([sAMAccountName], "@", "contoso.com")'
                 }
             )
-            
+
             Ensure              = 'Present'
         }
     }
