@@ -87,8 +87,10 @@ AADConnectDsc/
 │       └── about_AADConnectDsc.help.txt
 │
 ├── tests/                         # Test files
-│   └── QA/
-│       └── module.tests.ps1
+│   ├── QA/                        # Quality assurance tests (current)
+│   │   └── module.tests.ps1       # Module validation and PSScriptAnalyzer
+│   ├── Unit/                      # Unit tests (planned - not implemented)
+│   └── Integration/               # Integration tests (planned - not implemented)
 │
 ├── build.ps1                     # Build script
 ├── build.yaml                    # Build configuration
@@ -231,32 +233,97 @@ RequiredModulesDirectory: 'output/RequiredModules'
 
 ### Testing Strategy
 
-#### Unit Testing
+#### Current Test Implementation
+
+**QA Tests (Implemented)**
+- **Location**: `tests/QA/module.tests.ps1`
+- **Purpose**: Module quality validation and basic functionality
+- **Tests Include**:
+  - Changelog format validation
+  - Module import/removal testing
+  - PSScriptAnalyzer code quality validation
+  - Basic module structure verification
+
+**Build Configuration**
+- **Framework**: Pester 5.x with NUnit XML output
+- **Coverage**: Configured but currently at 0% threshold
+- **Test Discovery**: Configured for `tests/Unit` (not yet implemented)
+- **CI Integration**: Azure Pipelines with automatic test execution
+
+#### Unit Testing (Planned - Not Implemented)
 
 **Test Scope:**
-- Individual function validation
-- Class method testing
-- Parameter validation
-- Error handling scenarios
+- Individual function validation (Get-ADSyncRule, Add/Get/Remove-AADConnectDirectoryExtensionAttribute, Convert-ObjectToHashtable)
+- Class method testing (AADSyncRule, AADConnectDirectoryExtensionAttribute)
+- Parameter validation and boundary testing
+- Error handling scenarios and exception paths
+- PowerShell help documentation validation
+
+**Required Test Structure:**
+```
+tests/Unit/
+├── Public/
+│   ├── Get-ADSyncRule.Tests.ps1
+│   ├── Add-AADConnectDirectoryExtensionAttribute.Tests.ps1
+│   ├── Get-AADConnectDirectoryExtensionAttribute.Tests.ps1
+│   ├── Remove-AADConnectDirectoryExtensionAttribute.Tests.ps1
+│   └── Convert-ObjectToHashtable.Tests.ps1
+├── Classes/
+│   ├── AADSyncRule.Tests.ps1
+│   └── AADConnectDirectoryExtensionAttribute.Tests.ps1
+└── Private/
+    └── New-Guid2.Tests.ps1
+```
 
 **Mock Requirements:**
-- ADSync module cmdlet mocking
+- ADSync module cmdlet mocking (Get-ADSyncRule, Get-ADSyncGlobalSettings, Set-ADSyncGlobalSettings)
 - Azure AD Connect service state simulation
-- File system and registry mocking
+- File system and registry mocking for configuration storage
+- PowerShell DSC framework interaction mocking
 
-#### Integration Testing
+#### Integration Testing (Planned - Not Implemented)
 
-**Test Environment:**
-- Full Azure AD Connect installation
-- Test Active Directory domain
-- Azure AD tenant connectivity
-- Isolated test environment
+**Test Environment Requirements:**
+- Full Azure AD Connect installation with functioning ADSync module
+- Test Active Directory domain with sample objects
+- Azure AD tenant connectivity for end-to-end validation
+- Isolated test environment to prevent production impact
+- Dedicated test service account with appropriate permissions
 
 **Test Scenarios:**
-- End-to-end configuration application
-- Upgrade and migration testing
-- Performance and load testing
-- Error recovery testing
+- End-to-end DSC configuration application and verification
+- Sync rule creation, modification, and deletion workflows
+- Directory extension attribute lifecycle management
+- Configuration drift detection and remediation
+- Error recovery and rollback procedures
+- Performance testing with large-scale configurations
+- Upgrade and migration scenario validation
+
+**Required Test Structure:**
+```
+tests/Integration/
+├── AADSyncRule.Integration.Tests.ps1
+├── AADConnectDirectoryExtensionAttribute.Integration.Tests.ps1
+└── CompleteConfiguration.Integration.Tests.ps1
+```
+
+#### Testing Gaps and Priorities
+
+**High Priority (Required for Production)**:
+1. **Unit Tests for Public Functions** - Critical for reliability
+2. **Class Method Unit Tests** - Ensure DSC resource functionality
+3. **Mock Framework Setup** - Enable testing without Azure AD Connect dependency
+4. **Parameter Validation Tests** - Prevent configuration errors
+
+**Medium Priority (Quality Improvement)**:
+1. **Integration Tests** - Full end-to-end validation
+2. **Performance Tests** - Large-scale configuration handling
+3. **Error Scenario Tests** - Comprehensive error handling validation
+
+**Low Priority (Future Enhancement)**:
+1. **Load Testing** - High-volume synchronization scenarios
+2. **Compatibility Testing** - Multiple Azure AD Connect versions
+3. **Security Testing** - Credential and permission validation
 
 This technical foundation ensures AADConnectDsc can reliably manage Azure AD
 Connect configurations while maintaining compatibility with existing
