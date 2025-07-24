@@ -14,8 +14,7 @@ class AADConnectDirectoryExtensionAttribute
     [bool]$IsEnabled
 
     [DscProperty()]
-    [Ensure]
-    $Ensure
+    [Ensure]$Ensure
 
     AADConnectDirectoryExtensionAttribute()
     {
@@ -49,7 +48,7 @@ class AADConnectDirectoryExtensionAttribute
             Where-Object { $_.AssignedObjectClass -eq $this.AssignedObjectClass -and $_.Type -eq $this.Type }
 
         $currentState.Ensure = [Ensure][int][bool]$attribute
-        $CurrentState.Name = $this.Name
+        $currentState.Name = $this.Name
         $currentState.AssignedObjectClass = $this.AssignedObjectClass
         $currentState.Type = $attribute.Type
         $currentState.IsEnabled = $attribute.IsEnabled
