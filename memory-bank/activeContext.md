@@ -3,25 +3,51 @@
 ## Current Work Focus
 
 ### Primary Objective
+
 Create comprehensive documentation for the AADConnectDsc PowerShell DSC resource
 module following DSC community standards and patterns established by projects
 like ComputerManagementDsc and NetworkingDsc.
 
+### Recent Development Activity
+
+#### Standard Rule Comparison Enhancement (Commit 0850c83)
+
+- Updated AADSyncRule class Test() method to handle standard rules more
+  appropriately
+- For `IsStandardRule = $true`, only `Name` and `Disabled` properties are
+  compared for DSC compliance
+- All other properties are excluded from compliance evaluation since standard
+  rules cannot be modified
+- Added secondary comparison for informational/reporting purposes without
+  affecting test results
+- Enhanced verbose logging to clearly indicate when standard rule comparison
+  is happening
+
+#### Key Technical Changes
+
+- Modified `ExcludeProperties` logic to dynamically exclude all properties
+  except `Name` and `Disabled` for standard rules
+- Added conditional secondary comparison with detailed verbose output
+- Improved error messaging for better user experience
+
 ### Documentation Goals
 
-**Standards Compliance**
+#### Standards Compliance
+
 - Follow DSC community documentation patterns
 - Match structure and style of established DSC modules
 - Include all standard DSC module documentation components
 - Ensure consistency with PowerShell Gallery requirements
 
-**Independence from AADConnectConfig**
+#### Independence from AADConnectConfig
+
 - Document AADConnectDsc as a standalone module
 - No references to AADConnectConfig project
 - Focus purely on DSC resource capabilities
 - Maintain clear separation of concerns
 
-**Learning from Usage Patterns**
+#### Learning from Usage Patterns
+
 - Analyze AADConnectConfig to understand DSC resource usage
 - Extract examples and patterns without creating dependencies
 - Document real-world scenarios and use cases
