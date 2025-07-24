@@ -103,7 +103,7 @@ class AADSyncRule
 
         $param.ExcludeProperties = if ($this.IsStandardRule)
         {
-            'Connector', 'Version', 'Identifier', 'Precedence'
+            ($this | Get-Member -MemberType Property).Name | Where-Object { $_ -notin 'Name', 'Disabled' }
         }
         else
         {
@@ -116,6 +116,18 @@ class AADSyncRule
             {
                 Write-Verbose "The sync rule '$($this.Name)' exists and should exist, comparing rule with 'Test-DscParameterState'."
                 Test-DscParameterState @param -ReverseCheck
+
+                if ($this.IsStandardRule)
+                {
+                    $param.ExcludeProperties = 'Connector', 'Version', 'Identifier', 'Precedence'
+                    Write-Verbose '-----------------------------------------------------------------------------------------------------'
+                    Write-Verbose '--------------------------- Comparing all properties for standard rule ------------------------------'
+                    Write-Verbose '----------------------- The result will not effect the overall test result --------------------------'
+                    Write-Verbose '-----------------------------------------------------------------------------------------------------'
+                    $null = Test-DscParameterState @param -ReverseCheck
+                    Write-Verbose '-----------------------------------------------------------------------------------------------------'
+                    Write-Verbose '-----------------------------------------------------------------------------------------------------'
+                }
             }
             else
             {
@@ -255,11 +267,11 @@ class AADSyncRule
             {
                 if ($null -eq $existingRule)
                 {
-                    Write-Error "A syncrule defined as 'IsStandardRule' does not exist. It cannot be enabled or disabled."
+                    Write-Error "A Sync Rule defined as 'IsStandardRule' does not exist. It cannot be enabled or disabled."
                     return
                 }
 
-                Write-Warning "The only property changed on a standard rule is 'Disabled'. All other configuration drifts will not be corrected."
+                Write-Warning "The only property that will be changed on a standard rule is 'Disabled'. All other configuration drifts will not be corrected."
                 $existingRule.Disabled = $this.Disabled
                 Write-Verbose "Setting the 'Disabled' property of the rule '$($this.Name)' to '$($this.Disabled)' and calling 'Add-ADSyncRule'."
                 $existingRule | Add-ADSyncRule
