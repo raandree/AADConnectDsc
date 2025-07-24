@@ -104,7 +104,7 @@ function Remove-AADConnectDirectoryExtensionAttribute
             $attributeValues = $FullAttributeString -split '\.'
             if ($attributeValues.Count -ne 4)
             {
-                Write-Error "The attribute string did not have the correct format. Make sure it is like 'attributeName.group.String.True'".
+                Write-Error "The attribute string did not have the correct format. Make sure it is like 'attributeName.group.String.True'"
                 return
             }
             $Name = $attributeValues[0]

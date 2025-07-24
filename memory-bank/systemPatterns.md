@@ -51,13 +51,23 @@ The core DSC resource for managing synchronization rules:
 - Manage rule creation, modification, and deletion
 - Handle complex property types (scope filters, join conditions, attribute flows)
 - Integrate with Azure AD Connect precedence system
-- Support both standard and custom rules
+- Support both standard and custom rules with differentiated behavior
 
 **Design Patterns:**
 - **State Management**: Get/Test/Set pattern for DSC compliance
 - **Property Validation**: Strong typing with custom validation
 - **Error Handling**: Comprehensive error reporting with context
 - **Logging**: Verbose logging for troubleshooting
+- **Standard Rule Handling**: Specialized logic for Microsoft standard rules
+
+**Standard Rule Behavior Pattern:**
+```powershell
+# For IsStandardRule = $true:
+# - Only Name and Disabled properties are evaluated for DSC compliance
+# - All other properties are excluded from Test() comparison
+# - Secondary comparison performed for informational purposes
+# - Only Disabled property can be modified via Set()
+```
 
 **Class Hierarchy:**
 ```powershell
@@ -69,8 +79,8 @@ AADSyncRule
 │   └── System Properties: Identifier, Version (NotConfigurable)
 ├── Methods
 │   ├── Get() → Current state retrieval
-│   ├── Test() → Configuration compliance check
-│   └── Set() → Configuration application
+│   ├── Test() → Configuration compliance check (with standard rule logic)
+│   └── Set() → Configuration application (limited for standard rules)
 └── Helper Classes
     ├── ScopeConditionGroup/ScopeCondition
     ├── JoinConditionGroup/JoinCondition
@@ -228,6 +238,35 @@ AADSyncRule.Get()
 
 ## Testing and Validation Patterns
 
+### Standard Rule Comparison Pattern
+
+**Pattern**: Differential Property Evaluation
+
+```powershell
+# Primary comparison (affects DSC compliance)
+$param.ExcludeProperties = if ($this.IsStandardRule) {
+    # Exclude ALL properties except Name and Disabled for standard rules
+    ($this | Get-Member -MemberType Property).Name | 
+        Where-Object { $_ -notin 'Name', 'Disabled' }
+} else {
+    # Standard exclusions for custom rules
+    'Connector', 'Version', 'Identifier'
+}
+
+# Secondary comparison (informational only)
+if ($this.IsStandardRule) {
+    $param.ExcludeProperties = 'Connector', 'Version', 'Identifier', 'Precedence'
+    # Perform comparison but don't affect return value
+    $null = Test-DscParameterState @param -ReverseCheck
+}
+```
+
+**Benefits:**
+- Standard rules only fail DSC compliance if Name/Disabled differ
+- Secondary comparison provides visibility into configuration drift
+- Clear separation between actionable and informational differences
+- Prevents false failures for immutable standard rule properties
+
 ### Unit Testing Strategy
 
 **Pattern**: Class Method Testing
@@ -235,6 +274,7 @@ AADSyncRule.Get()
 - Mock Azure AD Connect dependencies
 - Validate complex object transformations
 - Test error handling scenarios
+- Test standard vs custom rule behavior differences
 
 ### Integration Testing Strategy
 

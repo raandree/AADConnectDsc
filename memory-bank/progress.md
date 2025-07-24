@@ -1,5 +1,20 @@
 # Progress: AADConnectDsc Documentation Status
 
+## Latest Development Updates
+
+### Standard Rule Comparison Enhancement (July 24, 2025) ✅ COMPLETE
+- ✅ **AADSyncRule Class Enhancement**: Updated Test() method for better standard rule handling
+- ✅ **Property Exclusion Logic**: Only `Name` and `Disabled` properties compared for standard rules
+- ✅ **Documentation Update**: Added detailed notes about standard rule behavior
+- ✅ **Example Addition**: New example showing standard rule management
+- ✅ **Memory Bank Update**: Documented changes in active context
+
+### Technical Implementation Details ✅
+- ✅ **Dynamic Property Exclusion**: All properties except `Name` and `Disabled` excluded from compliance testing
+- ✅ **Secondary Comparison**: Informational comparison performed without affecting test results
+- ✅ **Enhanced Verbose Logging**: Clear indicators when standard rule comparison is happening
+- ✅ **Error Message Improvements**: Better user experience with clearer messaging
+
 ## Phase 1: Foundation Documentation ✅ COMPLETE
 
 ### Memory Bank Establishment ✅
@@ -39,6 +54,7 @@
 - ✅ **Complete Parameter Reference**: All 15+ parameters documented with examples
 - ✅ **Complex Properties**: ScopeFilter, JoinFilter, AttributeFlowMappings detailed
 - ✅ **Multiple Examples**: Basic, advanced, and production scenarios
+- ✅ **Standard Rule Behavior**: Detailed documentation of standard rule handling
 - ✅ **File**: `docs/AADSyncRule.md`
 
 ### AADConnectDirectoryExtensionAttribute Documentation ✅

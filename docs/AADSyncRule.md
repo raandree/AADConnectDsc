@@ -99,6 +99,7 @@ sync rules and management of standard Microsoft-provided sync rules.
 - **Required**: No
 - **Default**: `$false`
 - **Description**: Whether this is a Microsoft standard rule (read-only except for Disabled property)
+- **Note**: For standard rules, DSC Test() method only compares `Name` and `Disabled` properties for compliance. A secondary comparison of all properties is performed for reporting purposes but does not affect the test result
 
 #### ImmutableTag
 
@@ -242,7 +243,24 @@ AADSyncRule 'BasicUserRule'
 }
 ```
 
-### Example 2: Advanced Rule with Expressions
+### Example 2: Managing a Standard Rule
+
+```powershell
+AADSyncRule 'StandardUserRule'
+{
+    Name                = 'In from AD - User Common'
+    ConnectorName       = 'contoso.com'
+    IsStandardRule      = $true
+    Disabled            = $false
+    
+    # Note: Only Name and Disabled properties are evaluated for compliance
+    # All other properties are ignored since standard rules cannot be modified
+    
+    Ensure              = 'Present'
+}
+```
+
+### Example 3: Advanced Rule with Expressions
 
 ```powershell
 AADSyncRule 'AdvancedUserRule'
@@ -276,7 +294,13 @@ AADSyncRule 'AdvancedUserRule'
 ## Notes
 
 - Custom sync rules automatically receive precedence values starting from 0
-- Standard rules can only have their `Disabled` property modified
+- **Standard Rule Behavior**: For `IsStandardRule = $true`:
+  - Only the `Disabled` property can be modified
+  - DSC compliance testing only validates `Name` and `Disabled` properties
+  - All other properties are excluded from compliance evaluation since
+    standard rules cannot be changed
+  - A secondary comparison is performed for informational purposes but
+    doesn't affect DSC test results
 - Scope filters use AND logic within a group, OR logic between groups
 - Join conditions are used with `Join` LinkType rules
 - Expression syntax follows Azure AD Connect transformation functions
