@@ -20,6 +20,10 @@ function Write-AADConnectEventLog
         - 1001: Warning - Sync rule is absent but should be present
         - 1002: Warning - Sync rule is present but should be absent
         - 1003: Warning - Sync rule configuration drift detected
+        - 2000: Information - Sync rule created successfully
+        - 2001: Information - Sync rule updated successfully
+        - 2002: Information - Standard sync rule disabled state changed
+        - 2003: Information - Sync rule removed successfully
 
     .PARAMETER Message
         The message to write to the event log.
@@ -103,7 +107,27 @@ function Write-AADConnectEventLog
 
         [Parameter()]
         [bool]
-        $IsStandardRule
+        $IsStandardRule,
+
+        [Parameter()]
+        [string]
+        $Operation,
+
+        [Parameter()]
+        [int]
+        $ScopeFilterCount,
+
+        [Parameter()]
+        [int]
+        $JoinFilterCount,
+
+        [Parameter()]
+        [int]
+        $AttributeFlowMappingCount,
+
+        [Parameter()]
+        [string]
+        $RuleIdentifier
     )
 
     try
@@ -111,18 +135,39 @@ function Write-AADConnectEventLog
         $logName = 'AADConnectDsc'
         $sourceName = 'AADConnectDsc'
 
+        # Always write verbose output for debugging, even if event logging fails
+        Write-Verbose "Attempting to write event log entry: EventType=$EventType, EventId=$EventId, SyncRule=$SyncRuleName"
+
         # Check if the event log exists, if not create it
         if (-not [System.Diagnostics.EventLog]::Exists($logName))
         {
             Write-Verbose "Event log '$logName' does not exist. Creating it now."
-            New-EventLog -LogName $logName -Source $sourceName
-            Write-Verbose "Event log '$logName' created successfully."
+            try
+            {
+                New-EventLog -LogName $logName -Source $sourceName
+                Write-Verbose "Event log '$logName' created successfully."
+            }
+            catch
+            {
+                Write-Warning "Failed to create event log '$logName': $($_.Exception.Message). This requires Administrator privileges."
+                Write-Verbose "Event logging will be skipped. To enable event logging, run 'New-EventLog -LogName '$logName' -Source '$sourceName'' as Administrator."
+                return
+            }
         }
         elseif (-not [System.Diagnostics.EventLog]::SourceExists($sourceName))
         {
             Write-Verbose "Event source '$sourceName' does not exist in log '$logName'. Creating it now."
-            New-EventLog -LogName $logName -Source $sourceName
-            Write-Verbose "Event source '$sourceName' created successfully."
+            try
+            {
+                New-EventLog -LogName $logName -Source $sourceName
+                Write-Verbose "Event source '$sourceName' created successfully."
+            }
+            catch
+            {
+                Write-Warning "Failed to create event source '$sourceName': $($_.Exception.Message). This requires Administrator privileges."
+                Write-Verbose "Event logging will be skipped. To enable event logging, run 'New-EventLog -LogName '$logName' -Source '$sourceName'' as Administrator."
+                return
+            }
         }
 
         # Build the complete message with context in multi-line format
@@ -172,16 +217,56 @@ function Write-AADConnectEventLog
                 $ruleType = if ($IsStandardRule) { "Microsoft Standard Rule" } else { "Custom Rule" }
                 $contextMessage += "`n  Rule Type: $ruleType"
             }
+
+            if ($Operation)
+            {
+                $contextMessage += "`n  Operation: $Operation"
+            }
+
+            if ($RuleIdentifier)
+            {
+                $contextMessage += "`n  Rule Identifier: $RuleIdentifier"
+            }
+
+            # Add configuration complexity details for create/update operations
+            if ($PSBoundParameters.ContainsKey('ScopeFilterCount'))
+            {
+                $contextMessage += "`n  Scope Filter Groups: $ScopeFilterCount"
+            }
+
+            if ($PSBoundParameters.ContainsKey('JoinFilterCount'))
+            {
+                $contextMessage += "`n  Join Filter Groups: $JoinFilterCount"
+            }
+
+            if ($PSBoundParameters.ContainsKey('AttributeFlowMappingCount'))
+            {
+                $contextMessage += "`n  Attribute Flow Mappings: $AttributeFlowMappingCount"
+            }
         }
 
         # Write the event log entry
-        Write-EventLog -LogName $logName -Source $sourceName -EventId $EventId -EntryType $EventType -Message $contextMessage
+        try
+        {
+            Write-EventLog -LogName $logName -Source $sourceName -EventId $EventId -EntryType $EventType -Message $contextMessage
+            Write-Verbose "✅ Event log entry written successfully: EventType=$EventType, EventId=$EventId, SyncRule=$SyncRuleName, Connector=$ConnectorName"
+        }
+        catch
+        {
+            Write-Warning "❌ Failed to write event log entry: $($_.Exception.Message). This typically requires Administrator privileges."
+            Write-Verbose "To enable event logging, run PowerShell as Administrator or pre-create the event log with: New-EventLog -LogName '$logName' -Source '$sourceName'"
 
-        Write-Verbose "Event log entry written successfully: EventType=$EventType, EventId=$EventId, SyncRule=$SyncRuleName, Connector=$ConnectorName"
+            # For debugging purposes, always log the event details to verbose output
+            Write-Verbose "Event details that would have been logged:"
+            Write-Verbose "  EventType: $EventType"
+            Write-Verbose "  EventId: $EventId"
+            Write-Verbose "  Message: $contextMessage"
+        }
     }
     catch
     {
-        Write-Warning "Failed to write to event log: $($_.Exception.Message)"
+        Write-Warning "❌ Event logging failed: $($_.Exception.Message)"
+        Write-Verbose "Event logging attempted but failed. DSC operation will continue normally."
         # Don't throw - event logging should not break the main DSC operation
     }
 }

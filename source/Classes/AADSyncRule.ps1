@@ -275,6 +275,8 @@ class AADSyncRule
         Write-Verbose "Got connector '$($this.ConnectorName)' for rule '$($this.Name)' with identifier '$($this.Connector)'."
 
         $existingRule = Get-ADSyncRule -Name $this.Name -ConnectorName $this.ConnectorName
+        $isNewRule = $null -eq $existingRule
+
         if ($existingRule)
         {
             Write-Verbose "Got existing rule '$($existingRule.Name)' with identifier '$($existingRule.Identifier)' for connector '$($this.ConnectorName)'."
@@ -300,9 +302,22 @@ class AADSyncRule
                 }
 
                 Write-Warning "The only property that will be changed on a standard rule is 'Disabled'. All other configuration drifts will not be corrected."
+                $oldDisabledState = $existingRule.Disabled
                 $existingRule.Disabled = $this.Disabled
                 Write-Verbose "Setting the 'Disabled' property of the rule '$($this.Name)' to '$($this.Disabled)' and calling 'Add-ADSyncRule'."
                 $existingRule | Add-ADSyncRule
+
+                # Log standard rule disabled state change
+                try
+                {
+                    $operationDetails = "Changed Disabled state from $oldDisabledState to $($this.Disabled)"
+                    Write-Verbose "🔔 Attempting to log standard rule disabled state change event..."
+                    Write-AADConnectEventLog -EventType 'Information' -EventId 2002 -Message "Standard sync rule disabled state changed successfully" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule -Operation $operationDetails -RuleIdentifier $this.Identifier
+                }
+                catch
+                {
+                    Write-Verbose "❌ Failed to write event log entry for standard rule change: $($_.Exception.Message)"
+                }
             }
             else
             {
@@ -378,12 +393,42 @@ class AADSyncRule
 
                 Write-Verbose "Calling 'Add-ADSyncRule' to create or update the rule '$($this.Name)'."
                 $rule | Add-ADSyncRule
+
+                # Log rule creation or update
+                $eventId = if ($isNewRule) { 2000 } else { 2001 }
+                $message = if ($isNewRule) { "Sync rule created successfully" } else { "Sync rule updated successfully" }
+                $operation = if ($isNewRule) { "Create" } else { "Update" }
+
+                try
+                {
+                    $scopeFilterCount = if ($this.ScopeFilter) { $this.ScopeFilter.Count } else { 0 }
+                    $joinFilterCount = if ($this.JoinFilter) { $this.JoinFilter.Count } else { 0 }
+                    $attributeFlowMappingCount = if ($this.AttributeFlowMappings) { $this.AttributeFlowMappings.Count } else { 0 }
+
+                    Write-Verbose "🔔 Attempting to log sync rule $operation event (EventId: $eventId)..."
+                    Write-AADConnectEventLog -EventType 'Information' -EventId $eventId -Message $message -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule -Operation $operation -RuleIdentifier $this.Identifier -ScopeFilterCount $scopeFilterCount -JoinFilterCount $joinFilterCount -AttributeFlowMappingCount $attributeFlowMappingCount
+                }
+                catch
+                {
+                    Write-Verbose "❌ Failed to write event log entry for sync rule $operation operation: $($_.Exception.Message)"
+                }
             }
         }
         else
         {
             if ($existingRule)
             {
+                # Log rule removal
+                try
+                {
+                    Write-Verbose "🔔 Attempting to log sync rule removal event..."
+                    Write-AADConnectEventLog -EventType 'Information' -EventId 2003 -Message "Sync rule removed successfully" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $existingRule.Direction -TargetObjectType $existingRule.TargetObjectType -SourceObjectType $existingRule.SourceObjectType -Precedence $existingRule.Precedence -Disabled $existingRule.Disabled -IsStandardRule $existingRule.IsStandardRule -Operation "Remove" -RuleIdentifier $this.Identifier
+                }
+                catch
+                {
+                    Write-Verbose "❌ Failed to write event log entry for sync rule removal: $($_.Exception.Message)"
+                }
+
                 Remove-ADSyncRule -Identifier $this.Identifier
             }
         }

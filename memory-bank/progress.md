@@ -1,19 +1,48 @@
-# Progress: AADConnectDsc Documentation Status
+# Progress: AADConnectDsc Status
 
 ## Latest Development Updates
 
-### Event Logging Implementation (August 7, 2025) ✅ COMPLETE
-- ✅ **Event Logging Function**: Created `Write-AADConnectEventLog` private function
-  - Automatically creates AADConnectDsc event log and source if missing
-  - Follows DSC community style guidelines
-  - Comprehensive error handling without breaking DSC operations
-- ✅ **AADSyncRule Test Method Enhancement**: Added event logging to Test() method
-  - Information event (ID 1000) when sync rule is in desired state
-  - Warning event (ID 1001) when sync rule is absent but should be present
-  - Warning event (ID 1002) when sync rule is present but should be absent
-  - Warning event (ID 1003) when sync rule has configuration drift
-- ✅ **Event Log Audit Trail**: Complete tracking of sync rule compliance states
-- ✅ **Module Build Validation**: Successfully built module with new event logging functionality
+### Enhanced Event Logging with Permission Diagnostics (August 7, 2025) ✅ COMPLETE
+
+**Problem Resolution**: Successfully resolved issue where events weren't appearing when Set() method modified sync rules, particularly in non-administrator testing environments.
+
+#### Root Cause Resolution ✅
+- ✅ **Module Structure Issue**: Event logging function was in Private folder but not included in compiled module
+- ✅ **Function Accessibility**: DSC resource classes couldn't access Write-AADConnectEventLog despite calling it
+- ✅ **Compilation Errors**: Fixed syntax errors in help text and variable scope problems
+- ✅ **Permission Handling**: Added permission-aware error messages for non-admin environments
+
+#### Enhanced Implementation ✅
+- ✅ **File Location Fix**: Moved `Write-AADConnectEventLog` from Private to Public folder for proper inclusion
+- ✅ **Permission-Aware Diagnostics**: Clear warnings when Administrator privileges required
+- ✅ **Verbose Logging**: Always shows event logging attempts for debugging purposes
+- ✅ **Graceful Fallback**: Event logging failures don't break DSC operations
+- ✅ **Actionable Guidance**: Provides specific commands to enable event logging as Administrator
+
+#### Event Logging Function Features ✅
+- ✅ **Automatic Event Log Creation**: Creates "AADConnectDsc" event log and source when needed
+- ✅ **Multi-line Event Format**: Structured information display with comprehensive context
+- ✅ **Enhanced Error Handling**: Non-breaking error handling with clear diagnostic messages
+- ✅ **Rich Operational Context**: Rule details, complexity metrics, and operation information
+
+#### Event ID Schema ✅
+- ✅ **Compliance Events**:
+  - ID 1000 (Information): Sync rule is in desired state and compliant
+  - ID 1001 (Warning): Sync rule absent but should be present
+  - ID 1002 (Warning): Sync rule present but should be absent
+  - ID 1003 (Warning): Sync rule configuration drift detected
+- ✅ **Operational Events**:
+  - ID 2000 (Information): Sync rule created successfully
+  - ID 2001 (Information): Sync rule updated successfully
+  - ID 2002 (Information): Standard rule disabled state changed
+  - ID 2003 (Information): Sync rule removed successfully
+
+#### Testing Validation ✅
+- ✅ **Module Build Success**: Version 0.4.0-eventlog0001 compiled successfully
+- ✅ **Function Import**: Module imports without parser errors
+- ✅ **Event Logging Access**: DSC resource classes can access event logging function
+- ✅ **Permission Testing**: Confirmed behavior in both admin and non-admin environments
+- ✅ **Diagnostic Output**: Verbose messages provide clear feedback about event logging attempts
 
 ### Event Log Design Details ✅
 - ✅ **Dedicated Event Log**: Uses separate "AADConnectDsc" event log for clean organization
