@@ -124,8 +124,9 @@ class AADSyncRule
                     Write-Verbose '--------------------------- Comparing all properties for standard rule ------------------------------'
                     Write-Verbose '----------------------- The result will not effect the overall test result --------------------------'
                     Write-Verbose '-----------------------------------------------------------------------------------------------------'
-                    $null = Test-DscParameterState @param -ReverseCheck
+                    $result = Test-DscParameterState @param -ReverseCheck
                     Write-Verbose '-----------------------------------------------------------------------------------------------------'
+                    Write-Verbose "---- Test-DscParameterState returned '$result', but a negative value is not returned to the LCM -----"
                     Write-Verbose '-----------------------------------------------------------------------------------------------------'
                 }
             }
