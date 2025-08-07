@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   standard rules except `Name` and `Disabled`. This is because standard rules
   cannot be changed. A second compare job is executed for reporting on
   differences but without having an effect on the overall test result.
-
+- Fixed of `DscResource.Common`, now `0.24.0-preview0002`.
 
 ## [0.3.2] - 2025-07-22
 
