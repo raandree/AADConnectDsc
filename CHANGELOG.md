@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   differences but without having an effect on the overall test result.
 - Fixed of `DscResource.Common`, now `0.24.0-preview0002`.
 
+### Changed
+
+- AADSyncRule
+  - Verbose output us suppressed when comparing all properties for standard rules.
+
 ## [0.3.2] - 2025-07-22
 
 ### Changed
