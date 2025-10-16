@@ -6,37 +6,37 @@ The rule includes scope filtering to only sync employees and sets up basic
 attribute flow mappings.
 #>
 
-Configuration Example_AADSyncRule_Basic
+configuration Example_AADSyncRule_Basic
 {
     Import-DscResource -ModuleName AADConnectDsc
 
-    Node localhost
+    node localhost
     {
         AADSyncRule 'BasicUserRule'
         {
-            Name                = 'Example - Inbound - User - Basic'
-            ConnectorName       = 'contoso.com'
-            Description         = 'Basic user sync rule example'
-            Direction           = 'Inbound'
-            TargetObjectType    = 'person'
-            SourceObjectType    = 'user'
-            LinkType            = 'Provision'
-            Precedence          = 0
-            Disabled            = $false
+            Name                  = 'Example - Inbound - User - Basic'
+            ConnectorName         = 'contoso.com'
+            Description           = 'Basic user sync rule example'
+            Direction             = 'Inbound'
+            TargetObjectType      = 'person'
+            SourceObjectType      = 'user'
+            LinkType              = 'Provision'
+            Precedence            = 0
+            Disabled              = $false
 
             # Scope filter - only sync enabled employees
-            ScopeFilter         = @(
+            ScopeFilter           = @(
                 @{
                     ScopeConditionList = @(
                         @{
-                            Attribute           = 'userAccountControl'
-                            ComparisonOperator  = 'NOTEQUAL'
-                            ComparisonValue     = '514'  # Account disabled
+                            Attribute          = 'userAccountControl'
+                            ComparisonOperator = 'NOTEQUAL'
+                            ComparisonValue    = '514'  # Account disabled
                         },
                         @{
-                            Attribute           = 'employeeType'
-                            ComparisonOperator  = 'EQUAL'
-                            ComparisonValue     = 'Employee'
+                            Attribute          = 'employeeType'
+                            ComparisonOperator = 'EQUAL'
+                            ComparisonValue    = 'Employee'
                         }
                     )
                 }
@@ -61,7 +61,7 @@ Configuration Example_AADSyncRule_Basic
                 }
             )
 
-            Ensure              = 'Present'
+            Ensure                = 'Present'
         }
     }
 }

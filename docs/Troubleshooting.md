@@ -18,6 +18,7 @@ Unable to load one or more of the requested types. Retrieve the LoaderExceptions
 **Solutions**:
 
 1. **Verify PowerShell Version**:
+
    ```powershell
    $PSVersionTable.PSVersion
    # Should be 5.1.x (Windows PowerShell)
@@ -25,11 +26,13 @@ Unable to load one or more of the requested types. Retrieve the LoaderExceptions
    ```
 
 2. **Check Module Import**:
+
    ```powershell
    Import-Module AADConnectDsc -Force -Verbose
    ```
 
 3. **Validate Class Loading**:
+
    ```powershell
    [AADSyncRule]::new()
    ```
@@ -46,6 +49,7 @@ Exception calling "ValidateConfigurationArgument" with "2" argument(s):
 **Solutions**:
 
 1. **Check Property Names**: Ensure exact case matching
+
    ```powershell
    # Correct
    Direction = 'Inbound'
@@ -55,6 +59,7 @@ Exception calling "ValidateConfigurationArgument" with "2" argument(s):
    ```
 
 2. **Validate Enum Values**:
+
    ```powershell
    # Check valid values for Direction
    [System.Enum]::GetNames([DirectionType])
@@ -76,16 +81,19 @@ was found in any module directory.
 **Solutions**:
 
 1. **Verify Azure AD Connect Installation**:
+
    ```powershell
    Test-Path "C:\Program Files\Microsoft Azure AD Sync\Bin\"
    ```
 
 2. **Import ADSync Module Manually**:
+
    ```powershell
    Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"
    ```
 
 3. **Check Module Path**:
+
    ```powershell
    $env:PSModulePath -split ';'
    # Should include ADSync installation path
@@ -106,6 +114,7 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 2. **Check Service Account**: Verify Azure AD Connect service account permissions
 
 3. **Validate User Rights**:
+
    ```powershell
    whoami /priv
    # Look for SeBackupPrivilege and SeRestorePrivilege
@@ -120,16 +129,19 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 **Solutions**:
 
 1. **Check Service Status**:
+
    ```powershell
    Get-Service ADSync
    ```
 
 2. **Start Service if Stopped**:
+
    ```powershell
    Start-Service ADSync
    ```
 
 3. **Check Dependencies**:
+
    ```powershell
    Get-Service ADSync | Select-Object -ExpandProperty DependentServices
    ```
@@ -141,17 +153,20 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 **Solutions**:
 
 1. **Verify LocalDB Instance**:
+
    ```powershell
    sqllocaldb info
    sqllocaldb info ADSync2019
    ```
 
 2. **Check Database Files**:
+
    ```powershell
    Test-Path "C:\Program Files\Microsoft Azure AD Sync\Data\ADSync.mdf"
    ```
 
 3. **Restart Database Service**:
+
    ```powershell
    sqllocaldb stop ADSync2019
    sqllocaldb start ADSync2019
@@ -166,12 +181,14 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 **Solutions**:
 
 1. **Check Existing Rules**:
+
    ```powershell
    Get-ADSyncRule | Where-Object Precedence -eq 50 | 
        Select-Object Name, Direction, Precedence
    ```
 
 2. **Use Unique Precedence Values**:
+
    ```powershell
    # Find next available precedence
    $maxPrecedence = (Get-ADSyncRule | Measure-Object Precedence -Maximum).Maximum
@@ -179,6 +196,7 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
    ```
 
 3. **Update Conflicting Rules**:
+
    ```powershell
    AADSyncRule 'MyRule'
    {
@@ -194,6 +212,7 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 **Solutions**:
 
 1. **Validate Scope Conditions**:
+
    ```powershell
    # Test scope condition logic
    $testUser = Get-ADUser testuser -Properties *
@@ -201,11 +220,13 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
    ```
 
 2. **Check Attribute Availability**:
+
    ```powershell
    Get-ADUser testuser -Properties * | Get-Member -Name cloudFiltered
    ```
 
 3. **Debug with Simple Scope**:
+
    ```powershell
    ScopeConditionGroups = @(
        @{
@@ -227,6 +248,7 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 **Solutions**:
 
 1. **Verify Attribute Values**:
+
    ```powershell
    # Check connector space attribute
    $csObject | Select-Object mail
@@ -236,6 +258,7 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
    ```
 
 2. **Test Case Sensitivity**:
+
    ```powershell
    JoinConditionGroups = @(
        @{
@@ -251,6 +274,7 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
    ```
 
 3. **Use Multiple Join Conditions**:
+
    ```powershell
    JoinConditions = @(
        @{
@@ -275,18 +299,21 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 **Solutions**:
 
 1. **Check Existing Attributes**:
+
    ```powershell
    Get-AADConnectDirectoryExtensionAttribute | 
        Where-Object Name -eq 'employeeID'
    ```
 
 2. **Verify Object Class**:
+
    ```powershell
    # Valid object classes
    @('user', 'group', 'contact') -contains 'user'
    ```
 
 3. **Validate Data Type**:
+
    ```powershell
    # Valid data types
    @('String', 'Integer', 'DateTime', 'Boolean', 'Binary') -contains 'String'
@@ -299,6 +326,7 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
 **Solutions**:
 
 1. **Use Correct Attribute Name**:
+
    ```powershell
    AttributeFlowMappings = @(
        @{
@@ -310,11 +338,13 @@ Access to the path 'C:\Program Files\Microsoft Azure AD Sync\Data' is denied.
    ```
 
 2. **Verify Attribute Exists**:
+
    ```powershell
    Get-AADConnectDirectoryExtensionAttribute -Name 'employeeID'
    ```
 
 3. **Check Attribute State**:
+
    ```powershell
    $attr = Get-AADConnectDirectoryExtensionAttribute -Name 'employeeID'
    $attr.IsEnabled  # Should be True
@@ -369,11 +399,13 @@ Get-ADSyncRule | Format-Table Name, Direction, Precedence, Disabled
 #### New Sync Rule Issues
 
 1. **Validate Configuration**:
+
    ```powershell
    Test-DscConfiguration -Path .\SyncRuleConfig.ps1
    ```
 
 2. **Check Prerequisites**:
+
    ```powershell
    # Verify connector exists
    Get-ADSyncConnector -Name 'contoso.com'
@@ -384,11 +416,13 @@ Get-ADSyncRule | Format-Table Name, Direction, Precedence, Disabled
    ```
 
 3. **Apply Configuration**:
+
    ```powershell
    Start-DscConfiguration -Path .\SyncRuleConfig -Wait -Verbose
    ```
 
 4. **Verify Results**:
+
    ```powershell
    Get-ADSyncRule -Name 'My Custom Rule'
    ```
@@ -396,22 +430,26 @@ Get-ADSyncRule | Format-Table Name, Direction, Precedence, Disabled
 #### Directory Extension Issues
 
 1. **Check Current State**:
+
    ```powershell
    Get-AADConnectDirectoryExtensionAttribute -Name 'myAttribute'
    ```
 
 2. **Validate Prerequisites**:
+
    ```powershell
    # Check if attribute name conflicts with existing
    Get-ADObject -SearchBase (Get-ADRootDSE).schemaNamingContext -Filter {name -eq 'myAttribute'}
    ```
 
 3. **Apply Configuration**:
+
    ```powershell
    Start-DscConfiguration -Path .\ExtensionConfig -Wait -Verbose
    ```
 
 4. **Test Attribute Usage**:
+
    ```powershell
    # Create test sync rule using the extension
    AADSyncRule 'TestExtensionRule'
@@ -429,6 +467,7 @@ Get-ADSyncRule | Format-Table Name, Direction, Precedence, Disabled
 **Solutions**:
 
 1. **Check Resource Dependencies**:
+
    ```powershell
    # Ensure proper DependsOn declarations
    AADSyncRule 'Rule2'
@@ -439,12 +478,14 @@ Get-ADSyncRule | Format-Table Name, Direction, Precedence, Disabled
    ```
 
 2. **Monitor Resource Usage**:
+
    ```powershell
    Get-Process ADSync
    Get-Counter "\Process(miiserver)\% Processor Time"
    ```
 
 3. **Optimize Queries**:
+
    ```powershell
    # Use specific filters instead of broad searches
    Get-ADSyncRule -Name 'Specific Rule Name'  # Good
@@ -458,11 +499,13 @@ Get-ADSyncRule | Format-Table Name, Direction, Precedence, Disabled
 **Solutions**:
 
 1. **Monitor Memory Usage**:
+
    ```powershell
    Get-Process PowerShell | Select-Object WorkingSet, VirtualMemorySize
    ```
 
 2. **Clear Variables**:
+
    ```powershell
    # Clear large variables when done
    Remove-Variable -Name largeVariable
@@ -470,6 +513,7 @@ Get-ADSyncRule | Format-Table Name, Direction, Precedence, Disabled
    ```
 
 3. **Process Resources in Batches**:
+
    ```powershell
    # Apply configurations in smaller batches instead of all at once
    ```

@@ -3,6 +3,7 @@
 ## What the Event Log Messages Look Like Now
 
 ### Event ID 1000 (Information) - Sync Rule in Desired State
+
 ```
 AADSyncRule is in desired state and compliant with configuration
 
@@ -18,6 +19,7 @@ Sync Rule Details:
 ```
 
 ### Event ID 1001 (Warning) - Sync Rule Missing
+
 ```
 AADSyncRule is absent but should be present - configuration drift detected
 
@@ -33,6 +35,7 @@ Sync Rule Details:
 ```
 
 ### Event ID 1002 (Warning) - Sync Rule Should Be Absent
+
 ```
 AADSyncRule is present but should be absent - configuration drift detected
 
@@ -48,6 +51,7 @@ Sync Rule Details:
 ```
 
 ### Event ID 1003 (Warning) - Configuration Drift
+
 ```
 AADSyncRule configuration drift detected - current state does not match desired state
 
@@ -63,6 +67,7 @@ Sync Rule Details:
 ```
 
 ### Event ID 2000 (Information) - Sync Rule Created
+
 ```
 Sync rule created successfully
 
@@ -83,6 +88,7 @@ Sync Rule Details:
 ```
 
 ### Event ID 2001 (Information) - Sync Rule Updated
+
 ```
 Sync rule updated successfully
 
@@ -103,6 +109,7 @@ Sync Rule Details:
 ```
 
 ### Event ID 2002 (Information) - Standard Rule State Changed
+
 ```
 Standard sync rule disabled state changed successfully
 
@@ -120,6 +127,7 @@ Sync Rule Details:
 ```
 
 ### Event ID 2003 (Information) - Sync Rule Removed
+
 ```
 Sync rule removed successfully
 
@@ -150,6 +158,7 @@ Sync Rule Details:
 The enhanced event logging now includes:
 
 ### Basic Rule Information
+
 - **Rule Name**: Primary identifier for the sync rule
 - **Connector**: Which connector the rule applies to
 - **Direction**: Inbound or Outbound synchronization
@@ -159,6 +168,7 @@ The enhanced event logging now includes:
 - **Rule Type**: Microsoft Standard Rule vs Custom Rule
 
 ### Operational Details (Set() Operations)
+
 - **Operation**: Type of operation performed (Create, Update, Remove, State Change)
 - **Rule Identifier**: Unique GUID identifier for the sync rule
 - **Scope Filter Groups**: Number of scope filter condition groups
@@ -166,6 +176,7 @@ The enhanced event logging now includes:
 - **Attribute Flow Mappings**: Number of attribute flow mappings
 
 This information enables administrators to:
+
 - Quickly identify which sync rules are experiencing drift
 - Understand the business impact of configuration changes
 - Prioritize remediation based on rule importance and precedence

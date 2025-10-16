@@ -153,30 +153,38 @@ class AADSyncRule
         }
 
         # Write event log entries based on compliance state
-        try {
-            if ($compare) {
+        try
+        {
+            if ($compare)
+            {
                 # Sync rule is in desired state - write Information event
-                Write-AADConnectEventLog -EventType 'Information' -EventId 1000 -Message "AADSyncRule is in desired state and compliant with configuration" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
+                Write-AADConnectEventLog -EventType 'Information' -EventId 1000 -Message 'AADSyncRule is in desired state and compliant with configuration' -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
             }
-            else {
+            else
+            {
                 # Sync rule is not in desired state - write Warning event with specific event IDs
-                if ($currentState.Ensure -ne $desiredState.Ensure) {
-                    if ($desiredState.Ensure -eq 'Present') {
+                if ($currentState.Ensure -ne $desiredState.Ensure)
+                {
+                    if ($desiredState.Ensure -eq 'Present')
+                    {
                         # Sync rule is absent but should be present
-                        Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message "AADSyncRule is absent but should be present - configuration drift detected" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
+                        Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message 'AADSyncRule is absent but should be present - configuration drift detected' -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
                     }
-                    else {
+                    else
+                    {
                         # Sync rule is present but should be absent
-                        Write-AADConnectEventLog -EventType 'Warning' -EventId 1002 -Message "AADSyncRule is present but should be absent - configuration drift detected" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
+                        Write-AADConnectEventLog -EventType 'Warning' -EventId 1002 -Message 'AADSyncRule is present but should be absent - configuration drift detected' -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
                     }
                 }
-                else {
+                else
+                {
                     # Properties don't match for existing sync rule
-                    Write-AADConnectEventLog -EventType 'Warning' -EventId 1003 -Message "AADSyncRule configuration drift detected - current state does not match desired state" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
+                    Write-AADConnectEventLog -EventType 'Warning' -EventId 1003 -Message 'AADSyncRule configuration drift detected - current state does not match desired state' -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule
                 }
             }
         }
-        catch {
+        catch
+        {
             # Event logging should not break the main DSC operation
             Write-Verbose "Failed to write event log entry: $($_.Exception.Message)"
         }        return $compare
@@ -314,8 +322,8 @@ class AADSyncRule
                 try
                 {
                     $operationDetails = "Changed Disabled state from $oldDisabledState to $($this.Disabled)"
-                    Write-Verbose "🔔 Attempting to log standard rule disabled state change event..."
-                    Write-AADConnectEventLog -EventType 'Information' -EventId 2002 -Message "Standard sync rule disabled state changed successfully" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule -Operation $operationDetails -RuleIdentifier $this.Identifier
+                    Write-Verbose '🔔 Attempting to log standard rule disabled state change event...'
+                    Write-AADConnectEventLog -EventType 'Information' -EventId 2002 -Message 'Standard sync rule disabled state changed successfully' -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule -Operation $operationDetails -RuleIdentifier $this.Identifier
                 }
                 catch
                 {
@@ -398,15 +406,57 @@ class AADSyncRule
                 $rule | Add-ADSyncRule
 
                 # Log rule creation or update
-                $eventId = if ($isNewRule) { 2000 } else { 2001 }
-                $message = if ($isNewRule) { "Sync rule created successfully" } else { "Sync rule updated successfully" }
-                $operation = if ($isNewRule) { "Create" } else { "Update" }
+                $eventId = if ($isNewRule)
+                {
+                    2000
+                }
+                else
+                {
+                    2001
+                }
+                $message = if ($isNewRule)
+                {
+                    'Sync rule created successfully'
+                }
+                else
+                {
+                    'Sync rule updated successfully'
+                }
+                $operation = if ($isNewRule)
+                {
+                    'Create'
+                }
+                else
+                {
+                    'Update'
+                }
 
                 try
                 {
-                    $scopeFilterCount = if ($this.ScopeFilter) { $this.ScopeFilter.Count } else { 0 }
-                    $joinFilterCount = if ($this.JoinFilter) { $this.JoinFilter.Count } else { 0 }
-                    $attributeFlowMappingCount = if ($this.AttributeFlowMappings) { $this.AttributeFlowMappings.Count } else { 0 }
+                    $scopeFilterCount = if ($this.ScopeFilter)
+                    {
+                        $this.ScopeFilter.Count
+                    }
+                    else
+                    {
+                        0
+                    }
+                    $joinFilterCount = if ($this.JoinFilter)
+                    {
+                        $this.JoinFilter.Count
+                    }
+                    else
+                    {
+                        0
+                    }
+                    $attributeFlowMappingCount = if ($this.AttributeFlowMappings)
+                    {
+                        $this.AttributeFlowMappings.Count
+                    }
+                    else
+                    {
+                        0
+                    }
 
                     Write-Verbose "🔔 Attempting to log sync rule $operation event (EventId: $eventId)..."
                     Write-AADConnectEventLog -EventType 'Information' -EventId $eventId -Message $message -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $this.Direction -TargetObjectType $this.TargetObjectType -SourceObjectType $this.SourceObjectType -Precedence $this.Precedence -Disabled $this.Disabled -IsStandardRule $this.IsStandardRule -Operation $operation -RuleIdentifier $this.Identifier -ScopeFilterCount $scopeFilterCount -JoinFilterCount $joinFilterCount -AttributeFlowMappingCount $attributeFlowMappingCount
@@ -424,8 +474,8 @@ class AADSyncRule
                 # Log rule removal
                 try
                 {
-                    Write-Verbose "🔔 Attempting to log sync rule removal event..."
-                    Write-AADConnectEventLog -EventType 'Information' -EventId 2003 -Message "Sync rule removed successfully" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $existingRule.Direction -TargetObjectType $existingRule.TargetObjectType -SourceObjectType $existingRule.SourceObjectType -Precedence $existingRule.Precedence -Disabled $existingRule.Disabled -IsStandardRule $existingRule.IsStandardRule -Operation "Remove" -RuleIdentifier $this.Identifier
+                    Write-Verbose '🔔 Attempting to log sync rule removal event...'
+                    Write-AADConnectEventLog -EventType 'Information' -EventId 2003 -Message 'Sync rule removed successfully' -SyncRuleName $this.Name -ConnectorName $this.ConnectorName -Direction $existingRule.Direction -TargetObjectType $existingRule.TargetObjectType -SourceObjectType $existingRule.SourceObjectType -Precedence $existingRule.Precedence -Disabled $existingRule.Disabled -IsStandardRule $existingRule.IsStandardRule -Operation 'Remove' -RuleIdentifier $this.Identifier
                 }
                 catch
                 {

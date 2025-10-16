@@ -63,7 +63,7 @@ Describe 'Changelog Management' -Tag 'Changelog' {
     }
 
     It 'Changelog should have an Unreleased header' -Skip:$skipTest {
-            (Get-ChangelogData -Path (Join-Path -Path $ProjectPath -ChildPath 'CHANGELOG.md') -ErrorAction Stop).Unreleased | Should -Not -BeNullOrEmpty
+        (Get-ChangelogData -Path (Join-Path -Path $ProjectPath -ChildPath 'CHANGELOG.md') -ErrorAction Stop).Unreleased | Should -Not -BeNullOrEmpty
     }
 }
 

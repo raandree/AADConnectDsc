@@ -47,6 +47,7 @@ existing PowerShell modules.
 The core DSC resource for managing synchronization rules:
 
 **Key Responsibilities:**
+
 - Validate sync rule configuration
 - Manage rule creation, modification, and deletion
 - Handle complex property types (scope filters, join conditions, attribute flows)
@@ -54,6 +55,7 @@ The core DSC resource for managing synchronization rules:
 - Support both standard and custom rules with differentiated behavior
 
 **Design Patterns:**
+
 - **State Management**: Get/Test/Set pattern for DSC compliance
 - **Property Validation**: Strong typing with custom validation
 - **Error Handling**: Comprehensive error reporting with context
@@ -61,6 +63,7 @@ The core DSC resource for managing synchronization rules:
 - **Standard Rule Handling**: Specialized logic for Microsoft standard rules
 
 **Standard Rule Behavior Pattern:**
+
 ```powershell
 # For IsStandardRule = $true:
 # - Only Name and Disabled properties are evaluated for DSC compliance
@@ -70,6 +73,7 @@ The core DSC resource for managing synchronization rules:
 ```
 
 **Class Hierarchy:**
+
 ```powershell
 AADSyncRule
 ├── Properties (DscProperty attributes)
@@ -92,6 +96,7 @@ AADSyncRule
 Manages directory schema extensions:
 
 **Responsibilities:**
+
 - Directory extension attribute lifecycle management
 - Schema validation and registration
 - Integration with Azure AD schema requirements
@@ -103,6 +108,7 @@ Manages directory schema extensions:
 Enhanced wrapper around the native ADSync module:
 
 **Design Pattern**: Parameter Set Pattern
+
 ```powershell
 Parameter Sets:
 ├── ByName (default)
@@ -112,6 +118,7 @@ Parameter Sets:
 ```
 
 **Enhancements over native cmdlet:**
+
 - Simplified connector name resolution
 - Better error handling and validation
 - Consistent return object format
@@ -120,6 +127,7 @@ Parameter Sets:
 #### Directory Extension Functions
 
 Three-function pattern for CRUD operations:
+
 - `Add-AADConnectDirectoryExtensionAttribute`
 - `Get-AADConnectDirectoryExtensionAttribute`  
 - `Remove-AADConnectDirectoryExtensionAttribute`
@@ -129,6 +137,7 @@ Three-function pattern for CRUD operations:
 #### Azure AD Connect SDK Integration
 
 **Pattern**: Wrapper with Enhancement
+
 - Leverages existing ADSync module functionality
 - Adds validation and error handling
 - Provides simplified interfaces for common operations
@@ -137,6 +146,7 @@ Three-function pattern for CRUD operations:
 #### DSC Framework Integration
 
 **Pattern**: Class-Based Resource Implementation
+
 - Follows DSC resource lifecycle (Get/Test/Set)
 - Implements proper state management
 - Provides idempotent operations
@@ -145,6 +155,7 @@ Three-function pattern for CRUD operations:
 #### Error Handling Strategy
 
 **Pattern**: Layered Error Handling
+
 1. **Input Validation**: Parameter validation at entry points
 2. **Business Logic Validation**: Validate against Azure AD Connect rules
 3. **Integration Errors**: Handle ADSync module failures gracefully
@@ -201,6 +212,7 @@ AADSyncRule.Get()
 **Decision**: Use PowerShell classes instead of MOF-based resources
 
 **Rationale:**
+
 - Better performance and memory usage
 - Stronger typing and validation
 - Easier maintenance and debugging
@@ -211,6 +223,7 @@ AADSyncRule.Get()
 **Decision**: Automatic precedence assignment for custom rules
 
 **Rationale:**
+
 - Reduces configuration complexity
 - Eliminates precedence conflicts
 - Follows Azure AD Connect best practices
@@ -221,6 +234,7 @@ AADSyncRule.Get()
 **Decision**: Support for complex attribute flow expressions
 
 **Implementation:**
+
 - String-based expression storage
 - Whitespace normalization for comparison
 - Support for PowerShell and built-in functions
@@ -231,6 +245,7 @@ AADSyncRule.Get()
 **Decision**: Use connector names instead of GUIDs in configuration
 
 **Benefits:**
+
 - Human-readable configurations
 - Environment portability
 - Easier troubleshooting
@@ -262,6 +277,7 @@ if ($this.IsStandardRule) {
 ```
 
 **Benefits:**
+
 - Standard rules only fail DSC compliance if Name/Disabled differ
 - Secondary comparison provides visibility into configuration drift
 - Clear separation between actionable and informational differences
@@ -291,6 +307,7 @@ Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message $message -S
 ```
 
 **Key Design Features:**
+
 - **Automatic Event Log Creation**: Creates event log and source if missing
 - **Rich Context**: Includes sync rule name and connector name in all events
 - **Non-Breaking Error Handling**: Event logging failures don't break DSC operations
@@ -322,6 +339,7 @@ Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message $message -S
 ```
 
 **Benefits:**
+
 - Complete audit trail of DSC compliance states
 - Enables monitoring and alerting on configuration drift
 - Supports compliance reporting and operational visibility
@@ -331,6 +349,7 @@ Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message $message -S
 ### Unit Testing Strategy
 
 **Pattern**: Class Method Testing
+
 - Test each DSC method (Get/Test/Set) independently
 - Mock Azure AD Connect dependencies
 - Validate complex object transformations
@@ -340,6 +359,7 @@ Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message $message -S
 ### Integration Testing Strategy
 
 **Pattern**: Live Environment Testing
+
 - Test against actual Azure AD Connect installations
 - Validate end-to-end configuration scenarios
 - Test upgrade and migration scenarios
@@ -348,6 +368,7 @@ Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message $message -S
 ### Validation Framework
 
 **Pattern**: Multi-Layer Validation
+
 1. **Schema Validation**: Ensure configuration meets DSC requirements
 2. **Business Rule Validation**: Validate against Azure AD Connect constraints
 3. **Integration Validation**: Test actual application to sync engine

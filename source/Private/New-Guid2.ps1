@@ -1,4 +1,5 @@
-function New-Guid2 {
+function New-Guid2
+{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]

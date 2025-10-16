@@ -116,6 +116,7 @@ sync rules and management of standard Microsoft-provided sync rules.
 - **Description**: Array of scope condition groups that determine which objects this rule applies to
 
 **Structure**:
+
 ```powershell
 ScopeFilter = @(
     @{
@@ -139,6 +140,7 @@ ScopeFilter = @(
 - **Description**: Array of join condition groups that define how objects are linked
 
 **Structure**:
+
 ```powershell
 JoinFilter = @(
     @{
@@ -160,6 +162,7 @@ JoinFilter = @(
 - **Description**: Array of attribute flow mappings that define how attribute values are transformed
 
 **Structure**:
+
 ```powershell
 AttributeFlowMappings = @(
     @{
