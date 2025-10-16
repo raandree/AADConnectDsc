@@ -5,17 +5,17 @@ This example creates a directory extension attribute for storing a custom
 employee ID that will be synchronized between Active Directory and Azure AD.
 #>
 
-Configuration Example_AADConnectDirectoryExtensionAttribute_Basic
+configuration Example_AADConnectDirectoryExtensionAttribute_Basic
 {
     Import-DscResource -ModuleName AADConnectDsc
 
-    Node localhost
+    node localhost
     {
         AADConnectDirectoryExtensionAttribute 'EmployeeIDExtension'
         {
             Name                = 'employeeID'
             AssignedObjectClass = 'user'
-            Type                = 'String'
+            type                = 'String'
             IsEnabled           = $true
             Ensure              = 'Present'
         }
@@ -29,17 +29,17 @@ This example creates multiple directory extension attributes for different
 data types that can be used in sync rules for custom attribute flows.
 #>
 
-Configuration Example_AADConnectDirectoryExtensionAttribute_Multiple
+configuration Example_AADConnectDirectoryExtensionAttribute_Multiple
 {
     Import-DscResource -ModuleName AADConnectDsc
 
-    Node localhost
+    node localhost
     {
         AADConnectDirectoryExtensionAttribute 'CostCenterExtension'
         {
             Name                = 'costCenter'
             AssignedObjectClass = 'user'
-            Type                = 'String'
+            type                = 'String'
             IsEnabled           = $true
             Ensure              = 'Present'
         }
@@ -48,7 +48,7 @@ Configuration Example_AADConnectDirectoryExtensionAttribute_Multiple
         {
             Name                = 'managerID'
             AssignedObjectClass = 'user'
-            Type                = 'String'
+            type                = 'String'
             IsEnabled           = $true
             Ensure              = 'Present'
         }
@@ -57,7 +57,7 @@ Configuration Example_AADConnectDirectoryExtensionAttribute_Multiple
         {
             Name                = 'lastLogon'
             AssignedObjectClass = 'user'
-            Type                = 'DateTime'
+            type                = 'DateTime'
             IsEnabled           = $true
             Ensure              = 'Present'
         }

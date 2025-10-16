@@ -5,59 +5,59 @@ This example creates a complex sync rule with multiple scope conditions,
 join conditions, and attribute flow expressions including PowerShell functions.
 #>
 
-Configuration Example_AADSyncRule_Advanced
+configuration Example_AADSyncRule_Advanced
 {
     Import-DscResource -ModuleName AADConnectDsc
 
-    Node localhost
+    node localhost
     {
         AADSyncRule 'AdvancedUserRule'
         {
-            Name                = 'Example - Inbound - User - Advanced'
-            ConnectorName       = 'contoso.com'
-            Description         = 'Advanced user sync rule with complex mappings'
-            Direction           = 'Inbound'
-            TargetObjectType    = 'person'
-            SourceObjectType    = 'user'
-            LinkType            = 'Provision'
-            Precedence          = 1
-            Disabled            = $false
+            Name                  = 'Example - Inbound - User - Advanced'
+            ConnectorName         = 'contoso.com'
+            Description           = 'Advanced user sync rule with complex mappings'
+            Direction             = 'Inbound'
+            TargetObjectType      = 'person'
+            SourceObjectType      = 'user'
+            LinkType              = 'Provision'
+            Precedence            = 1
+            Disabled              = $false
 
             # Complex scope filter with multiple conditions
-            ScopeFilter         = @(
+            ScopeFilter           = @(
                 @{
                     ScopeConditionList = @(
                         @{
-                            Attribute           = 'userAccountControl'
-                            ComparisonOperator  = 'NOTEQUAL'
-                            ComparisonValue     = '514'  # Not disabled
+                            Attribute          = 'userAccountControl'
+                            ComparisonOperator = 'NOTEQUAL'
+                            ComparisonValue    = '514'  # Not disabled
                         },
                         @{
-                            Attribute           = 'department'
-                            ComparisonOperator  = 'STARTSWITH'
-                            ComparisonValue     = 'IT'
+                            Attribute          = 'department'
+                            ComparisonOperator = 'STARTSWITH'
+                            ComparisonValue    = 'IT'
                         }
                     )
                 },
                 @{
                     ScopeConditionList = @(
                         @{
-                            Attribute           = 'extensionAttribute1'
-                            ComparisonOperator  = 'EQUAL'
-                            ComparisonValue     = 'SyncEnabled'
+                            Attribute          = 'extensionAttribute1'
+                            ComparisonOperator = 'EQUAL'
+                            ComparisonValue    = 'SyncEnabled'
                         }
                     )
                 }
             )
 
             # Join condition for object linking
-            JoinFilter          = @(
+            JoinFilter            = @(
                 @{
                     JoinConditionList = @(
                         @{
-                            CSAttribute         = 'objectSid'
-                            MVAttribute         = 'objectSid'
-                            CaseSensitive       = $false
+                            CSAttribute   = 'objectSid'
+                            MVAttribute   = 'objectSid'
+                            CaseSensitive = $false
                         }
                     )
                 }
@@ -89,7 +89,7 @@ Configuration Example_AADSyncRule_Advanced
                 }
             )
 
-            Ensure              = 'Present'
+            Ensure                = 'Present'
         }
     }
 }

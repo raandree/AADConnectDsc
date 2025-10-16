@@ -118,6 +118,7 @@ if ((Get-Service ADSync).Status -ne 'Running') {
 Deploy DSC alongside existing configuration, then gradually transition.
 
 **Advantages**:
+
 - Low risk approach
 - Easy rollback
 - Gradual validation
@@ -166,11 +167,13 @@ Configuration ParallelDeployment
 Replace existing configuration directly with DSC equivalents.
 
 **Advantages**:
+
 - Clean migration
 - No duplicate rules
 - Immediate DSC management
 
 **Risks**:
+
 - Higher risk of disruption
 - Requires thorough testing
 - More complex rollback
@@ -178,7 +181,7 @@ Replace existing configuration directly with DSC equivalents.
 **Process**:
 
 1. **Document existing rules** completely
-2. **Create exact DSC equivalents** 
+2. **Create exact DSC equivalents**
 3. **Test extensively** in staging
 4. **Schedule maintenance window**
 5. **Remove existing rules**
@@ -190,6 +193,7 @@ Replace existing configuration directly with DSC equivalents.
 Migrate some rules to DSC while keeping others manual.
 
 **Use Cases**:
+
 - Complex rules that need gradual migration
 - Rules that change frequently (keep manual)
 - Standard rules (migrate to DSC)

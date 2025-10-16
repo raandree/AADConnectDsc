@@ -5,16 +5,19 @@
 ### Core Technologies
 
 **PowerShell 5.0+**
+
 - Minimum requirement for class-based DSC resources
 - Leverages advanced PowerShell features
 - Compatible with Windows PowerShell and PowerShell Core
 
 **PowerShell DSC Framework**
+
 - Native Windows configuration management platform
 - Declarative configuration model
 - Built-in state management and drift detection
 
 **Azure AD Connect SDK**
+
 - ADSync PowerShell module integration
 - Microsoft.Azure.ActiveDirectory.Synchronization.Framework.dll
 - Native Azure AD Connect API access
@@ -24,10 +27,12 @@
 #### Runtime Dependencies
 
 **Required Modules:**
+
 - `ADSync` - Azure AD Connect PowerShell module (installed with Azure AD Connect)
 - `PSDesiredStateConfiguration` - DSC framework (built into Windows PowerShell)
 
 **System Requirements:**
+
 - Windows Server 2012 R2 or later
 - PowerShell 5.0 or later
 - .NET Framework 4.6 or later (Azure AD Connect requirement)
@@ -36,12 +41,14 @@
 #### Development Dependencies
 
 **Build Tools:**
+
 - `InvokeBuild` - PowerShell build automation
 - `Pester` - PowerShell testing framework
 - `PSScriptAnalyzer` - Code quality analysis
 - `DscResource.Test` - DSC resource validation
 
 **Documentation Tools:**
+
 - `DscResource.DocGenerator` - Auto-documentation generation
 - `Markdown` - Documentation format
 - `Git` - Version control
@@ -118,6 +125,7 @@ AADConnectDsc/
 #### Build Process
 
 **Build Pipeline:**
+
 1. **Dependency Resolution**: Download required modules
 2. **Code Analysis**: PSScriptAnalyzer validation  
 3. **Testing**: Pester test execution
@@ -126,6 +134,7 @@ AADConnectDsc/
 6. **Validation**: Final module validation
 
 **Build Configuration:**
+
 ```yaml
 # build.yaml example structure
 ModuleVersion: '0.1'
@@ -139,11 +148,13 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Azure AD Connect Integration
 
 **Constraint: Service Dependency**
+
 - Module requires Azure AD Connect service to be installed
 - Cannot function independently of synchronization engine
 - Limited to Windows operating systems
 
 **Impact on Design:**
+
 - Must handle service availability checks
 - Error handling for missing dependencies  
 - Testing requires full Azure AD Connect environment
@@ -151,11 +162,13 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### PowerShell DSC Framework
 
 **Constraint: Class-Based Resources**
+
 - Requires PowerShell 5.0+ for class support
 - Limited backward compatibility with older PowerShell versions
 - Memory and performance considerations
 
 **Impact on Design:**
+
 - Minimum PowerShell version requirements
 - Need for compatibility testing across versions
 - Performance optimization for large configurations
@@ -163,11 +176,13 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Azure AD Connect API Limitations
 
 **Constraint: PowerShell Module Interface**
+
 - Limited to Microsoft-provided ADSync cmdlets
 - No direct API access to synchronization engine
 - Dependent on Microsoft's SDK updates
 
 **Impact on Design:**
+
 - Wrapper pattern around existing cmdlets
 - Limited to functionality exposed by ADSync module
 - Need for version compatibility management
@@ -177,11 +192,13 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Credential Management
 
 **Requirements:**
+
 - Secure handling of service account credentials
 - Integration with Windows credential management
 - Support for encrypted credential storage
 
 **Implementation:**
+
 - Leverage existing Azure AD Connect security model
 - No additional credential storage in module
 - Rely on Windows security context
@@ -189,11 +206,13 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Privilege Requirements
 
 **Minimum Privileges:**
+
 - Azure AD Connect service account permissions
 - Local administrator rights for DSC operations
 - Azure AD synchronization permissions
 
 **Security Boundaries:**
+
 - Operate within Azure AD Connect security context
 - No elevation of privileges beyond existing requirements
 - Audit logging for all configuration changes
@@ -203,16 +222,19 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Resource Usage
 
 **Memory Footprint:**
+
 - Base module: ~50MB loaded in memory
 - DSC operations: Additional 100-200MB during execution
 - Scales with number of sync rules managed
 
 **CPU Usage:**
+
 - Low CPU usage during steady state
 - Higher usage during configuration application
 - Periodic DSC evaluation cycles
 
 **Network Impact:**
+
 - Minimal network traffic (local operations)
 - Azure AD Connect handles cloud synchronization
 - DSC pull operations if configured
@@ -220,11 +242,13 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Scalability Limits
 
 **Sync Rule Limits:**
+
 - Azure AD Connect supports up to 100 custom sync rules
 - Performance degrades with large numbers of rules
 - Memory usage scales with rule complexity
 
 **Concurrent Operations:**
+
 - Single-threaded DSC resource execution
 - No parallel sync rule processing
 - Coordination with Azure AD Connect service required
@@ -234,12 +258,14 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Unit Testing
 
 **Test Scope:**
+
 - Individual function validation
 - Class method testing
 - Parameter validation
 - Error handling scenarios
 
 **Mock Requirements:**
+
 - ADSync module cmdlet mocking
 - Azure AD Connect service state simulation
 - File system and registry mocking
@@ -247,12 +273,14 @@ RequiredModulesDirectory: 'output/RequiredModules'
 #### Integration Testing
 
 **Test Environment:**
+
 - Full Azure AD Connect installation
 - Test Active Directory domain
 - Azure AD tenant connectivity
 - Isolated test environment
 
 **Test Scenarios:**
+
 - End-to-end configuration application
 - Upgrade and migration testing
 - Performance and load testing

@@ -214,7 +214,14 @@ function Write-AADConnectEventLog
 
             if ($PSBoundParameters.ContainsKey('IsStandardRule'))
             {
-                $ruleType = if ($IsStandardRule) { "Microsoft Standard Rule" } else { "Custom Rule" }
+                $ruleType = if ($IsStandardRule)
+                {
+                    'Microsoft Standard Rule'
+                }
+                else
+                {
+                    'Custom Rule'
+                }
                 $contextMessage += "`n  Rule Type: $ruleType"
             }
 
@@ -257,7 +264,7 @@ function Write-AADConnectEventLog
             Write-Verbose "To enable event logging, run PowerShell as Administrator or pre-create the event log with: New-EventLog -LogName '$logName' -Source '$sourceName'"
 
             # For debugging purposes, always log the event details to verbose output
-            Write-Verbose "Event details that would have been logged:"
+            Write-Verbose 'Event details that would have been logged:'
             Write-Verbose "  EventType: $EventType"
             Write-Verbose "  EventId: $EventId"
             Write-Verbose "  Message: $contextMessage"
@@ -266,7 +273,7 @@ function Write-AADConnectEventLog
     catch
     {
         Write-Warning "❌ Event logging failed: $($_.Exception.Message)"
-        Write-Verbose "Event logging attempted but failed. DSC operation will continue normally."
+        Write-Verbose 'Event logging attempted but failed. DSC operation will continue normally.'
         # Don't throw - event logging should not break the main DSC operation
     }
 }

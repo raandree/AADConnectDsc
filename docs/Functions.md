@@ -23,19 +23,23 @@ Get-ADSyncRule [[-Name] <string>] [[-Identifier] <guid>] [[-Direction] <string>]
 #### Parameters
 
 **Name** (String, Optional)
+
 - The name of the synchronization rule to retrieve
 - Supports wildcards
 - Example: `'Custom - Inbound*'`
 
 **Identifier** (Guid, Optional)  
+
 - The unique identifier (GUID) of the synchronization rule
 - Example: `'12345678-1234-1234-1234-123456789012'`
 
 **Direction** (String, Optional)
+
 - Filter by rule direction
 - Valid values: `'Inbound'`, `'Outbound'`
 
 **ConnectorName** (String, Optional)
+
 - Filter by connector name
 - Example: `'contoso.com'`
 
@@ -58,6 +62,7 @@ $rule = Get-ADSyncRule -Identifier '12345678-1234-1234-1234-123456789012'
 #### Returns
 
 Returns `AADSyncRule` objects containing:
+
 - Name
 - Identifier  
 - Direction
@@ -85,15 +90,18 @@ Add-AADConnectDirectoryExtensionAttribute -Name <string> -AssignedObjectClass <s
 #### Parameters
 
 **Name** (String, Required)
+
 - The name of the extension attribute to create
 - Must be unique within the schema
 - Example: `'employeeID'`
 
 **AssignedObjectClass** (String, Required)
+
 - The object class to assign the attribute to
 - Valid values: `'user'`, `'group'`, `'contact'`
 
 **Type** (String, Required)
+
 - The data type of the attribute
 - Valid values: `'String'`, `'Integer'`, `'DateTime'`, `'Boolean'`, `'Binary'`
 
@@ -127,11 +135,13 @@ Get-AADConnectDirectoryExtensionAttribute [[-Name] <string>] [[-AssignedObjectCl
 #### Parameters
 
 **Name** (String, Optional)
+
 - The name of the extension attribute to retrieve
 - Supports wildcards
 - Example: `'employee*'`
 
 **AssignedObjectClass** (String, Optional)
+
 - Filter by assigned object class
 - Valid values: `'user'`, `'group'`, `'contact'`
 
@@ -154,6 +164,7 @@ $employeeAttrs = Get-AADConnectDirectoryExtensionAttribute -Name 'employee*'
 #### Returns
 
 Returns `AADConnectDirectoryExtensionAttribute` objects containing:
+
 - Name
 - AssignedObjectClass
 - Type
@@ -172,10 +183,12 @@ Remove-AADConnectDirectoryExtensionAttribute -Name <string> -AssignedObjectClass
 #### Parameters
 
 **Name** (String, Required)
+
 - The name of the extension attribute to remove
 - Example: `'employeeID'`
 
 **AssignedObjectClass** (String, Required)
+
 - The object class the attribute is assigned to
 - Valid values: `'user'`, `'group'`, `'contact'`
 
@@ -210,6 +223,7 @@ Convert-ObjectToHashtable -InputObject <object>
 #### Parameters
 
 **InputObject** (Object, Required)
+
 - The object to convert to a hashtable
 - Can be any PowerShell object
 

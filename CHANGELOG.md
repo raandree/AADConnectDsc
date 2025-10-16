@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cannot be changed. A second compare job is executed for reporting on
   differences but without having an effect on the overall test result.
 - Fixed of `DscResource.Common`, now `0.24.0-preview0002`.
+- Formatting throughout the project.
 
 ### Changed
 

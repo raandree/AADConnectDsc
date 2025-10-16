@@ -7,18 +7,18 @@ It creates custom directory extensions and then uses them in sync rules
 for advanced attribute flow scenarios.
 #>
 
-Configuration Example_AADConnectDsc_Complete
+configuration Example_AADConnectDsc_Complete
 {
     Import-DscResource -ModuleName AADConnectDsc
 
-    Node localhost
+    node localhost
     {
         # First, create directory extension attributes
         AADConnectDirectoryExtensionAttribute 'EmployeeIDExtension'
         {
             Name                = 'employeeID'
             AssignedObjectClass = 'user'
-            Type                = 'String'
+            type                = 'String'
             IsEnabled           = $true
             Ensure              = 'Present'
         }
@@ -27,7 +27,7 @@ Configuration Example_AADConnectDsc_Complete
         {
             Name                = 'departmentCode'
             AssignedObjectClass = 'user'
-            Type                = 'String'
+            type                = 'String'
             IsEnabled           = $true
             Ensure              = 'Present'
         }
@@ -35,29 +35,29 @@ Configuration Example_AADConnectDsc_Complete
         # Create a sync rule that uses the custom extensions
         AADSyncRule 'CustomEmployeeRule'
         {
-            Name                = 'Organization - Inbound - User - Employee'
-            ConnectorName       = 'contoso.com'
-            Description         = 'Custom employee sync rule using extensions'
-            Direction           = 'Inbound'
-            TargetObjectType    = 'person'
-            SourceObjectType    = 'user'
-            LinkType            = 'Provision'
-            Precedence          = 10
-            Disabled            = $false
+            Name                  = 'Organization - Inbound - User - Employee'
+            ConnectorName         = 'contoso.com'
+            Description           = 'Custom employee sync rule using extensions'
+            Direction             = 'Inbound'
+            TargetObjectType      = 'person'
+            SourceObjectType      = 'user'
+            LinkType              = 'Provision'
+            Precedence            = 10
+            Disabled              = $false
 
             # Scope to employees only
-            ScopeFilter         = @(
+            ScopeFilter           = @(
                 @{
                     ScopeConditionList = @(
                         @{
-                            Attribute           = 'employeeType'
-                            ComparisonOperator  = 'EQUAL'
-                            ComparisonValue     = 'Employee'
+                            Attribute          = 'employeeType'
+                            ComparisonOperator = 'EQUAL'
+                            ComparisonValue    = 'Employee'
                         },
                         @{
-                            Attribute           = 'userAccountControl'
-                            ComparisonOperator  = 'NOTEQUAL'
-                            ComparisonValue     = '514'  # Not disabled
+                            Attribute          = 'userAccountControl'
+                            ComparisonOperator = 'NOTEQUAL'
+                            ComparisonValue    = '514'  # Not disabled
                         }
                     )
                 }
@@ -101,31 +101,31 @@ Configuration Example_AADConnectDsc_Complete
                 }
             )
 
-            Ensure              = 'Present'
-            DependsOn           = '[AADConnectDirectoryExtensionAttribute]EmployeeIDExtension', '[AADConnectDirectoryExtensionAttribute]DepartmentCodeExtension'
+            Ensure                = 'Present'
+            DependsOn             = '[AADConnectDirectoryExtensionAttribute]EmployeeIDExtension', '[AADConnectDirectoryExtensionAttribute]DepartmentCodeExtension'
         }
 
         # Create an outbound rule for Azure AD
         AADSyncRule 'CustomEmployeeOutbound'
         {
-            Name                = 'Organization - Outbound - User - Employee'
-            ConnectorName       = 'contoso.com - AAD'
-            Description         = 'Custom employee outbound rule to Azure AD'
-            Direction           = 'Outbound'
-            TargetObjectType    = 'user'
-            SourceObjectType    = 'person'
-            LinkType            = 'Provision'
-            Precedence          = 11
-            Disabled            = $false
+            Name                  = 'Organization - Outbound - User - Employee'
+            ConnectorName         = 'contoso.com - AAD'
+            Description           = 'Custom employee outbound rule to Azure AD'
+            Direction             = 'Outbound'
+            TargetObjectType      = 'user'
+            SourceObjectType      = 'person'
+            LinkType              = 'Provision'
+            Precedence            = 11
+            Disabled              = $false
 
             # Scope to provisioned employees
-            ScopeFilter         = @(
+            ScopeFilter           = @(
                 @{
                     ScopeConditionList = @(
                         @{
-                            Attribute           = 'sourceObjectType'
-                            ComparisonOperator  = 'EQUAL'
-                            ComparisonValue     = 'user'
+                            Attribute          = 'sourceObjectType'
+                            ComparisonOperator = 'EQUAL'
+                            ComparisonValue    = 'user'
                         }
                     )
                 }
@@ -160,8 +160,8 @@ Configuration Example_AADConnectDsc_Complete
                 }
             )
 
-            Ensure              = 'Present'
-            DependsOn           = '[AADSyncRule]CustomEmployeeRule'
+            Ensure                = 'Present'
+            DependsOn             = '[AADSyncRule]CustomEmployeeRule'
         }
     }
 }

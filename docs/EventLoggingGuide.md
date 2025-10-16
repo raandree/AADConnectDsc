@@ -7,6 +7,7 @@ The comprehensive event logging functionality has been successfully implemented 
 ## What's Implemented
 
 ### Event IDs and Types
+
 - **1000 (Information)**: Sync rule is in desired state and compliant
 - **1001 (Warning)**: Sync rule is absent but should be present  
 - **1002 (Warning)**: Sync rule is present but should be absent
@@ -17,8 +18,9 @@ The comprehensive event logging functionality has been successfully implemented 
 - **2003 (Information)**: Sync rule removed successfully
 
 ### Event Logging Function
+
 - **Function**: `Write-AADConnectEventLog` (Private function)
-- **Event Log**: "AADConnectDsc" 
+- **Event Log**: "AADConnectDsc"
 - **Event Source**: "AADConnectDsc"
 - **Format**: Multi-line with structured information
 - **Error Handling**: Graceful failure that doesn't break DSC operations
@@ -26,19 +28,24 @@ The comprehensive event logging functionality has been successfully implemented 
 ## Why You Might Not See Events
 
 ### 1. Permission Requirements
+
 Event logging requires elevated permissions:
+
 - Creating event logs requires Administrator rights
 - Writing to event logs may require elevated permissions
 - DSC Local Configuration Manager typically runs as SYSTEM
 
 ### 2. Event Log Creation
+
 The custom "AADConnectDsc" event log must be created first:
+
 ```powershell
 # Run as Administrator
 New-EventLog -LogName "AADConnectDsc" -Source "AADConnectDsc"
 ```
 
 ### 3. DSC Execution Context
+
 - DSC may run in different security contexts
 - Local DSC runs as SYSTEM (should have permissions)
 - Remote DSC may have different permission contexts
@@ -46,12 +53,14 @@ New-EventLog -LogName "AADConnectDsc" -Source "AADConnectDsc"
 ## How to Verify Event Logging
 
 ### Option 1: Pre-create Event Log (Recommended)
+
 ```powershell
 # Run as Administrator BEFORE using DSC
 New-EventLog -LogName "AADConnectDsc" -Source "AADConnectDsc"
 ```
 
 ### Option 2: Check Event Logs After DSC Run
+
 ```powershell
 # Check if event log exists
 [System.Diagnostics.EventLog]::Exists("AADConnectDsc")
@@ -65,6 +74,7 @@ Get-WinEvent -LogName "AADConnectDsc" -MaxEvents 5 |
 ```
 
 ### Option 3: Monitor During DSC Execution
+
 ```powershell
 # Monitor events in real-time (run before DSC operation)
 Get-WinEvent -LogName "AADConnectDsc" -Oldest | 
@@ -121,18 +131,22 @@ Write-AADConnectEventLog -EventType 'Information' -EventId 2000 `
 ## Troubleshooting
 
 ### No Events Appearing
+
 1. **Check Permissions**: Ensure DSC runs with sufficient permissions
 2. **Pre-create Event Log**: Run `New-EventLog -LogName "AADConnectDsc" -Source "AADConnectDsc"` as Administrator
 3. **Check Event Log Exists**: Verify with `[System.Diagnostics.EventLog]::Exists("AADConnectDsc")`
 4. **Check DSC Verbose Logs**: Look for event logging error messages in DSC output
 
 ### Access Denied Errors
+
 - Run PowerShell as Administrator
 - Ensure DSC LCM has appropriate permissions
 - Check Event Log service is running
 
 ### Events Not Detailed Enough
+
 The event messages include:
+
 - Sync rule name and connector
 - Direction and object types  
 - Precedence and disabled state
@@ -148,6 +162,7 @@ The event messages include:
 ✅ **Professional Windows Event Log integration**
 
 The event logging will work properly when:
+
 1. DSC runs with sufficient permissions (typically as SYSTEM)
 2. The AADConnectDsc event log is created
 3. The sync rule operations actually occur (create/update/remove)

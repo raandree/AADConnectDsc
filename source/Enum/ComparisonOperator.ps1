@@ -1,4 +1,5 @@
-enum ComparisonOperator {
+enum ComparisonOperator
+{
     EQUAL
     NOTEQUAL
     LESSTHAN
