@@ -75,7 +75,10 @@
     VariablesToExport    = @()
 
     # DSC resources to export from this module
-    DscResourcesToExport = @()
+    DscResourcesToExport = @(
+        'AADSyncRule',
+        'AADConnectDirectoryExtensionAttribute'
+    )
 
     # List of all modules packaged with this module
     # ModuleList = @()

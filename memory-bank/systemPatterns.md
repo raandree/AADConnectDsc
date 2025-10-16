@@ -267,6 +267,67 @@ if ($this.IsStandardRule) {
 - Clear separation between actionable and informational differences
 - Prevents false failures for immutable standard rule properties
 
+### Event Logging Architecture
+
+**Pattern**: Dedicated Event Log with Structured Event IDs
+AADConnectDsc implements comprehensive audit logging for compliance monitoring.
+
+#### Event Log Structure
+
+```
+Event Log: AADConnectDsc
+Source: AADConnectDsc
+Event IDs:
+├── 1000 (Information): Sync rule in desired state  
+├── 1001 (Warning): Sync rule absent but should be present
+├── 1002 (Warning): Sync rule present but should be absent
+└── 1003 (Warning): Sync rule configuration drift detected
+```
+
+#### Event Logging Function Pattern
+
+```powershell
+Write-AADConnectEventLog -EventType 'Warning' -EventId 1001 -Message $message -SyncRuleName $name -ConnectorName $connector
+```
+
+**Key Design Features:**
+- **Automatic Event Log Creation**: Creates event log and source if missing
+- **Rich Context**: Includes sync rule name and connector name in all events
+- **Non-Breaking Error Handling**: Event logging failures don't break DSC operations
+- **Structured Event IDs**: Predefined IDs for different compliance scenarios
+- **Audit Trail**: Complete tracking of sync rule compliance state changes
+
+#### Integration with DSC Test() Method
+
+```powershell
+[bool]Test() {
+    # ... existing test logic ...
+    
+    try {
+        if ($compare) {
+            Write-AADConnectEventLog -EventType 'Information' -EventId 1000 -Message "AADSyncRule is in desired state and compliant with configuration" -SyncRuleName $this.Name -ConnectorName $this.ConnectorName
+        } else {
+            # Determine specific drift type and log appropriate warning
+            $eventId = if ($currentState.Ensure -ne $desiredState.Ensure) {
+                if ($desiredState.Ensure -eq 'Present') { 1001 } else { 1002 }
+            } else { 1003 }
+            Write-AADConnectEventLog -EventType 'Warning' -EventId $eventId -Message $warningMessage -SyncRuleName $this.Name -ConnectorName $this.ConnectorName
+        }
+    } catch {
+        Write-Verbose "Failed to write event log entry: $($_.Exception.Message)"
+    }
+    
+    return $compare
+}
+```
+
+**Benefits:**
+- Complete audit trail of DSC compliance states
+- Enables monitoring and alerting on configuration drift
+- Supports compliance reporting and operational visibility
+- Follows enterprise logging best practices
+- Integrates seamlessly with existing Windows event infrastructure
+
 ### Unit Testing Strategy
 
 **Pattern**: Class Method Testing

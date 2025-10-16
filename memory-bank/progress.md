@@ -1,6 +1,89 @@
-# Progress: AADConnectDsc Documentation Status
+# Progress: AADConnectDsc Status
 
 ## Latest Development Updates
+
+### README.md Documentation Enhancement (October 16, 2025) ✅ COMPLETE
+
+**Objective**: Transform README.md into a comprehensive documentation hub with proper navigation, cross-references, and dedicated feature explanations.
+
+#### Enhancements Implemented ✅
+- ✅ **Event Logging Section**: Added comprehensive standalone section explaining the built-in event logging feature
+- ✅ **Event Categories Documentation**: Documented all 8 event IDs with their purposes
+- ✅ **Event Information Details**: Explained the rich contextual data included in events
+- ✅ **Example Event Output**: Provided real-world example of event log entry
+- ✅ **Monitoring Use Cases**: Documented practical applications for event logging
+- ✅ **Event Log File Organization**: Moved event log docs to docs/ folder for consistency
+- ✅ **Table of Contents**: Added complete navigation structure for easy access
+- ✅ **Features Section**: Highlighted key capabilities and value propositions
+- ✅ **Enhanced Resource Links**: Added direct links to resource documentation and examples
+- ✅ **Documentation Hub**: Created comprehensive documentation section with categorized links
+- ✅ **Getting Started Guides**: Linked to Architecture, Best Practices, and Migration guides
+- ✅ **Advanced Topics**: Connected Functions, Troubleshooting, and Event Logging guides
+- ✅ **Example Library**: Organized links to all example configurations
+- ✅ **Support Section**: Added "Support and Community" section with help resources
+- ✅ **External References**: Linked to Azure AD Connect and DSC documentation
+- ✅ **Quick Start Enhancement**: Added next steps with links to key documentation
+- ✅ **Zero Markdown Lint Errors**: All formatting issues resolved
+
+#### Documentation Links Added ✅
+- ✅ docs/Architecture.md - Module architecture and design patterns
+- ✅ docs/BestPractices.md - Configuration guidelines and production strategies
+- ✅ docs/Migration.md - Migration from manual to DSC management
+- ✅ docs/AADSyncRule.md - Complete sync rule resource reference
+- ✅ docs/AADConnectDirectoryExtensionAttribute.md - Schema extension documentation
+- ✅ docs/Functions.md - Public function API reference
+- ✅ docs/Troubleshooting.md - Diagnostic procedures and solutions
+- ✅ docs/EventLoggingGuide.md - Event logging functionality and configuration
+- ✅ docs/EventLogExamples.md - Sample event log entries
+- ✅ source/Examples/ - All example configurations organized by resource
+
+### Enhanced Event Logging with Permission Diagnostics (August 7, 2025) ✅ COMPLETE
+
+**Problem Resolution**: Successfully resolved issue where events weren't appearing when Set() method modified sync rules, particularly in non-administrator testing environments.
+
+#### Root Cause Resolution ✅
+- ✅ **Module Structure Issue**: Event logging function was in Private folder but not included in compiled module
+- ✅ **Function Accessibility**: DSC resource classes couldn't access Write-AADConnectEventLog despite calling it
+- ✅ **Compilation Errors**: Fixed syntax errors in help text and variable scope problems
+- ✅ **Permission Handling**: Added permission-aware error messages for non-admin environments
+
+#### Enhanced Implementation ✅
+- ✅ **File Location Fix**: Moved `Write-AADConnectEventLog` from Private to Public folder for proper inclusion
+- ✅ **Permission-Aware Diagnostics**: Clear warnings when Administrator privileges required
+- ✅ **Verbose Logging**: Always shows event logging attempts for debugging purposes
+- ✅ **Graceful Fallback**: Event logging failures don't break DSC operations
+- ✅ **Actionable Guidance**: Provides specific commands to enable event logging as Administrator
+
+#### Event Logging Function Features ✅
+- ✅ **Automatic Event Log Creation**: Creates "AADConnectDsc" event log and source when needed
+- ✅ **Multi-line Event Format**: Structured information display with comprehensive context
+- ✅ **Enhanced Error Handling**: Non-breaking error handling with clear diagnostic messages
+- ✅ **Rich Operational Context**: Rule details, complexity metrics, and operation information
+
+#### Event ID Schema ✅
+- ✅ **Compliance Events**:
+  - ID 1000 (Information): Sync rule is in desired state and compliant
+  - ID 1001 (Warning): Sync rule absent but should be present
+  - ID 1002 (Warning): Sync rule present but should be absent
+  - ID 1003 (Warning): Sync rule configuration drift detected
+- ✅ **Operational Events**:
+  - ID 2000 (Information): Sync rule created successfully
+  - ID 2001 (Information): Sync rule updated successfully
+  - ID 2002 (Information): Standard rule disabled state changed
+  - ID 2003 (Information): Sync rule removed successfully
+
+#### Testing Validation ✅
+- ✅ **Module Build Success**: Version 0.4.0-eventlog0001 compiled successfully
+- ✅ **Function Import**: Module imports without parser errors
+- ✅ **Event Logging Access**: DSC resource classes can access event logging function
+- ✅ **Permission Testing**: Confirmed behavior in both admin and non-admin environments
+- ✅ **Diagnostic Output**: Verbose messages provide clear feedback about event logging attempts
+
+### Event Log Design Details ✅
+- ✅ **Dedicated Event Log**: Uses separate "AADConnectDsc" event log for clean organization
+- ✅ **Structured Event IDs**: Predefined event IDs for different compliance states
+- ✅ **Rich Context Information**: Includes sync rule name and connector name in event messages
+- ✅ **PowerShell Best Practices**: Follows DSC community coding standards and patterns
 
 ### Standard Rule Comparison Enhancement (July 24, 2025) ✅ COMPLETE
 - ✅ **AADSyncRule Class Enhancement**: Updated Test() method for better standard rule handling
