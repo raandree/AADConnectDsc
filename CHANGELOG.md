@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Added `powershell-yaml` to the `RequiredModules` in the module's psd1 file.
+- Add Sync-Parameter function for command parameter handling and conversion
+  to remove dependency on AutomatedLab.Common.
 
 ## [0.4.0] - 2025-10-16
 
